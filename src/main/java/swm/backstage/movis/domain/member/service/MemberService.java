@@ -32,11 +32,11 @@ public class MemberService {
 
         //member리스트 조회 후 Map 자료구조로 변경
         Set<String> existMemberSet = memberJpaRepository.findAllByClub(club).stream()
-                .map(o-> o.getPhoneNo() +"_"+o.getName()).collect(Collectors.toSet());
+                .map(o-> String.format("$s_$s", o.getPhoneNo(), o.getName())).collect(Collectors.toSet());
 
         // memberCreateListDto에 받아온 Member 중복 비교
         List<Member> memberList =  memberCreateListDto.getMemberList().stream()
-                .filter(memberCreateDto -> !existMemberSet.contains(memberCreateDto.getPhoneNo() + "_" + memberCreateDto.getName()))
+                .filter(memberCreateDto -> !existMemberSet.contains(String.format("$s_$s", memberCreateDto.getPhoneNo(), memberCreateDto.getName())))
                 .map(memberCreateDto -> new Member(UUID.randomUUID().toString(),club,memberCreateDto))
                 .toList();
 
