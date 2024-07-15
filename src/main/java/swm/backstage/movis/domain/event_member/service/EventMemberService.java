@@ -8,7 +8,8 @@ import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_member.dto.EventMemberListDto;
 import swm.backstage.movis.domain.event.service.EventService;
 import swm.backstage.movis.domain.event_member.EventMember;
-import swm.backstage.movis.domain.event_member.repository.EventMemberRepository;
+import swm.backstage.movis.domain.event_member.repository.EventMemberJdbcRepository;
+import swm.backstage.movis.domain.event_member.repository.EventMemberJpaRepository;
 import swm.backstage.movis.domain.member.service.MemberService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
@@ -21,13 +22,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventMemberService {
 
-    private final EventMemberRepository eventMemberRepository;
+    private final EventMemberJpaRepository eventMemberJpaRepository;
+    private final EventMemberJdbcRepository eventMemberJdbcRepository;
     private final EventService eventService;
     private final MemberService memberService;
 
     @Transactional
     public EventMember getEventMemberByUuid(String eventMemberId) {
-        return eventMemberRepository.findByUuid(eventMemberId)
+        return eventMemberJpaRepository.findByUuid(eventMemberId)
                 .orElseThrow(()->new BaseException("account book is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
@@ -40,7 +42,7 @@ public class EventMemberService {
                 .collect(Collectors.toSet());
 
 
-        event.getEventMembers().addAll(
+        eventMemberJdbcRepository.bulkSave(
                 memberService.getMemberListByUuids(eventMemberListDto.getIdList()).stream()
                         .filter(member -> !memberSet.contains(member.getId()))
                         .map(member->new EventMember(UUID.randomUUID().toString(),member,event))
