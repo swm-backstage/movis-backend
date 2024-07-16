@@ -11,7 +11,7 @@ import swm.backstage.movis.domain.event.service.EventService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/events")
+@RequestMapping("/api/v1/events")
 public class EventController {
     private final EventService eventService;
 

@@ -10,7 +10,7 @@ import swm.backstage.movis.domain.club.dto.ClubGetListDto;
 import swm.backstage.movis.domain.club.service.ClubService;
 
 @RestController
-@RequestMapping("/api/clubs")
+@RequestMapping("/api/v1/clubs")
 @RequiredArgsConstructor
 public class ClubController {
 

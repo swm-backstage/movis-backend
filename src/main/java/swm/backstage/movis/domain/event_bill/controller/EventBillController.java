@@ -8,7 +8,7 @@ import swm.backstage.movis.domain.event_bill.service.EventBillService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/eventBill")
+@RequestMapping("/api/v1/eventBill")
 public class EventBillController {
     private final EventBillService eventBillService;
 

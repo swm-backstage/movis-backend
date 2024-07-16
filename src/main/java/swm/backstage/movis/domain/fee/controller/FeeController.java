@@ -8,7 +8,7 @@ import swm.backstage.movis.domain.fee.service.FeeService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/fees")
+@RequestMapping("/api/v1/fees")
 public class FeeController {
     private final FeeService feeService;
 
