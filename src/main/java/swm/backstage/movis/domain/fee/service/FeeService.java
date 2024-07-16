@@ -48,7 +48,7 @@ public class FeeService {
     }
 
     @Transactional
-    public void saveFee(FeeDto feeDto, Club club) {
+    protected void saveFee(FeeDto feeDto, Club club) {
         AccountBook accountBook = accountService.getAccountBookByClub(clubService.getClubByUuId(feeDto.getClubId()));
         // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
         EventMember eventMember = eventMemberService.getEventMemberByUuid(feeDto.getEventMemberId());
