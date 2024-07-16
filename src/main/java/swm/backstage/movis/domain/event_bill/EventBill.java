@@ -55,4 +55,8 @@ public class EventBill {
         this.paidAt = eventBillCreateDto.getPaidAt();
         this.isDeleted = false;
     }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 }

@@ -24,5 +24,11 @@ public class AccountBookService {
                 .orElseThrow(()->new BaseException("account book is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
+    @Transactional
+    public AccountBook getAccountBookByClubId(String clubId) {
+        return accountBookRepository.findByClubIdWithLock(clubId)
+                .orElseThrow(()->new BaseException("account book is not found", ErrorCode.ELEMENT_NOT_FOUND));
+    }
+
 
 }
