@@ -35,6 +35,17 @@ public class EventService {
     }
 
     /**
+     * 금액, 모임 id로 event 추정하기
+     * */
+    public Event findEventByClubIdAndAmount(String clubId, Long amount) {
+        List<Event> events = eventRepository.findByClubIdAndTotalPaymentAmount(clubId,amount);
+        if(events.size() != 1){
+            return null;
+        }
+        return events.get(0);
+    }
+
+    /**
      * null 허용 O
      * */
     public Event findEventByUuid(String eventUuid) {

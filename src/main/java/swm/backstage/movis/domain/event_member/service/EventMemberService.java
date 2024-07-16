@@ -50,5 +50,20 @@ public class EventMemberService {
         );
     }
 
+    public String getEventMemberIdByAlertInfo(String clubId, String name, Long amount){
+
+        //1. clubId,  amount로 event 찾기 -> 못찾으면 null 반환
+        Event event = eventService.findEventByClubIdAndAmount(clubId, amount);
+        if(event == null){
+            return null;
+        }
+        //2. event + name으로 eventMemberId 찾기 -> 못찾으면 null 반환
+        EventMember eventMember = eventMemberJpaRepository.findByEventAndMemberName(event, name).orElse(null);
+        if(eventMember == null){
+            return null;
+        }
+        return eventMember.getUuid();
+    }
+
 
 }
