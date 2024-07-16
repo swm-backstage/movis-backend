@@ -3,6 +3,7 @@ package swm.backstage.movis.domain.event_bill.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event_bill.dto.EventBillCreateDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateDto;
 import swm.backstage.movis.domain.event_bill.service.EventBillService;
 
 @RestController
@@ -22,8 +23,9 @@ public class EventBillController {
     /**
      * 수동 분류
      * */
-//    @PatchMapping()
-//    public SuccessCode updateEventBill(@RequestBody EventBillCreateDto eventBillCreateDto) {
-//
-//    }
+    @PatchMapping("/{eventBillId}")
+    public void updateEventBill(@PathVariable("eventBillId") String eventBillId,
+                                @RequestBody EventBillUpdateDto eventBillUpdateDto) {
+        eventBillService.updateUnClassifiedEventBill(eventBillId,eventBillUpdateDto);
+    }
 }
