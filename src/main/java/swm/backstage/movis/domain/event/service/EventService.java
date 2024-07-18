@@ -8,7 +8,9 @@ import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.dto.EventCreateDto;
+import swm.backstage.movis.domain.event.dto.EventGetListDto;
 import swm.backstage.movis.domain.event.repository.EventRepository;
+import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
@@ -53,7 +55,23 @@ public class EventService {
     }
 
 
-    public List<Event> getEventList(String clubId) {
-        return eventRepository.findAllByClub(clubService.getClubByUuId(clubId));
+    /**
+     * 이벤트 리스트 페이징 조회
+     * */
+    public EventGetListDto getEventPagingList(String clubId, String lastId, int size) {
+        Club club = clubService.getClubByUuId(clubId);
+        List<Event> eventList;
+        if(lastId.equals("first")){
+            eventList = eventRepository.getFirstPage(club.getId(),size+1);
+        }
+        else{
+            Event event = getEventByUuid(lastId);
+            eventList = eventRepository.getNextPageByEventIdAndLastId(club.getId(),event.getId(),size+1);
+        }
+        Boolean isLast = eventList.size() < size + 1;
+        if(!isLast){
+            eventList.remove(eventList.size()-1);
+        }
+        return new EventGetListDto(eventList,isLast);
     }
 }
