@@ -1,7 +1,6 @@
 package swm.backstage.movis.domain.event_member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_member.EventMember;
 

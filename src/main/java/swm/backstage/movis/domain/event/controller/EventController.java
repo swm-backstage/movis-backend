@@ -26,7 +26,9 @@ public class EventController {
     }
 
     @GetMapping()
-    public EventGetListDto getEventList(@RequestParam(name = "clubId") String clubId) {
-        return new EventGetListDto(eventService.getEventList(clubId));
+    public EventGetListDto getEventPagingList(@RequestParam(name = "clubId") String clubId,
+                                        @RequestParam(name = "lastId",defaultValue = "first") String lastId,
+                                        @RequestParam(name = "size",defaultValue = "20") int size) {
+        return eventService.getEventPagingList(clubId,lastId,size);
     }
 }
