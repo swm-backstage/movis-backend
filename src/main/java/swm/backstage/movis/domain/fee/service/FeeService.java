@@ -16,6 +16,8 @@ import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.fee.dto.FeeDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.repository.FeeRepository;
+import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
+import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 import java.util.List;
@@ -29,6 +31,7 @@ public class FeeService {
     private final AccountBookService accountService;
     private final EventMemberService eventMemberService;
     private final EventService eventService;
+    private final TransactionHistoryService transactionHistoryService;
 
 
     /**
@@ -84,10 +87,12 @@ public class FeeService {
         AccountBook accountBook = accountService.getAccountBookByClub(clubService.getClubByUuId(feeDto.getClubId()));
         // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
         EventMember eventMember = eventMemberService.getEventMemberByUuid(feeDto.getEventMemberId());
-        feeRepository.save(new Fee(UUID.randomUUID().toString(), feeDto, club, eventMember));
+        Fee fee = new Fee(UUID.randomUUID().toString(), feeDto, club, eventMember);
+        feeRepository.save(fee);
         eventMember.updateEventMember();
         eventMember.getEvent().updateBalance(feeDto.getPaidAmount());
         accountBook.updateBalance(feeDto.getPaidAmount());
+        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee));
     }
 
 }

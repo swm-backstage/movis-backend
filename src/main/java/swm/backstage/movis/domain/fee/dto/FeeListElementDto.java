@@ -13,7 +13,7 @@ public class FeeListElementDto {
     private Long amount;
 
     public FeeListElementDto(Fee fee) {
-        uuid = fee.getUuid();
+        this.uuid = fee.getUuid();
         this.name = fee.getName();
         this.amount =fee.getPaidAmount();
     }

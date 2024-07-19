@@ -15,6 +15,8 @@ import swm.backstage.movis.domain.event_bill.dto.EventBillCreateDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateDto;
 import swm.backstage.movis.domain.event_bill.repository.EventBillRepository;
+import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
+import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
@@ -28,6 +30,7 @@ public class EventBillService {
     private final ClubService clubService;
     private final AccountBookService accountBookService;
     private final EventService eventService;
+    private final TransactionHistoryService transactionHistoryService;
 
     @Transactional
     public void createEventBill(EventBillCreateDto eventBillCreateDto){
@@ -46,6 +49,7 @@ public class EventBillService {
         accountBook.updateBalance(eventBill.getAmount());
         event.updateBalance(eventBill.getAmount());
         eventBill.setEvent(event);
+        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
     }
     
     public EventBillGetPagingListDto getEventBIllPagingList(String eventId, String lastId, int size){

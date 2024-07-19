@@ -9,6 +9,7 @@ import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.dto.EventCreateDto;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.event_member.EventMember;
+import swm.backstage.movis.domain.transaction_history.TransactionHistory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class Event {
 
     @OneToMany(mappedBy = "event",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private List<EventBill> eventBills = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<TransactionHistory> transactionHistorys = new ArrayList<>();
 
     @Column(name="balance")
     private Long balance;

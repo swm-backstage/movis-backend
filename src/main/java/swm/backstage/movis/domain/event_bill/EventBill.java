@@ -12,7 +12,10 @@ import swm.backstage.movis.domain.event_bill.dto.EventBillCreateDto;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "event_bill")
+@Table(name = "event_bill", indexes = {
+        @Index(name = "idx_event_id", columnList = "event_id"),
+        @Index(name = "idx_event_id_eb_id", columnList = "event_id, id")
+})
 @NoArgsConstructor
 @Getter
 public class EventBill {
