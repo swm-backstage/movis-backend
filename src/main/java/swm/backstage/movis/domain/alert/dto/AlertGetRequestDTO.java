@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class AlertGetRequestDTO {
+
     private String name;
     private String cludUid;
     private String contents;
