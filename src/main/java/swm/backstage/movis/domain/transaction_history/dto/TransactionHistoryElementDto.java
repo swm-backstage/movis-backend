@@ -10,16 +10,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TransactionHistoryElementDto {
     private String transactionHistoryId;
-    private String feeOrBillUuid;
+    private String status;
+    private String id;
     private String name;
     private Long amount;
     private LocalDateTime paidAt;
 
     public TransactionHistoryElementDto(TransactionHistory transactionHistory) {
         this.transactionHistoryId = transactionHistory.getUuid();
-        this.feeOrBillUuid = transactionHistory.getElementUuid();
+        this.id = transactionHistory.getElementUuid();
         this.name = transactionHistory.getName();
         this.amount =transactionHistory.getAmount();
         this.paidAt = transactionHistory.getPaidAt();
+        this.status = transactionHistory.getStatus().toString();
     }
 }

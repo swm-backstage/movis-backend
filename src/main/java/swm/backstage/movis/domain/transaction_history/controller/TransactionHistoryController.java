@@ -18,11 +18,19 @@ public class TransactionHistoryController {
 
     private final TransactionHistoryService transactionHistoryService;
 
-    @GetMapping()
-    public TransactionHistoryGetPagingListResDto getTransactionHistoryPagingList(@RequestParam String eventId,
+    @GetMapping("/fromEvent")
+    public TransactionHistoryGetPagingListResDto getTransactionHistoryPagingListByEvent(@RequestParam String eventId,
                                                                                  @RequestParam LocalDateTime lastPaidAt,
                                                                                  @RequestParam(required = false, defaultValue = "first") String lastId,
                                                                                  @RequestParam(defaultValue = "20") int size){
-        return transactionHistoryService.getTransactionHistoryPagingList(eventId,lastPaidAt, lastId, size);
+        return transactionHistoryService.getTransactionHistoryPagingListByEvent(eventId,lastPaidAt, lastId, size);
+    }
+
+    @GetMapping("/fromClub")
+    public TransactionHistoryGetPagingListResDto getTransactionHistoryPagingListByFestival(@RequestParam String clubId,
+                                                                                 @RequestParam LocalDateTime lastPaidAt,
+                                                                                 @RequestParam(required = false, defaultValue = "first") String lastId,
+                                                                                 @RequestParam(defaultValue = "20") int size){
+        return transactionHistoryService.getTransactionHistoryPagingListByClub(clubId,lastPaidAt, lastId, size);
     }
 }

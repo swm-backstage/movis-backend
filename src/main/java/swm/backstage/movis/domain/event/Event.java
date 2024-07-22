@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "event", indexes = {
         @Index(name = "idx_club_id", columnList = "club_id"),
-        @Index(name = "idx_club_id_event_id", columnList = "event_id, id")})
+        @Index(name = "idx_club_id_event_id", columnList = "club_id, id")})
 @NoArgsConstructor
 @Getter
 public class Event {

@@ -8,6 +8,7 @@ import swm.backstage.movis.domain.fee.dto.FeeDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.service.FeeService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -30,8 +31,9 @@ public class FeeController {
 
     @GetMapping()
     public FeeGetPagingListResDto getFeePagingList(@RequestParam String eventId,
+                                                   @RequestParam LocalDateTime lastPaidAt,
                                                    @RequestParam(required = false, defaultValue = "first") String lastId,
                                                    @RequestParam(defaultValue = "20") int size){
-        return feeService.getFeePagingList(eventId, lastId, size);
+        return feeService.getFeePagingList(eventId,lastPaidAt, lastId, size);
     }
 }

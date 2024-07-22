@@ -9,6 +9,7 @@ import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.member.Member;
+import swm.backstage.movis.domain.transaction_history.TransactionHistory;
 import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
@@ -56,6 +57,9 @@ public class Club extends DateTimeField {
 
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
     private List<Fee> feeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
+    private List<TransactionHistory> transactionHistoryList = new ArrayList<>();
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;

@@ -20,6 +20,8 @@ import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCrea
 import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,15 +64,15 @@ public class FeeService {
         return feeRepository.findByUuid(feeId).orElseThrow(()-> new BaseException("feeId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
-    public FeeGetPagingListResDto getFeePagingList(String eventId, String lastId, int size){
+    public FeeGetPagingListResDto getFeePagingList(String eventId, LocalDateTime localDateTime , String lastId, int size){
         Event event = eventService.getEventByUuid(eventId);
         List<Fee> feeList;
         if(lastId.equals("first")){
-            feeList = feeRepository.getFirstPage(event.getId(),size+1);
+            feeList = feeRepository.getFirstPage(event.getId(),localDateTime,size+1);
         }
         else{
            Fee fee = getFeeById(lastId);
-            feeList = feeRepository.getNextPageByEventIdAndLastId(event.getId(),fee.getId(),size+1);
+            feeList = feeRepository.getNextPageByEventIdAndLastId(event.getId(),localDateTime,fee.getId(),size+1);
         }
 
         //하나 추가해서 조회한거 삭제해주기
