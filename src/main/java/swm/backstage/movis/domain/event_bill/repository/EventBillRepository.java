@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import swm.backstage.movis.domain.event_bill.EventBill;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,17 +15,21 @@ public interface EventBillRepository extends JpaRepository<EventBill, Long> {
     // 1 회차용
     @Query("SELECT eb FROM EventBill eb " +
             "WHERE eb.event.id = :eventId " +
-            "ORDER BY eb.id DESC " +
+            "AND eb.paidAt <= :lastPaidAt " +
+            "ORDER BY eb.paidAt DESC , eb.id ASC " +
             "LIMIT :size")
     List<EventBill> getFirstPage(@Param("eventId") Long eventId,
-                           @Param("size") int size);
+                                 @Param("lastPaidAt") LocalDateTime lastPaidAt,
+                                 @Param("size") int size);
 
     // n 회차용
     @Query("SELECT eb FROM EventBill eb " +
             "WHERE eb.event.id = :eventId AND eb.id < :lastId  " +
-            "ORDER BY eb.id DESC " +
+            "AND ((eb.paidAt = :lastPaidAt AND eb.id > :lastId) OR (eb.paidAt < :lastPaidAt)) " +
+            "ORDER BY eb.paidAt DESC , eb.id ASC " +
             "LIMIT :size")
-    List<EventBill> getNextPageByEventIdAndLastId(@Param("eventId") Long eventId,
-                                            @Param("lastId") Long lastId,
-                                            @Param("size") int size);
+    List<EventBill> getNextPage(@Param("eventId") Long eventId,
+                                @Param("lastPaidAt") LocalDateTime lastPaidAt,
+                                @Param("lastId") Long lastId,
+                                @Param("size") int size);
 }

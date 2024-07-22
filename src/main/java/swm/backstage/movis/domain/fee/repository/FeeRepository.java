@@ -17,17 +17,21 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
     // 1 회차용
     @Query("SELECT f FROM Fee f " +
             "WHERE f.event.id = :eventId " +
+            "AND f.paidAt <= :lastPaidAt " +
             "ORDER BY f.id DESC " +
             "LIMIT :size")
     List<Fee> getFirstPage(@Param("eventId") Long eventId,
+                           @Param("lastPaidAt") LocalDateTime lastPaidAt,
                            @Param("size") int size);
 
     // n 회차용
     @Query("SELECT f FROM Fee f " +
             "WHERE f.event.id = :eventId AND f.id < :lastId  " +
+            "AND ((f.paidAt = :lastPaidAt AND f.id > :lastId) OR (f.paidAt < :lastPaidAt)) " +
             "ORDER BY f.id DESC " +
             "LIMIT :size")
     List<Fee> getNextPageByEventIdAndLastId(@Param("eventId") Long eventId,
-                                                @Param("lastId") Long lastId,
-                                                @Param("size") int size);
+                                            @Param("lastPaidAt") LocalDateTime lastPaidAt,
+                                            @Param("lastId") Long lastId,
+                                            @Param("size") int size);
 }

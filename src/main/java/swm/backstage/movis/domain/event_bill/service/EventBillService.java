@@ -20,6 +20,7 @@ import swm.backstage.movis.domain.transaction_history.service.TransactionHistory
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,15 +53,15 @@ public class EventBillService {
         transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
     }
     
-    public EventBillGetPagingListDto getEventBIllPagingList(String eventId, String lastId, int size){
+    public EventBillGetPagingListDto getEventBIllPagingList(String eventId, LocalDateTime lastPaidAt, String lastId, int size){
         Event event = eventService.getEventByUuid(eventId);
         List<EventBill> eventBillList;
         if(lastId.equals("first")){
-            eventBillList = eventBillRepository.getFirstPage(event.getId(),size+1);
+            eventBillList = eventBillRepository.getFirstPage(event.getId(),lastPaidAt,size+1);
         }
         else{
             EventBill eventBill = getEventBillByUuid(lastId);
-            eventBillList = eventBillRepository.getNextPageByEventIdAndLastId(event.getId(),eventBill.getId(),size+1);
+            eventBillList = eventBillRepository.getNextPage(event.getId(),lastPaidAt ,eventBill.getId(),size+1);
         }
 
         //하나 추가해서 조회한거 삭제해주기

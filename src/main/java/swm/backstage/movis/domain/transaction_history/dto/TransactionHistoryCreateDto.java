@@ -18,13 +18,15 @@ public class TransactionHistoryCreateDto {
     private Long amount;
     private LocalDateTime paidAt;
     private Event event;
+    private TransactionStatus status;
 
-    public TransactionHistoryCreateDto(String elementUuid, String name, Long amount, Event event, LocalDateTime paidAt) {
+    public TransactionHistoryCreateDto(String elementUuid, String name, Long amount, Event event, LocalDateTime paidAt,TransactionStatus status) {
         this.elementUuid = elementUuid;
         this.name = name;
         this.amount = amount;
         this.event = event;
         this.paidAt = paidAt;
+        this.status = status;
     }
 
     public static TransactionHistoryCreateDto fromEventBill(EventBill eventBill) {
@@ -33,7 +35,8 @@ public class TransactionHistoryCreateDto {
                 eventBill.getPayName(),
                 eventBill.getAmount(),
                 eventBill.getEvent(),
-                eventBill.getPaidAt());
+                eventBill.getPaidAt(),
+                TransactionStatus.BILL);
     }
     public static TransactionHistoryCreateDto fromFee(Fee fee) {
         return new TransactionHistoryCreateDto(
@@ -41,6 +44,7 @@ public class TransactionHistoryCreateDto {
                 fee.getName(),
                 fee.getPaidAmount(),
                 fee.getEvent(),
-                fee.getPaidAt());
+                fee.getPaidAt(),
+                TransactionStatus.FEE);
     }
 }
