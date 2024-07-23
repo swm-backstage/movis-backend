@@ -3,7 +3,11 @@ package swm.backstage.movis.domain.event.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +33,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> getNextPageByEventIdAndLastId(@Param("clubId") Long clubId,
                                             @Param("lastId") Long lastId,
                                             @Param("size") int size);
+
+    @Query("SELECT e FROM Event e " +
+            "WHERE e.club = :club " +
+            "AND e.paymentDeadline > :now " +
+            "order by e.paymentDeadline ASC ")
+    List<Event> getCollectingMoneyEventByClub(@Param("club") Club club,
+                                              @Param("now") LocalDate now);
 }

@@ -75,5 +75,8 @@ public class Event {
         this.balance +=  balance;
     }
 
-
+    public void updateGatherFeeInfo(Long totalPaymentAmount, LocalDate paymentDeadline) {
+        this.totalPaymentAmount = totalPaymentAmount;
+        this.paymentDeadline = paymentDeadline;
+    }
 }

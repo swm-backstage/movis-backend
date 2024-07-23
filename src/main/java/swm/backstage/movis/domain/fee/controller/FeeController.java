@@ -3,13 +3,11 @@ package swm.backstage.movis.domain.fee.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.fee.dto.FeeDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.service.FeeService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @RestController
@@ -25,8 +23,8 @@ public class FeeController {
     }
 
     @PatchMapping()
-    public void updateUnClassifiedFee(@RequestBody FeeDto feeDto ){
-        feeService.updateUnClassifiedFee(feeDto);
+    public void updateUnClassifiedFee(@RequestParam("feeId") String feeId ,@RequestBody FeeDto feeDto ){
+        feeService.updateUnClassifiedFee(feeId, feeDto);
     }
 
     @GetMapping()

@@ -4,10 +4,11 @@ package swm.backstage.movis.domain.event.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import swm.backstage.movis.domain.event.dto.EventCreateDto;
-import swm.backstage.movis.domain.event.dto.EventGetDto;
-import swm.backstage.movis.domain.event.dto.EventGetListDto;
+import swm.backstage.movis.domain.event.dto.*;
 import swm.backstage.movis.domain.event.service.EventService;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +31,17 @@ public class EventController {
                                         @RequestParam(name = "lastId",defaultValue = "first") String lastId,
                                         @RequestParam(name = "size",defaultValue = "20") int size) {
         return eventService.getEventPagingList(clubId,lastId,size);
+    }
+
+
+    @PostMapping("/gatherFee")
+    public void enrollGatherFee(@RequestBody EventGatherFeeReqDto eventGatherFeeReqDto) {
+        eventService.enrollGatherFee(eventGatherFeeReqDto);
+    }
+
+    @GetMapping("/funding")
+    public EventGetFundingListDto getEventFundingList(@RequestParam("clubId") String clubId,
+                                                      @RequestParam("now") LocalDate now) {
+        return new EventGetFundingListDto(eventService.getCollectingMoneyEventList(clubId,now));
     }
 }

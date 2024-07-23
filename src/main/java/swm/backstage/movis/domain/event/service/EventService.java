@@ -3,17 +3,20 @@ package swm.backstage.movis.domain.event.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.dto.EventCreateDto;
+import swm.backstage.movis.domain.event.dto.EventGatherFeeReqDto;
 import swm.backstage.movis.domain.event.dto.EventGetListDto;
 import swm.backstage.movis.domain.event.repository.EventRepository;
-import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,5 +76,19 @@ public class EventService {
             eventList.remove(eventList.size()-1);
         }
         return new EventGetListDto(eventList,isLast);
+    }
+
+    /**
+     * 현재 회비를 모으고 있는 이벤트 리스트 조회
+     * */
+    public List<Event> getCollectingMoneyEventList(String clubId, LocalDate now){
+        Club club = clubService.getClubByUuId(clubId);
+        return eventRepository.getCollectingMoneyEventByClub(club, now);
+    }
+
+    @Transactional
+    public void enrollGatherFee(EventGatherFeeReqDto eventGatherFeeReqDto) {
+        Event event = getEventByUuid(eventGatherFeeReqDto.getEventId());
+        event.updateGatherFeeInfo(eventGatherFeeReqDto.getTotalPaymentAmount(),eventGatherFeeReqDto.getPaymentDeadline());
     }
 }

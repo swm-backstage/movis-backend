@@ -42,9 +42,11 @@ public class Fee {
     @JoinColumn(name = "event_member_id")
     private EventMember eventMember;
 
-    public Fee(FeeDto feeDto, Club club) {
+    public Fee(String uuid,FeeDto feeDto, Club club) {
+        this.uuid = uuid;
         this.paidAmount = feeDto.getPaidAmount();
         this.paidAt = feeDto.getPaidAt();
+        this.name = feeDto.getName();
         this.club = club;
     }
 
@@ -57,4 +59,11 @@ public class Fee {
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
     }
+
+    public void updateBlankElement(EventMember eventMember, FeeDto feeDto) {
+        this.eventMember = eventMember;
+        this.event = eventMember.getEvent();
+        this.name = feeDto.getName();
+    }
 }
+

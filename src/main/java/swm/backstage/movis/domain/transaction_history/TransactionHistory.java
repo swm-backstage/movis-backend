@@ -32,6 +32,7 @@ public class TransactionHistory {
     private String name;
     private Long amount;
     private LocalDateTime paidAt;
+    private Boolean isClassified;
 
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
@@ -45,13 +46,20 @@ public class TransactionHistory {
     private Club club;
 
     public TransactionHistory(String uuid,TransactionHistoryCreateDto dto) {
+        this.club =dto.getClub();
         this.uuid = uuid;
         this.elementUuid = dto.getElementUuid();
         this.name = dto.getName();
         this.amount = dto.getAmount();
         this.event = dto.getEvent();
         this.paidAt = dto.getPaidAt();
+        this.isClassified = dto.getIsClassified();
         this.status = dto.getStatus();
+    }
+    public void updateTransactionHistory(Event event, String name){
+        this.event = event;
+        this.name = name;
+        this.isClassified = Boolean.TRUE;
     }
 }
 
