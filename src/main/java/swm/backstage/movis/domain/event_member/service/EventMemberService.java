@@ -14,6 +14,7 @@ import swm.backstage.movis.domain.member.service.MemberService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,6 +49,10 @@ public class EventMemberService {
                         .map(member->new EventMember(UUID.randomUUID().toString(),member,event))
                         .toList()
         );
+    }
+
+    public List<EventMember> getEventMemberList(String eventId){
+        return eventMemberJpaRepository.findAllByEvent(eventService.getEventByUuid(eventId));
     }
 
     public String getEventMemberIdByAlertInfo(String clubId, String name, Long amount){

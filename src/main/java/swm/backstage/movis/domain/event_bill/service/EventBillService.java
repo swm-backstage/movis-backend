@@ -16,6 +16,7 @@ import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateDto;
 import swm.backstage.movis.domain.event_bill.repository.EventBillRepository;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
+import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryUpdateDto;
 import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
@@ -33,9 +34,13 @@ public class EventBillService {
     private final EventService eventService;
     private final TransactionHistoryService transactionHistoryService;
 
+    /**
+     * 지출 내역 추가 (알림)
+     * */
     @Transactional
     public void createEventBill(EventBillCreateDto eventBillCreateDto){
-        eventBillRepository.save(new EventBill(UUID.randomUUID().toString(),eventBillCreateDto,clubService.getClubByUuId(eventBillCreateDto.getClubId())));
+        EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(),eventBillCreateDto,clubService.getClubByUuId(eventBillCreateDto.getClubId())));
+        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
     }
 
     public EventBill getEventBillByUuid(String eventBillId){
@@ -50,7 +55,7 @@ public class EventBillService {
         accountBook.updateBalance(eventBill.getAmount());
         event.updateBalance(eventBill.getAmount());
         eventBill.setEvent(event);
-        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
+        transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(eventBillId,eventBill.getPayName(),event));
     }
     
     public EventBillGetPagingListDto getEventBIllPagingList(String eventId, LocalDateTime lastPaidAt, String lastId, int size){

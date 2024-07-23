@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
+import swm.backstage.movis.domain.transaction_history.dto.TransactionStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,4 +56,7 @@ public interface TransactionHistoryRepository extends JpaRepository<TransactionH
                                                 @Param("lastPaidAt") LocalDateTime lastPaidAt,
                                                 @Param("lastId") Long lastId,
                                                 @Param("size") int size);
+
+    Optional<TransactionHistory> findByElementUuid(String elementUuid);
+    List<TransactionHistory> findAllByClubUuidAndIsClassifiedOrderByPaidAtDesc(String clubId, boolean isClassified);
 }

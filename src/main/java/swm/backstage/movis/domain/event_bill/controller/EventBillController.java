@@ -17,7 +17,7 @@ public class EventBillController {
     private final EventBillService eventBillService;
 
     /**
-     * 지출 내역 추가
+     * 지출 내역 추가 (알림으로)
      * */
     @PostMapping()
     public void createEventBill(@RequestBody EventBillCreateDto eventBillCreateDto) {

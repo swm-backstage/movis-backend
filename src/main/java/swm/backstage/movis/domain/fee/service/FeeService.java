@@ -17,6 +17,7 @@ import swm.backstage.movis.domain.fee.dto.FeeDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.repository.FeeRepository;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
+import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryUpdateDto;
 import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
@@ -37,27 +38,26 @@ public class FeeService {
 
 
     /**
-     * 분류된 요소와 분류되지 않은 요소만 전달 된다.
-     * -> EventMember의 걷을 금액을 따라서 분류가 된 회비라면 0으로 만들고 납부여부를 true로 해야함
+     * Fee 등록 (알림)
      * */
     @Transactional
     public void createFee(FeeDto feeDto) {
         Club club = clubService.getClubByUuId(feeDto.getClubId());
-
         // 미분류시
         if(feeDto.getEventMemberId() == null) {
-            feeRepository.save(new Fee(feeDto,club));
+            saveFee(feeDto, club, false, null);
         }
         //분류시
         else{
-            saveFee(feeDto,club);
+            saveFee(feeDto,club,true,null);
         }
     }
 
     @Transactional
-    public void updateUnClassifiedFee(FeeDto feeUpdateDto) {
+    public void updateUnClassifiedFee(String feeId, FeeDto feeUpdateDto) {
         Club club = clubService.getClubByUuId(feeUpdateDto.getClubId());
-        saveFee(feeUpdateDto,club);
+        Fee fee = getFeeById(feeId);
+        saveFee(feeUpdateDto,club,true,fee);
     }
 
     public Fee getFeeById(String feeId){
@@ -83,18 +83,32 @@ public class FeeService {
         return new FeeGetPagingListResDto(feeList, isLast);
     }
 
-
     @Transactional
-    protected void saveFee(FeeDto feeDto, Club club) {
-        AccountBook accountBook = accountService.getAccountBookByClub(clubService.getClubByUuId(feeDto.getClubId()));
-        // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
-        EventMember eventMember = eventMemberService.getEventMemberByUuid(feeDto.getEventMemberId());
-        Fee fee = new Fee(UUID.randomUUID().toString(), feeDto, club, eventMember);
-        feeRepository.save(fee);
-        eventMember.updateEventMember();
-        eventMember.getEvent().updateBalance(feeDto.getPaidAmount());
-        accountBook.updateBalance(feeDto.getPaidAmount());
-        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee));
+    protected void saveFee(FeeDto feeDto, Club club,boolean isClassified,Fee fee) {
+        if(!isClassified){
+            fee = feeRepository.save(new Fee(UUID.randomUUID().toString(),feeDto,club));
+            transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.FALSE));
+        }
+        else{
+            // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
+            AccountBook accountBook = accountService.getAccountBookByClub(clubService.getClubByUuId(feeDto.getClubId()));
+            EventMember eventMember = eventMemberService.getEventMemberByUuid(feeDto.getEventMemberId());
+            //자동 분류
+            if(fee == null){
+                fee = new Fee(UUID.randomUUID().toString(), feeDto, club, eventMember);
+                feeRepository.save(fee);
+                transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.TRUE));
+            }
+            //수동분류
+            else{
+                fee.updateBlankElement(eventMember,feeDto);
+                transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(fee.getUuid(),fee.getName(),fee.getEvent()));
+            }
+            eventMember.updateEventMember();
+            eventMember.getEvent().updateBalance(feeDto.getPaidAmount());
+            accountBook.updateBalance(feeDto.getPaidAmount());
+        }
     }
 
 }
+//transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee));
