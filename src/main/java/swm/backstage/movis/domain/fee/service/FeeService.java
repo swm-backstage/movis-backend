@@ -91,7 +91,7 @@ public class FeeService {
         }
         else{
             // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
-            AccountBook accountBook = accountService.getAccountBookByClub(clubService.getClubByUuId(feeDto.getClubId()));
+            AccountBook accountBook = accountService.getAccountBookByClubId(feeDto.getClubId());
             EventMember eventMember = eventMemberService.getEventMemberByUuid(feeDto.getEventMemberId());
             //자동 분류
             if(fee == null){
@@ -111,4 +111,3 @@ public class FeeService {
     }
 
 }
-//transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee));

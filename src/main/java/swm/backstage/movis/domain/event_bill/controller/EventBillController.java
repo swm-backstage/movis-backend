@@ -1,7 +1,6 @@
 package swm.backstage.movis.domain.event_bill.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event_bill.dto.EventBillCreateDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListDto;
