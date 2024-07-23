@@ -8,7 +8,6 @@ import swm.backstage.movis.domain.event.dto.*;
 import swm.backstage.movis.domain.event.service.EventService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor

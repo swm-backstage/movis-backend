@@ -17,13 +17,6 @@ import swm.backstage.movis.global.error.exception.BaseException;
 public class AccountBookService {
     private final AccountBookRepository accountBookRepository;
 
-
-    @Transactional
-    public AccountBook getAccountBookByClub(Club club) {
-        return accountBookRepository.findByClubWithLock(club)
-                .orElseThrow(()->new BaseException("account book is not found", ErrorCode.ELEMENT_NOT_FOUND));
-    }
-
     @Transactional
     public AccountBook getAccountBookByClubId(String clubId) {
         return accountBookRepository.findByClubIdWithLock(clubId)

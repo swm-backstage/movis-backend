@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
-import swm.backstage.movis.domain.transaction_history.dto.TransactionStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
