@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class JwtCreateReqDto {
 
     @NotNull
-    @JsonProperty("refresh-token")
     String refreshToken;
 }
