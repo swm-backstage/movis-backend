@@ -17,7 +17,7 @@ public class AlertManager {
     private final FeeService feeService;
     private final EventMemberService eventMemberService;
 
-    public void getAlert(AlertGetRequestDTO dto){
+    public void alertToFee(AlertGetRequestDTO dto){
         String eventMemberId = eventMemberService.getEventMemberIdByAlertInfo(dto.getCludUid(), dto.getName(), dto.getCash());
         FeeDto newFeeDto = new FeeDto(
                 dto.getCludUid(),
