@@ -19,6 +19,23 @@ jobs:
         distribution: 'adopt'
         java-version: '17'
 
+    - name: Add Yml Files
+      run: |
+        mkdir ${PWD}/src/main/resources
+        echo "${{ secrets.APPLICATION }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application.yml
+        done
+        echo "${{ secrets.APPLICATION_AWS }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-aws.yml
+        done
+        echo "${{ secrets.APPLICATION_MYSQL }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-mysql.yml
+        done
+        echo "${{ secrets.APPLICATION_SECURITY }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-security.yml
+        done
+        ls -al ${PWD}/src/main/resources
+
     - name: Build with Gradle
       run: ./gradlew build
 
@@ -56,27 +73,4 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
-        kubectl apply -f - <<EOF
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: movis-prod
-            labels:
-              app: movis-prod
-          spec:
-            replicas: 3
-            selector:
-              matchLabels:
-                app: movis-prod
-            template:
-              metadata:
-                labels:
-                  app: movis-prod
-              spec:
-                containers:
-                - name: movis-back
-                  image: hub.klr.kr/movis-prod:latest
-                  imagePullPolicy: Always
-                  ports:
-                  - containerPort: 8080
-        EOF
+        kubectl rollout restart deployment/movis-prod
