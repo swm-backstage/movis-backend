@@ -13,7 +13,7 @@ import swm.backstage.movis.domain.auth.service.AuthService;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
