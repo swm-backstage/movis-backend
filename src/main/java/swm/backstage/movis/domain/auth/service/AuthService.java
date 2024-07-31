@@ -165,8 +165,8 @@ public class AuthService {
     @Transactional
     public JwtCreateResDto reissue(JwtCreateReqDto jwtCreateReqDto) {
 
-        // 접두사 Bearer 포함 검사
-        String refreshToken = jwtUtil.resolveToken(jwtCreateReqDto.getRefreshToken());
+        // refreshToken 유무 검사, Bearer 검사 x
+        String refreshToken = jwtCreateReqDto.getRefreshToken();
         if (!StringUtils.hasText(refreshToken)) {
 
             throw new BaseException("옳바르지 않은 토큰 형식입니다. ", ErrorCode.INVALID_TOKEN_FORMAT);
