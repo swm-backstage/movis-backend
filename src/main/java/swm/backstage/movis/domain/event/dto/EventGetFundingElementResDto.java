@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class EventGetFundingDto {
+public class EventGetFundingElementResDto {
     private String eventId;
 
     private String name;
@@ -18,7 +18,7 @@ public class EventGetFundingDto {
 
     private LocalDate paymentDeadline;
 
-    public EventGetFundingDto(Event event) {
+    public EventGetFundingElementResDto(Event event) {
         this.eventId = event.getUuid();
         this.name = event.getName();
         this.totalPaymentAmount = event.getTotalPaymentAmount();

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import swm.backstage.movis.domain.accout_book.AccountBook;
-import swm.backstage.movis.domain.club.Club;
 
 import java.util.Optional;
 

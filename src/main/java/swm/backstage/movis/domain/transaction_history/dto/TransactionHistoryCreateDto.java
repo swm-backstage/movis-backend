@@ -23,7 +23,7 @@ public class TransactionHistoryCreateDto {
     private TransactionStatus status;
     private Boolean isClassified;
 
-    public TransactionHistoryCreateDto(Club club,Event event, String elementUuid, String name, Long amount, LocalDateTime paidAt,TransactionStatus status,Boolean isClassified) {
+    public TransactionHistoryCreateDto(Club club, Event event, String elementUuid, String name, Long amount, LocalDateTime paidAt, TransactionStatus status, Boolean isClassified) {
         this.club = club;
         this.event = event;
         this.elementUuid = elementUuid;

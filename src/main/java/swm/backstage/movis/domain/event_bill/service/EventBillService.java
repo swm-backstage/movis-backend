@@ -9,9 +9,9 @@ import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.service.EventService;
 import swm.backstage.movis.domain.event_bill.EventBill;
-import swm.backstage.movis.domain.event_bill.dto.EventBillCreateDto;
-import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListDto;
-import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListResDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateReqDto;
 import swm.backstage.movis.domain.event_bill.repository.EventBillRepository;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryUpdateDto;
@@ -36,8 +36,8 @@ public class EventBillService {
      * 지출 내역 추가 (알림)
      * */
     @Transactional
-    public void createEventBill(EventBillCreateDto eventBillCreateDto){
-        EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(),eventBillCreateDto,clubService.getClubByUuId(eventBillCreateDto.getClubId())));
+    public void createEventBill(EventBillCreateReqDto eventBillCreateReqDto){
+        EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(), eventBillCreateReqDto,clubService.getClubByUuId(eventBillCreateReqDto.getClubId())));
         transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
     }
 
@@ -46,17 +46,17 @@ public class EventBillService {
     }
 
     @Transactional
-    public void updateUnClassifiedEventBill(String eventBillId, EventBillUpdateDto eventBillUpdateDto){
-        AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillUpdateDto.getClubId());
+    public void updateUnClassifiedEventBill(String eventBillId, EventBillUpdateReqDto eventBillUpdateReqDto){
+        AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillUpdateReqDto.getClubId());
         EventBill eventBill = getEventBillByUuid(eventBillId);
-        Event event = eventService.getEventByUuid(eventBillUpdateDto.getEventId());
+        Event event = eventService.getEventByUuid(eventBillUpdateReqDto.getEventId());
         accountBook.updateBalance(eventBill.getAmount());
         event.updateBalance(eventBill.getAmount());
         eventBill.setEvent(event);
         transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(eventBillId,eventBill.getPayName(),event));
     }
     
-    public EventBillGetPagingListDto getEventBIllPagingList(String eventId, LocalDateTime lastPaidAt, String lastId, int size){
+    public EventBillGetPagingListResDto getEventBIllPagingList(String eventId, LocalDateTime lastPaidAt, String lastId, int size){
         Event event = eventService.getEventByUuid(eventId);
         List<EventBill> eventBillList;
         if(lastId.equals("first")){
@@ -72,7 +72,7 @@ public class EventBillService {
         if(!isLast){
             eventBillList.remove(eventBillList.size()-1);
         }
-        return new EventBillGetPagingListDto(eventBillList, isLast);
+        return new EventBillGetPagingListResDto(eventBillList, isLast);
         
     }
 }

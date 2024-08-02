@@ -3,7 +3,7 @@ package swm.backstage.movis.domain.fee.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import swm.backstage.movis.domain.fee.dto.FeeDto;
+import swm.backstage.movis.domain.fee.dto.FeeReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.service.FeeService;
 
@@ -18,13 +18,13 @@ public class FeeController {
     private final FeeService feeService;
 
     @PostMapping()
-    public void createFee(@RequestBody FeeDto feeDto){
-        feeService.createFee(feeDto);
+    public void createFee(@RequestBody FeeReqDto feeReqDto){
+        feeService.createFee(feeReqDto);
     }
 
     @PatchMapping()
-    public void updateUnClassifiedFee(@RequestParam("feeId") String feeId ,@RequestBody FeeDto feeDto ){
-        feeService.updateUnClassifiedFee(feeId, feeDto);
+    public void updateUnClassifiedFee(@RequestParam("feeId") String feeId ,@RequestBody FeeReqDto feeReqDto){
+        feeService.updateUnClassifiedFee(feeId, feeReqDto);
     }
 
     @GetMapping()

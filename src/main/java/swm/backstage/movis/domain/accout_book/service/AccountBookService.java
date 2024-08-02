@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.accout_book.repository.AccountBookRepository;
-import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 

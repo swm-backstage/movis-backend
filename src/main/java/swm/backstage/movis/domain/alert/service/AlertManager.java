@@ -5,10 +5,8 @@ import org.springframework.stereotype.Component;
 import swm.backstage.movis.domain.alert.dto.AlertGetRequestDTO;
 import swm.backstage.movis.domain.alert.dto.BillType;
 import swm.backstage.movis.domain.event_member.service.EventMemberService;
-import swm.backstage.movis.domain.fee.dto.FeeDto;
+import swm.backstage.movis.domain.fee.dto.FeeReqDto;
 import swm.backstage.movis.domain.fee.service.FeeService;
-
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +17,7 @@ public class AlertManager {
 
     public void alertToFee(AlertGetRequestDTO dto){
         String eventMemberId = eventMemberService.getEventMemberIdByAlertInfo(dto.getCludUid(), dto.getName(), dto.getCash());
-        FeeDto newFeeDto = new FeeDto(
+        FeeReqDto newFeeReqDto = new FeeReqDto(
                 dto.getCludUid(),
                 eventMemberId,
                 dto.getName(),
@@ -27,6 +25,6 @@ public class AlertManager {
                 dto.getCreatedAt()
         );
 
-        feeService.createFee(newFeeDto);
+        feeService.createFee(newFeeReqDto);
     }
 }

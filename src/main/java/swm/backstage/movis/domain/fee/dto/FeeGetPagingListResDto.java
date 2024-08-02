@@ -10,13 +10,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class FeeGetPagingListResDto {
-    List<FeeListElementDto> feeElements;
+    List<FeeGetPagingElementResDto> feeElements;
     private Boolean isLast;
 
     public FeeGetPagingListResDto(List<Fee> feeList, Boolean isLast) {
         this.isLast = isLast;
         this.feeElements = feeList.stream()
-                .map(FeeListElementDto::new)
+                .map(FeeGetPagingElementResDto::new)
                 .toList();
     }
 }

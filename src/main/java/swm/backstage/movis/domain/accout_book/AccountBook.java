@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
-import swm.backstage.movis.domain.member.Member;
 
 import java.util.ArrayList;
 import java.util.List;

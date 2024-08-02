@@ -45,7 +45,7 @@ public class TransactionHistory {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    public TransactionHistory(String uuid,TransactionHistoryCreateDto dto) {
+    public TransactionHistory(String uuid, TransactionHistoryCreateDto dto) {
         this.club =dto.getClub();
         this.uuid = uuid;
         this.elementUuid = dto.getElementUuid();

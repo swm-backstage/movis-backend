@@ -7,13 +7,13 @@ import swm.backstage.movis.domain.event_bill.EventBill;
 
 @Getter
 @NoArgsConstructor
-public class EventBillListElementDto {
-    private String id;
+public class EventBillGetElementResDto {
+    private String eventId;
     private String name;
     private Long amount;
 
-    public EventBillListElementDto(EventBill eventBill) {
-        this.id = eventBill.getUuid();
+    public EventBillGetElementResDto(EventBill eventBill) {
+        this.eventId = eventBill.getUuid();
         this.name = eventBill.getPayName();
         this.amount = eventBill.getAmount();
     }

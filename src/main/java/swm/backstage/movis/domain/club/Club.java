@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.accout_book.AccountBook;
-import swm.backstage.movis.domain.club.dto.ClubCreateDto;
+import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.fee.Fee;
@@ -69,12 +69,12 @@ public class Club extends DateTimeField {
 
 
 
-    public Club(ClubCreateDto clubCreateDto, String uuid,AccountBook accountBook) {
+    public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook) {
         this.uuid = uuid;
-        this.description = clubCreateDto.getDescription();
-        this.name = clubCreateDto.getName();
-        this.accountNumber = clubCreateDto.getAccountNumber();
-        this.bankCode = clubCreateDto.getBankCode();
+        this.description = clubCreateReqDto.getDescription();
+        this.name = clubCreateReqDto.getName();
+        this.accountNumber = clubCreateReqDto.getAccountNumber();
+        this.bankCode = clubCreateReqDto.getBankCode();
         this.isDeleted = Boolean.FALSE;
         this.accountBook = accountBook;
         accountBook.setClub(this);
