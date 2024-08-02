@@ -13,6 +13,8 @@ import swm.backstage.movis.global.aws.service.AWSService;
 @RequestMapping("/api/v1")
 public class AWSController {
 
+
+    // TODO: production의 경우, yml 없이 OIDC로 설정하기
     @Value("${amazon.aws.s3.bucket}")
     private String bucketName;
     private final AWSService awsService;

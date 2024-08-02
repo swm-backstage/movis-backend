@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class AlertGetRequestDTO {
     private String name;
     private String cludUid;
-    private String contents;
+//    private String contents;
     private Long cash;
     private BillType billType;
     private LocalDateTime createdAt;

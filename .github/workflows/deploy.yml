@@ -1,0 +1,76 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+
+    - name: Add Yml Files
+      run: |
+        mkdir ${PWD}/src/main/resources
+        echo "${{ secrets.APPLICATION }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application.yml
+        done
+        echo "${{ secrets.APPLICATION_AWS }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-aws.yml
+        done
+        echo "${{ secrets.APPLICATION_MYSQL }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-mysql.yml
+        done
+        echo "${{ secrets.APPLICATION_SECURITY }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-security.yml
+        done
+        ls -al ${PWD}/src/main/resources
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: Build and push Docker image
+      run: |
+        docker build -t hub.klr.kr/movis-prod:latest .
+        docker push hub.klr.kr/movis-prod:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.18.0'
+
+    - name: Update kubeconfig for EKS
+      run: |
+        aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl rollout restart deployment/movis-prod
