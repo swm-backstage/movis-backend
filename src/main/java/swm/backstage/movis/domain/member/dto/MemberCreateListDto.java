@@ -14,5 +14,5 @@ public class MemberCreateListDto {
     @NotNull
     private String clubId;
 
-    private List<MemberCreateDto> memberList;
+    private List<MemberCreateReqDto> memberList;
 }

@@ -7,12 +7,12 @@ import swm.backstage.movis.domain.event_member.EventMember;
 @Getter
 @NoArgsConstructor
 public class EventMemberListElementDto {
-    private String uuid;
+    private String eventMemberId;
     private Boolean isPaid;
     private Long amountToPay;
 
     public EventMemberListElementDto(EventMember eventMember) {
-        this.uuid = eventMember.getUuid();
+        this.eventMemberId = eventMember.getUuid();
         this.isPaid = eventMember.getIsPaid();
         this.amountToPay = eventMember.getAmountToPay();
     }

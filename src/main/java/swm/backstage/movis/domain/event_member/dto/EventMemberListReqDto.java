@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class EventMemberListDto {
+public class EventMemberListReqDto {
     private String eventId;
-    private List<String> idList;
+    private List<String> eventMemberIdList;
 }

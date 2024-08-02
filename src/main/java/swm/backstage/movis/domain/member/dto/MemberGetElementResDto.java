@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class MemberGetDto {
+public class MemberGetElementResDto {
     private String memberId;
     private String clubId;
     private String name;
@@ -19,7 +19,7 @@ public class MemberGetDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public MemberGetDto(Member member) {
+    public MemberGetElementResDto(Member member) {
         this.memberId = member.getUuid();
         this.clubId = member.getClub().getUuid();
         this.name = member.getName();

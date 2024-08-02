@@ -7,12 +7,12 @@ import swm.backstage.movis.domain.fee.Fee;
 
 @Getter
 @NoArgsConstructor
-public class FeeListElementDto {
+public class FeeGetPagingElementResDto {
     private String uuid;
     private String name;
     private Long amount;
 
-    public FeeListElementDto(Fee fee) {
+    public FeeGetPagingElementResDto(Fee fee) {
         this.uuid = fee.getUuid();
         this.name = fee.getName();
         this.amount =fee.getPaidAmount();

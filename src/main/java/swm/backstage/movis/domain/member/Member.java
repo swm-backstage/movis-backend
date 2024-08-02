@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event_member.EventMember;
-import swm.backstage.movis.domain.member.dto.MemberCreateDto;
+import swm.backstage.movis.domain.member.dto.MemberCreateReqDto;
 import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
@@ -51,11 +51,11 @@ public class Member extends DateTimeField {
 
 
 
-    public Member(String uuid, Club club, MemberCreateDto memberCreateDto) {
+    public Member(String uuid, Club club, MemberCreateReqDto memberCreateReqDto) {
         this.uuid = uuid;
         this.club = club;
-        this.name = memberCreateDto.getName();
-        this.phoneNo = memberCreateDto.getPhoneNo();
+        this.name = memberCreateReqDto.getName();
+        this.phoneNo = memberCreateReqDto.getPhoneNo();
         this.isEnrolled = Boolean.TRUE;
         this.isDeleted = Boolean.FALSE;
         this.deletedAt = LocalDateTime.now();

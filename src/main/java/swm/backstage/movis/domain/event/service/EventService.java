@@ -3,15 +3,14 @@ package swm.backstage.movis.domain.event.service;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
-import swm.backstage.movis.domain.event.dto.EventCreateDto;
+import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
 import swm.backstage.movis.domain.event.dto.EventGatherFeeReqDto;
-import swm.backstage.movis.domain.event.dto.EventGetListDto;
+import swm.backstage.movis.domain.event.dto.EventGetPagingListResDto;
 import swm.backstage.movis.domain.event.repository.EventRepository;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
@@ -27,9 +26,9 @@ public class EventService {
     private final EventRepository eventRepository;
     private final ClubService clubService;
 
-    public void createEvent(EventCreateDto eventCreateDto) {
-        Club club = clubService.getClubByUuId(eventCreateDto.getClubId());
-        eventRepository.save(new Event(UUID.randomUUID().toString(),eventCreateDto,club,club.getAccountBook()));
+    public void createEvent(EventCreateReqDto eventCreateReqDto) {
+        Club club = clubService.getClubByUuId(eventCreateReqDto.getClubId());
+        eventRepository.save(new Event(UUID.randomUUID().toString(), eventCreateReqDto,club,club.getAccountBook()));
     }
 
     /**
@@ -61,7 +60,7 @@ public class EventService {
     /**
      * 이벤트 리스트 페이징 조회
      * */
-    public EventGetListDto getEventPagingList(String clubId, String lastId, int size) {
+    public EventGetPagingListResDto getEventPagingList(String clubId, String lastId, int size) {
         Club club = clubService.getClubByUuId(clubId);
         List<Event> eventList;
         if(lastId.equals("first")){
@@ -75,7 +74,7 @@ public class EventService {
         if(!isLast){
             eventList.remove(eventList.size()-1);
         }
-        return new EventGetListDto(eventList,isLast);
+        return new EventGetPagingListResDto(eventList,isLast);
     }
 
     /**

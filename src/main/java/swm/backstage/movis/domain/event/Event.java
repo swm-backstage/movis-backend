@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.Club;
-import swm.backstage.movis.domain.event.dto.EventCreateDto;
+import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
@@ -62,9 +62,9 @@ public class Event {
 
 
 
-    public Event(String uuid, EventCreateDto eventCreateDto, Club club, AccountBook accountBook) {
+    public Event(String uuid, EventCreateReqDto eventCreateReqDto, Club club, AccountBook accountBook) {
         this.uuid = uuid;
-        this.name = eventCreateDto.getEventName();
+        this.name = eventCreateReqDto.getEventName();
         this.club =club;
         this.accountBook = accountBook;
         this.balance = 0L;

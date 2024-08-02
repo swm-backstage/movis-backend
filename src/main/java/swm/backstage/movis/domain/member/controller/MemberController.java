@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.member.dto.MemberCreateListDto;
-import swm.backstage.movis.domain.member.dto.MemberGetListDto;
+import swm.backstage.movis.domain.member.dto.MemberGetListResDto;
 import swm.backstage.movis.domain.member.service.MemberService;
 
 
@@ -21,8 +21,8 @@ public class MemberController {
     }
 
     @GetMapping()
-    public MemberGetListDto getMemberList(@RequestParam(name = "clubId") String clubId) {
-        return new MemberGetListDto(memberService.getMemberList(clubId));
+    public MemberGetListResDto getMemberList(@RequestParam(name = "clubId") String clubId) {
+        return new MemberGetListResDto(memberService.getMemberList(clubId));
     }
 
 

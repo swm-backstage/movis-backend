@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
-import swm.backstage.movis.domain.event_bill.dto.EventBillCreateDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
 
 import java.time.LocalDateTime;
 
@@ -50,12 +50,12 @@ public class EventBill {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    public EventBill(String uuid,EventBillCreateDto eventBillCreateDto, Club club) {
+    public EventBill(String uuid, EventBillCreateReqDto eventBillCreateReqDto, Club club) {
         this.uuid = uuid;
-        this.payName = eventBillCreateDto.getPayName();
-        this.amount = eventBillCreateDto.getAmount();
+        this.payName = eventBillCreateReqDto.getPayName();
+        this.amount = eventBillCreateReqDto.getAmount();
         this.club = club;
-        this.paidAt = eventBillCreateDto.getPaidAt();
+        this.paidAt = eventBillCreateReqDto.getPaidAt();
         this.isDeleted = false;
     }
 

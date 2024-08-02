@@ -10,11 +10,11 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class EventGetFundingListDto {
-    List<EventGetFundingDto> eventFundingListDto;
+public class EventGetFundingListResDto {
+    List<EventGetFundingElementResDto> eventFundingListDto;
 
-    public EventGetFundingListDto(List<Event> eventList) {
+    public EventGetFundingListResDto(List<Event> eventList) {
         this.eventFundingListDto = eventList.stream()
-                .map(EventGetFundingDto::new).toList();
+                .map(EventGetFundingElementResDto::new).toList();
     }
 }

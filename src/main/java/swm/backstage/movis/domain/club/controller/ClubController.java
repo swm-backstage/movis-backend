@@ -4,9 +4,9 @@ package swm.backstage.movis.domain.club.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import swm.backstage.movis.domain.club.dto.ClubCreateDto;
-import swm.backstage.movis.domain.club.dto.ClubGetDto;
-import swm.backstage.movis.domain.club.dto.ClubGetListDto;
+import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
+import swm.backstage.movis.domain.club.dto.ClubGetResDto;
+import swm.backstage.movis.domain.club.dto.ClubGetListResDto;
 import swm.backstage.movis.domain.club.service.ClubService;
 
 @RestController
@@ -17,16 +17,16 @@ public class ClubController {
     private final ClubService clubService;
 
     @PostMapping()
-    public ClubGetDto createClub(@RequestBody @Validated ClubCreateDto clubCreateDto) {
-        return new ClubGetDto(clubService.createClub(clubCreateDto));
+    public ClubGetResDto createClub(@RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
+        return new ClubGetResDto(clubService.createClub(clubCreateReqDto));
     }
     @GetMapping("/{clubId}")
-    public ClubGetDto getClub(@PathVariable("clubId") String clubId){
-        return new ClubGetDto(clubService.getClubByUuId(clubId));
+    public ClubGetResDto getClub(@PathVariable("clubId") String clubId){
+        return new ClubGetResDto(clubService.getClubByUuId(clubId));
     }
 
     @GetMapping()
-    public ClubGetListDto getClubList(){
-        return new ClubGetListDto(clubService.getClubList());
+    public ClubGetListResDto getClubList(){
+        return new ClubGetListResDto(clubService.getClubList());
     }
 }

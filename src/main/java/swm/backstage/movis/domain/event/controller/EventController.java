@@ -16,8 +16,8 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping()
-    public void createEvent(@RequestBody @Validated EventCreateDto eventCreateDto) {
-        eventService.createEvent(eventCreateDto);
+    public void createEvent(@RequestBody @Validated EventCreateReqDto eventCreateReqDto) {
+        eventService.createEvent(eventCreateReqDto);
     }
 
     @GetMapping("/{eventId}")
@@ -26,9 +26,9 @@ public class EventController {
     }
 
     @GetMapping()
-    public EventGetListDto getEventPagingList(@RequestParam(name = "clubId") String clubId,
-                                        @RequestParam(name = "lastId",defaultValue = "first") String lastId,
-                                        @RequestParam(name = "size",defaultValue = "20") int size) {
+    public EventGetPagingListResDto getEventPagingList(@RequestParam(name = "clubId") String clubId,
+                                                       @RequestParam(name = "lastId",defaultValue = "first") String lastId,
+                                                       @RequestParam(name = "size",defaultValue = "20") int size) {
         return eventService.getEventPagingList(clubId,lastId,size);
     }
 
@@ -39,8 +39,8 @@ public class EventController {
     }
 
     @GetMapping("/funding")
-    public EventGetFundingListDto getEventFundingList(@RequestParam("clubId") String clubId,
-                                                      @RequestParam("now") LocalDate now) {
-        return new EventGetFundingListDto(eventService.getCollectingMoneyEventList(clubId,now));
+    public EventGetFundingListResDto getEventFundingList(@RequestParam("clubId") String clubId,
+                                                         @RequestParam("now") LocalDate now) {
+        return new EventGetFundingListResDto(eventService.getCollectingMoneyEventList(clubId,now));
     }
 }

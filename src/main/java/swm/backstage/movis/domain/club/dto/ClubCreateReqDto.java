@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Range;
 
 @Getter
 @NoArgsConstructor
-public class ClubCreateDto {
+public class ClubCreateReqDto {
 
     @NotNull
     private String name;

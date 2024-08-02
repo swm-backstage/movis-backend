@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeeDto {
+public class FeeReqDto {
     private String clubId;
     private String eventMemberId;
     private String name;

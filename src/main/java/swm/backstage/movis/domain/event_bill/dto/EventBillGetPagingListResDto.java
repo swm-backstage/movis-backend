@@ -10,14 +10,14 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class EventBillGetPagingListDto {
-    List<EventBillListElementDto> feeElements;
+public class EventBillGetPagingListResDto {
+    List<EventBillGetElementResDto> feeElements;
     private Boolean isLast;
 
-    public EventBillGetPagingListDto(List<EventBill> feeList, Boolean isLast) {
+    public EventBillGetPagingListResDto(List<EventBill> feeList, Boolean isLast) {
         this.isLast = isLast;
         this.feeElements = feeList.stream()
-                .map(EventBillListElementDto::new)
+                .map(EventBillGetElementResDto::new)
                 .toList();
     }
 }

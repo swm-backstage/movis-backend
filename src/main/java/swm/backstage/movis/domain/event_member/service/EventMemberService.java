@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.event.Event;
-import swm.backstage.movis.domain.event_member.dto.EventMemberListDto;
+import swm.backstage.movis.domain.event_member.dto.EventMemberListReqDto;
 import swm.backstage.movis.domain.event.service.EventService;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.event_member.repository.EventMemberJdbcRepository;
@@ -35,8 +35,8 @@ public class EventMemberService {
     }
 
     @Transactional
-    public void addEventMembers(EventMemberListDto eventMemberListDto) {
-        Event event = eventService.getEventByUuid(eventMemberListDto.getEventId());
+    public void addEventMembers(EventMemberListReqDto eventMemberListReqDto) {
+        Event event = eventService.getEventByUuid(eventMemberListReqDto.getEventId());
 
         Set<Long> memberSet = event.getEventMembers().stream()
                 .map(eventMember -> eventMember.getMember().getId())
@@ -44,7 +44,7 @@ public class EventMemberService {
 
 
         eventMemberJdbcRepository.bulkSave(
-                memberService.getMemberListByUuids(eventMemberListDto.getIdList()).stream()
+                memberService.getMemberListByUuids(eventMemberListReqDto.getEventMemberIdList()).stream()
                         .filter(member -> !memberSet.contains(member.getId()))
                         .map(member->new EventMember(UUID.randomUUID().toString(),member,event))
                         .toList()

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_member.EventMember;
-import swm.backstage.movis.domain.fee.dto.FeeDto;
+import swm.backstage.movis.domain.fee.dto.FeeReqDto;
 
 import java.time.LocalDateTime;
 
@@ -42,28 +42,28 @@ public class Fee {
     @JoinColumn(name = "event_member_id")
     private EventMember eventMember;
 
-    public Fee(String uuid,FeeDto feeDto, Club club) {
+    public Fee(String uuid, FeeReqDto feeReqDto, Club club) {
         this.uuid = uuid;
-        this.paidAmount = feeDto.getPaidAmount();
-        this.paidAt = feeDto.getPaidAt();
-        this.name = feeDto.getName();
+        this.paidAmount = feeReqDto.getPaidAmount();
+        this.paidAt = feeReqDto.getPaidAt();
+        this.name = feeReqDto.getName();
         this.club = club;
     }
 
-    public Fee(String uuid, FeeDto feeDto, Club club, EventMember eventMember) {
+    public Fee(String uuid, FeeReqDto feeReqDto, Club club, EventMember eventMember) {
         this.uuid = uuid;
-        this.paidAmount = feeDto.getPaidAmount();
-        this.paidAt = feeDto.getPaidAt();
-        this.name = feeDto.getName();
+        this.paidAmount = feeReqDto.getPaidAmount();
+        this.paidAt = feeReqDto.getPaidAt();
+        this.name = feeReqDto.getName();
         this.club = club;
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
     }
 
-    public void updateBlankElement(EventMember eventMember, FeeDto feeDto) {
+    public void updateBlankElement(EventMember eventMember, FeeReqDto feeReqDto) {
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
-        this.name = feeDto.getName();
+        this.name = feeReqDto.getName();
     }
 }
 
