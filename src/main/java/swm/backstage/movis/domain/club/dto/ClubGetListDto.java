@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ClubGetListDto {
-    private List<ClubGetDto> clubGetListDto;
+    private List<ClubGetElementDto> clubGetListDto;
 
     public ClubGetListDto(List<Club> clubs) {
-        this.clubGetListDto = clubs.stream().map(ClubGetDto::new).toList();
+        this.clubGetListDto = clubs.stream().map(ClubGetElementDto::new).toList();
     }
 }
