@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.member.Member;
 
 import java.sql.PreparedStatement;
@@ -19,6 +20,7 @@ public class MemberJdbcRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Transactional
     public void bulkSave(List<Member> memberList) {
         String sql = "INSERT INTO member " +
                 "(uuid, name, phone_no ,is_enrolled, is_deleted, club_id, created_at, updated_at, deleted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
