@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.request.*;
+import swm.backstage.movis.domain.auth.dto.response.ConfirmIdentifierResDto;
 import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
 import swm.backstage.movis.domain.auth.dto.response.PublicKeyGetResDto;
 import swm.backstage.movis.domain.auth.dto.response.UserLoginResDto;
@@ -30,6 +31,12 @@ public class AuthController {
     public UserLoginResDto login(@RequestBody @Validated UserLoginReqDto userLoginReqDto) {
 
         return authService.login(userLoginReqDto);
+    }
+
+    @PostMapping("/test/confirmIdentifier")
+    public ConfirmIdentifierResDto confirmIdentifier(@RequestBody ConfirmIdentifierReqDto confirmIdentifierReqDto) {
+
+        return authService.confirmIdentifier(confirmIdentifierReqDto);
     }
 
     /**

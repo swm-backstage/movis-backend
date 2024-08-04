@@ -33,8 +33,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDED_PATHS = List.of(
             //auth
             "/api/v1/auth/test/register",
+            "/api/v1/auth/test/confirmIdentifier",
             "/api/v1/auth/test/login",
             "/api/v1/auth/register",
+            "/api/v1/auth/confirmIdentifier",
             "/api/v1/auth/login",
             "/api/v1/auth/reissue", // reissue 요청에는 accessToken이 포함되어있지 않다.
             "/api/v1/auth/publicKey",
