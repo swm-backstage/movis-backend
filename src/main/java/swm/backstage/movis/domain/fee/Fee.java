@@ -4,6 +4,7 @@ package swm.backstage.movis.domain.fee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_member.EventMember;
@@ -29,6 +30,10 @@ public class Fee {
     private Long paidAmount;
     private LocalDateTime paidAt;
     private String name;
+
+    @Setter
+    @Column(length = 100)
+    private String explanation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")

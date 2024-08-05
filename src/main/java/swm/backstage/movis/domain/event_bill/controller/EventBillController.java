@@ -1,10 +1,9 @@
 package swm.backstage.movis.domain.event_bill.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
-import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListResDto;
-import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateReqDto;
+import swm.backstage.movis.domain.event_bill.dto.*;
 import swm.backstage.movis.domain.event_bill.service.EventBillService;
 
 import java.time.LocalDateTime;
@@ -39,4 +38,19 @@ public class EventBillController {
                                                                @RequestParam(name = "size",defaultValue = "20") int size) {
         return eventBillService.getEventBIllPagingList(eventId,lastPaidAt,lastId,size);
     }
+    /**
+     *  단일 조회
+     * */
+    @GetMapping("/{eventBillId}}")
+    public EventBillGetResDto getEventBill(@PathVariable String eventBillId) {
+        return new EventBillGetResDto(eventBillService.getEventBillByUuid(eventBillId));
+    }
+    /**
+     * 지출 내역 설명 추가
+     * */
+    @PostMapping("/explanation")
+    public EventBillGetResDto createEventBillExplanation(@RequestBody EventBIllCreateExplanationReqDto  eventBIllCreateExplanationReqDto){
+        return new EventBillGetResDto(eventBillService.createEventBillExplanation(eventBIllCreateExplanationReqDto));
+    }
+
 }

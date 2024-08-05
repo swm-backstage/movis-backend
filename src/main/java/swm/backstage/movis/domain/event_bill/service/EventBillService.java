@@ -9,6 +9,7 @@ import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.service.EventService;
 import swm.backstage.movis.domain.event_bill.EventBill;
+import swm.backstage.movis.domain.event_bill.dto.EventBIllCreateExplanationReqDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillGetPagingListResDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateReqDto;
@@ -74,5 +75,14 @@ public class EventBillService {
         }
         return new EventBillGetPagingListResDto(eventBillList, isLast);
         
+    }
+    /**
+     * 설명 추가
+     * */
+    @Transactional
+    public EventBill createEventBillExplanation(EventBIllCreateExplanationReqDto eventBIllCreateExplanationReqDto){
+        EventBill eventBill = getEventBillByUuid(eventBIllCreateExplanationReqDto.getEventBillId());
+        eventBill.setExplanation(eventBIllCreateExplanationReqDto.getExplanation());
+        return eventBill;
     }
 }
