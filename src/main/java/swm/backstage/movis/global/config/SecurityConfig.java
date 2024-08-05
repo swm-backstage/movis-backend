@@ -53,8 +53,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 //auth
                 .requestMatchers(
-                        "/api/*/auth/test/register","/api/*/auth/test/login",
-                        "/api/*/auth/register", "/api/*/auth/login", "/api/*/auth/logout", "/api/*/auth/reissue", "/api/*/auth/publicKey"
+                        "/api/*/auth/test/register","/api/*/auth/test/confirmIdentifier","/api/*/auth/test/login",
+                        "/api/*/auth/register", "/api/*/auth/confirmIdentifier", "/api/*/auth/login", "/api/*/auth/logout", "/api/*/auth/reissue", "/api/*/auth/publicKey"
                 )
                 .permitAll()
                 .requestMatchers(
