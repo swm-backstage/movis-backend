@@ -14,7 +14,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    Optional<User> findByIdentifier(String identifier) {
+    public Optional<User> findByIdentifier(String identifier) {
 
         return userRepository.findByIdentifier(identifier);
     }
