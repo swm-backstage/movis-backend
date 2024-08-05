@@ -41,7 +41,7 @@ public class EventBillController {
     /**
      *  단일 조회
      * */
-    @GetMapping("/{eventBillId}}")
+    @GetMapping("/{eventBillId}")
     public EventBillGetResDto getEventBill(@PathVariable String eventBillId) {
         return new EventBillGetResDto(eventBillService.getEventBillByUuid(eventBillId));
     }

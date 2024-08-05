@@ -47,7 +47,7 @@ public class FeeController {
     /**
      * 회비 단일 조회
      * */
-    @GetMapping("/{feeId}}")
+    @GetMapping("/{feeId}")
     public FeeGetResDto getFee(@PathVariable String feeId) {
         return new FeeGetResDto(feeService.getFeeByUuId(feeId));
     }
