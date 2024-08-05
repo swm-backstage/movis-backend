@@ -14,7 +14,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "user")
+@Table(name = "user", indexes = {
+    @Index(name = "idx_user_identifier", columnList = "identifier")})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends DateTimeField {
 
