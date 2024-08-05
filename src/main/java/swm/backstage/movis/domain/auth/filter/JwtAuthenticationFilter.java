@@ -41,14 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/api/v1/auth/reissue", // reissue 요청에는 accessToken이 포함되어있지 않다.
             "/api/v1/auth/publicKey",
             //모임, 이벤트 조회
-            "/api/v1/members",
-            "/api/v1/fees",
-            "/api/v1/events", "/api/v1/events/{eventId}",
-            "/api/v1/eventMembers",
-            "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
-            "/api/v1/clubs", "/api/v1/clubs/{clubId}",
-            "/api/v1/url-generate",
-            "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub",
+//            "/api/v1/members",
+//            "/api/v1/fees",
+//            "/api/v1/events", "/api/v1/events/{eventId}",
+//            "/api/v1/eventMembers",
+//            "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
+//            "/api/v1/clubs", "/api/v1/clubs/{clubId}",
+//            "/api/v1/url-generate",
+//            "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub",
             //swagger
             "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**"
     );
