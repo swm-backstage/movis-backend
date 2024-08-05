@@ -9,6 +9,8 @@ import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club.dto.ClubGetResDto;
 import swm.backstage.movis.domain.club.dto.ClubGetListResDto;
 import swm.backstage.movis.domain.club.service.ClubService;
+import swm.backstage.movis.domain.user.service.UserService;
+
 
 @RestController
 @RequestMapping("/api/v1/clubs")
@@ -16,10 +18,11 @@ import swm.backstage.movis.domain.club.service.ClubService;
 public class ClubController {
 
     private final ClubService clubService;
+    private final UserService userService;
 
     @PostMapping()
-    public ClubGetResDto createClub(@RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
-        return new ClubGetResDto(clubService.createClub(clubCreateReqDto));
+    public ClubGetResDto createClub(Authentication authentication,@RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
+        return new ClubGetResDto(clubService.createClub(clubCreateReqDto,authentication.getName()));
     }
     @GetMapping("/{clubId}")
     public ClubGetResDto getClub(@PathVariable("clubId") String clubId){
@@ -28,8 +31,6 @@ public class ClubController {
 
     @GetMapping()
     public ClubGetListResDto getClubList(Authentication authentication){
-
-        System.out.println("authentication.getPrincipal() = " + authentication.getPrincipal());
-        return new ClubGetListResDto(clubService.getClubList());
+        return new ClubGetListResDto(clubService.getClubList(authentication.getName()));
     }
 }

@@ -10,6 +10,7 @@ import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.member.Member;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
+import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,10 @@ public class Club extends DateTimeField {
 
     @Column(name = "description", length = 100)
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToOne(mappedBy = "club", fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private AccountBook accountBook;
@@ -69,7 +74,7 @@ public class Club extends DateTimeField {
 
 
 
-    public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook) {
+    public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook, User user) {
         this.uuid = uuid;
         this.description = clubCreateReqDto.getDescription();
         this.name = clubCreateReqDto.getName();
@@ -78,5 +83,6 @@ public class Club extends DateTimeField {
         this.isDeleted = Boolean.FALSE;
         this.accountBook = accountBook;
         accountBook.setClub(this);
+        this.user = user;
     }
 }

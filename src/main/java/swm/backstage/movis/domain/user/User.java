@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.global.common.DateTimeField;
 import swm.backstage.movis.domain.auth.dto.request.UserCreateReqDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,6 +46,9 @@ public class User extends DateTimeField {
 
     @Column(name = "role")
     private String role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Club> clubList = new ArrayList<>();
 
     public User(String uuid, UserCreateReqDto userCreateReqDto) {
 
