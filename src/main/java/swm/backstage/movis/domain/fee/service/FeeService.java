@@ -13,6 +13,7 @@ import swm.backstage.movis.domain.event.service.EventService;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.event_member.service.EventMemberService;
 import swm.backstage.movis.domain.fee.Fee;
+import swm.backstage.movis.domain.fee.dto.FeeCreateExplanationReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.repository.FeeRepository;
@@ -56,11 +57,11 @@ public class FeeService {
     @Transactional
     public void updateUnClassifiedFee(String feeId, FeeReqDto feeUpdateDto) {
         Club club = clubService.getClubByUuId(feeUpdateDto.getClubId());
-        Fee fee = getFeeById(feeId);
+        Fee fee = getFeeByUuId(feeId);
         saveFee(feeUpdateDto,club,true,fee);
     }
 
-    public Fee getFeeById(String feeId){
+    public Fee getFeeByUuId(String feeId){
         return feeRepository.findByUuid(feeId).orElseThrow(()-> new BaseException("feeId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
@@ -71,7 +72,7 @@ public class FeeService {
             feeList = feeRepository.getFirstPage(event.getId(),localDateTime,size+1);
         }
         else{
-           Fee fee = getFeeById(lastId);
+           Fee fee = getFeeByUuId(lastId);
             feeList = feeRepository.getNextPageByEventIdAndLastId(event.getId(),localDateTime,fee.getId(),size+1);
         }
 
@@ -109,5 +110,12 @@ public class FeeService {
             accountBook.updateBalance(feeReqDto.getPaidAmount());
         }
     }
-
+    /**
+     * 설명 추가
+     * */
+    public Fee createFeeExplanation(FeeCreateExplanationReqDto reqDto) {
+        Fee fee = getFeeByUuId(reqDto.getFeeId());
+        fee.setExplanation(reqDto.getExplanation());
+        return fee;
+    }
 }

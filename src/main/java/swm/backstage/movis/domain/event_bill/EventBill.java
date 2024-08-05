@@ -4,6 +4,7 @@ package swm.backstage.movis.domain.event_bill;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
@@ -40,6 +41,12 @@ public class EventBill {
 
     @Column(name = "image", length = 500)
     private String image;
+
+
+    @Setter
+    @Column(length = 100)
+    private String explanation;
+
     private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
