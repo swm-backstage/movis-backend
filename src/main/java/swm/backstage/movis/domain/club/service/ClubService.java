@@ -26,7 +26,7 @@ public class ClubService {
     @Transactional
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
-        return clubRepository.save(new Club(clubCreateReqDto,UUID.randomUUID().toString(),new AccountBook(clubCreateReqDto.getBalance()),user));
+        return clubRepository.save(new Club(clubCreateReqDto,UUID.randomUUID().toString(),new AccountBook(),user));
     }
 
     /**

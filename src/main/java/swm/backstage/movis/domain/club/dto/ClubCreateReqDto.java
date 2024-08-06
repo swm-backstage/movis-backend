@@ -20,9 +20,6 @@ public class ClubCreateReqDto {
     @Pattern(regexp = "^\\d{4}$", message = "Account number must be exactly 4 digits")
     private String accountNumber;
 
-    @Range(min = 0, max = 100000000)
-    private Long balance;
-
     @NotNull
     @Pattern(regexp = "^\\d{3}$", message = "Bank code must be exactly 3 digits")
     private String bankCode;

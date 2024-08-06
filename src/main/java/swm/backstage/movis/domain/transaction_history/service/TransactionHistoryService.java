@@ -50,7 +50,7 @@ public class TransactionHistoryService {
         if (!isLast) {
             transactionHistoryListList.remove(transactionHistoryListList.size() - 1);
         }
-        return new TransactionHistoryGetPagingListResDto(transactionHistoryListList, isLast);
+        return new TransactionHistoryGetPagingListResDto(transactionHistoryListList, isLast, null);
     }
 
     /**
@@ -60,6 +60,7 @@ public class TransactionHistoryService {
         Club club = clubService.getClubByUuId(clubId);
         List<TransactionHistory> transactionHistoryListList;
 
+        System.out.println("second");
         if (lastId.equals("first")) {
             transactionHistoryListList = transactionHistoryRepository.getFirstPageByClub(club.getId(), lastPaidAt, size + 1);
         } else {
@@ -73,7 +74,7 @@ public class TransactionHistoryService {
         if (!isLast) {
             transactionHistoryListList.remove(transactionHistoryListList.size() - 1);
         }
-        return new TransactionHistoryGetPagingListResDto(transactionHistoryListList, isLast);
+        return new TransactionHistoryGetPagingListResDto(transactionHistoryListList, isLast, club.getAccountBook());
 
     }
 
