@@ -26,9 +26,10 @@ public class EventService {
     private final EventRepository eventRepository;
     private final ClubService clubService;
 
-    public void createEvent(EventCreateReqDto eventCreateReqDto) {
+    @Transactional
+    public Event createEvent(EventCreateReqDto eventCreateReqDto) {
         Club club = clubService.getClubByUuId(eventCreateReqDto.getClubId());
-        eventRepository.save(new Event(UUID.randomUUID().toString(), eventCreateReqDto,club,club.getAccountBook()));
+        return eventRepository.save(new Event(UUID.randomUUID().toString(), eventCreateReqDto,club,club.getAccountBook()));
     }
 
     /**
@@ -86,8 +87,8 @@ public class EventService {
     }
 
     @Transactional
-    public void enrollGatherFee(EventGatherFeeReqDto eventGatherFeeReqDto) {
-        Event event = getEventByUuid(eventGatherFeeReqDto.getEventId());
+    public void enrollGatherFee(String eventId, EventGatherFeeReqDto eventGatherFeeReqDto) {
+        Event event = getEventByUuid(eventId);
         event.updateGatherFeeInfo(eventGatherFeeReqDto.getTotalPaymentAmount(),eventGatherFeeReqDto.getPaymentDeadline());
     }
 }

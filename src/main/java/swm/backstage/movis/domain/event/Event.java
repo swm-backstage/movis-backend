@@ -68,7 +68,13 @@ public class Event {
         this.club =club;
         this.accountBook = accountBook;
         this.balance = 0L;
-        this.totalPaymentAmount = 0L;
+        if(eventCreateReqDto.getGatherFeeInfo() == null){
+            this.totalPaymentAmount = 0L;
+        }
+        else {
+            this.totalPaymentAmount = eventCreateReqDto.getGatherFeeInfo().getTotalPaymentAmount();
+            this.paymentDeadline = eventCreateReqDto.getGatherFeeInfo().getPaymentDeadline();
+        }
     }
 
     public void updateBalance(Long balance) {
