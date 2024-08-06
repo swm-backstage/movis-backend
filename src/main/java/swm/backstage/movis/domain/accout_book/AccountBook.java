@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Table(name = "account_book")
 @Getter
-@NoArgsConstructor
 public class AccountBook {
 
     @Id
@@ -21,6 +20,14 @@ public class AccountBook {
     private Long id;
 
     private Long balance;
+    private Long totalDeposit;
+    private Long totalWithdrawal;
+
+    public AccountBook() {
+        this.balance = 0L;
+        this.totalDeposit = 0L;
+        this.totalWithdrawal = 0L;
+    }
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
@@ -35,9 +42,16 @@ public class AccountBook {
 
     public AccountBook(Long balance) {
         this.balance = balance;
+
     }
 
-    public void updateBalance(Long paidAmount) {
+    public void updateBalanceWithFee(Long paidAmount) {
         this.balance += paidAmount;
+        this.totalDeposit += paidAmount;
+    }
+
+    public void updateBalanceWithEventBill(Long paidAmount) {
+        this.balance += paidAmount;
+        this.totalWithdrawal += paidAmount;
     }
 }

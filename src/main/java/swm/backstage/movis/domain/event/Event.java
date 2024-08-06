@@ -73,6 +73,7 @@ public class Event {
 
     public void updateBalance(Long balance) {
         this.balance +=  balance;
+
     }
 
     public void updateGatherFeeInfo(Long totalPaymentAmount, LocalDate paymentDeadline) {

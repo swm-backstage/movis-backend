@@ -51,7 +51,7 @@ public class EventBillService {
         AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillUpdateReqDto.getClubId());
         EventBill eventBill = getEventBillByUuid(eventBillId);
         Event event = eventService.getEventByUuid(eventBillUpdateReqDto.getEventId());
-        accountBook.updateBalance(eventBill.getAmount());
+        accountBook.updateBalanceWithEventBill(eventBill.getAmount());
         event.updateBalance(eventBill.getAmount());
         eventBill.setEvent(event);
         transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(eventBillId,eventBill.getPayName(),event));

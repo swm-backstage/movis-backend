@@ -86,7 +86,7 @@ public class FeeService {
     }
 
     @Transactional
-    protected void saveFee(FeeReqDto feeReqDto, Club club, boolean isClassified, Fee fee) {
+    protected void  saveFee(FeeReqDto feeReqDto, Club club, boolean isClassified, Fee fee) {
         if(!isClassified){
             fee = feeRepository.save(new Fee(UUID.randomUUID().toString(), feeReqDto,club));
             transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.FALSE));
@@ -108,7 +108,7 @@ public class FeeService {
             }
             eventMember.updateEventMember();
             eventMember.getEvent().updateBalance(feeReqDto.getPaidAmount());
-            accountBook.updateBalance(feeReqDto.getPaidAmount());
+            accountBook.updateBalanceWithFee(feeReqDto.getPaidAmount());
         }
     }
     /**
