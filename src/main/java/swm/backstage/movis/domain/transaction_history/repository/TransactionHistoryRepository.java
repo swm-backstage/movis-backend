@@ -58,4 +58,5 @@ public interface TransactionHistoryRepository extends JpaRepository<TransactionH
 
     Optional<TransactionHistory> findByElementUuid(String elementUuid);
     List<TransactionHistory> findAllByClubUuidAndIsClassifiedOrderByPaidAtDesc(String clubId, boolean isClassified);
+    Long countByClubUuidAndIsClassified(String clubUuid, boolean isClassified);
 }

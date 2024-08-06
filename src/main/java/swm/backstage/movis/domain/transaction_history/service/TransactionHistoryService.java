@@ -89,4 +89,10 @@ public class TransactionHistoryService {
     public List<TransactionHistory> getUnclassifiedTransactionHistory(String clubId) {
         return transactionHistoryRepository.findAllByClubUuidAndIsClassifiedOrderByPaidAtDesc(clubId,false);
     }
+    /**
+     *  미분류 개수 조회
+     * */
+    public Long getTransactionHistoryCount(String clubId) {
+        return transactionHistoryRepository.countByClubUuidAndIsClassified(clubId,false);
+    }
 }
