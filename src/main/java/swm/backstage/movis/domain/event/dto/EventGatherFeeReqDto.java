@@ -9,9 +9,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class EventGatherFeeReqDto {
 
-    private String eventId;
-
     private Long totalPaymentAmount;
 
     private LocalDate paymentDeadline;
+
 }

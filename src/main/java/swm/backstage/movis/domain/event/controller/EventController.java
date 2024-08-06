@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event.dto.*;
+import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.event.service.EventService;
 
 import java.time.LocalDate;
@@ -14,10 +15,11 @@ import java.time.LocalDate;
 @RequestMapping("/api/v1/events")
 public class EventController {
     private final EventService eventService;
+    private final EventManager eventManager;
 
     @PostMapping()
     public void createEvent(@RequestBody @Validated EventCreateReqDto eventCreateReqDto) {
-        eventService.createEvent(eventCreateReqDto);
+        eventManager.createEvent(eventCreateReqDto);
     }
 
     @GetMapping("/{eventId}")
@@ -34,8 +36,9 @@ public class EventController {
 
 
     @PostMapping("/gatherFee")
-    public void enrollGatherFee(@RequestBody EventGatherFeeReqDto eventGatherFeeReqDto) {
-        eventService.enrollGatherFee(eventGatherFeeReqDto);
+    public void enrollGatherFee(@RequestParam("eventId") String eventId,
+                                @RequestBody EventGatherFeeReqDto eventGatherFeeReqDto) {
+        eventService.enrollGatherFee(eventId,eventGatherFeeReqDto);
     }
 
     @GetMapping("/funding")

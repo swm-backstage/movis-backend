@@ -11,4 +11,9 @@ import java.util.List;
 public class EventMemberListReqDto {
     private String eventId;
     private List<String> eventMemberIdList;
+
+    public EventMemberListReqDto(String eventId, List<String> eventMemberIdList) {
+        this.eventId = eventId;
+        this.eventMemberIdList = eventMemberIdList;
+    }
 }
