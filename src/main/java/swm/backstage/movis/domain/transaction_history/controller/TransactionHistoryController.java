@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryGetPagingListResDto;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryListDto;
 import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
+import swm.backstage.movis.global.common.response.EntityCntResDto;
 
 import java.time.LocalDateTime;
 
@@ -34,9 +35,18 @@ public class TransactionHistoryController {
                                                                                  @RequestParam(defaultValue = "20") int size){
         return transactionHistoryService.getTransactionHistoryPagingListByClub(clubId,lastPaidAt, lastId, size);
     }
-
+    /**
+     *  미분류 리스트 조회
+     * */
     @GetMapping("/unClassification")
     public TransactionHistoryListDto getUnclassifiedTransactionHistory(@RequestParam("clubId") String clubId){
         return new TransactionHistoryListDto(transactionHistoryService.getUnclassifiedTransactionHistory(clubId));
+    }
+    /**
+     *  미분류 개수 조회
+     * */
+    @GetMapping("/unClassification/count")
+    public EntityCntResDto getUnClassificationCount(@RequestParam("clubId") String clubId){
+        return new EntityCntResDto(transactionHistoryService.getTransactionHistoryCount(clubId));
     }
 }
