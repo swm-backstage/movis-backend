@@ -31,9 +31,9 @@ public class AlertManager {
     }
 
     public void alertToFee(AlertGetRequestDTO dto){
-        String eventMemberId = eventMemberService.getEventMemberIdByAlertInfo(dto.getCludUid(), dto.getName(), dto.getCash());
+        String eventMemberId = eventMemberService.getEventMemberIdByAlertInfo(dto.getClubUid(), dto.getName(), dto.getCash());
         FeeReqDto newFeeReqDto = new FeeReqDto(
-                dto.getCludUid(),
+                dto.getClubUid(),
                 eventMemberId,
                 dto.getName(),
                 dto.getCash(),
@@ -44,7 +44,7 @@ public class AlertManager {
 
     public void alertToEventBill(AlertGetRequestDTO dto){
         EventBillCreateReqDto newEventBillReqDto = new EventBillCreateReqDto(
-                dto.getCludUid(),
+                dto.getClubUid(),
                 dto.getCash(),
                 dto.getName(),
                 dto.getCreatedAt()

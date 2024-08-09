@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AlertGetRequestDTO {
     private String name;
-    private String cludUid;
+    private String clubUid;
 //    private String contents;
     private Long cash;
     private BillType billType;
