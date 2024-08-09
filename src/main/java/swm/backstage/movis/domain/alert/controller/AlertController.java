@@ -16,6 +16,6 @@ public class AlertController {
 
     @PostMapping
     public void createFee(AlertGetRequestDTO dto) {
-        alertManager.alertToFee(dto);
+        alertManager.alertConverter(dto);
     }
 }
