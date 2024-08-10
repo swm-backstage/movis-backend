@@ -68,7 +68,7 @@ public class SecurityConfig {
                         "/api/v1/events", "/api/v1/events/{eventId}",
                         "/api/v1/eventMembers",
                         "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
-                        "/api/v1/clubs", "/api/v1/clubs/{clubId}",
+                        "/api/v1/clubs", "/api/v1/clubs/{clubId}","/api/v1/clubs/forAlert",
                         "/api/v1/url-generate",
                         "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub")
                 .permitAll()

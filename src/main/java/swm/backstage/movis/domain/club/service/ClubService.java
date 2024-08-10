@@ -54,4 +54,9 @@ public class ClubService {
         return clubRepository.findAllByUser_Id(user.getId());
     }
 
+    public String getClubUid(String accountNumber, String identifier) {
+        User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
+        return clubRepository.findByUser_IdAndAccountNumber(user.getId(), accountNumber)
+                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUuid();
+    }
 }
