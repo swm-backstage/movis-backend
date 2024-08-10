@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club.dto.ClubGetResDto;
 import swm.backstage.movis.domain.club.dto.ClubGetListResDto;
+import swm.backstage.movis.domain.club.dto.ClubGetUidResDto;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.user.service.UserService;
 
@@ -32,5 +33,10 @@ public class ClubController {
     @GetMapping()
     public ClubGetListResDto getClubList(Authentication authentication){
         return new ClubGetListResDto(clubService.getClubList(authentication.getName()));
+    }
+
+    @GetMapping("/forAlert")
+    public ClubGetUidResDto getClubUid(Authentication authentication, @RequestParam("accountNumber") String accountNumber){
+        return new ClubGetUidResDto(clubService.getClubUid(accountNumber, authentication.getName()));
     }
 }
