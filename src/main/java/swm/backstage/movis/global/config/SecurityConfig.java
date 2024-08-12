@@ -51,30 +51,33 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests((auth) -> auth
-                //auth
                 .requestMatchers(
+                        //swagger
+                        "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**",
+                        //auth
                         "/api/*/auth/test/register","/api/*/auth/test/confirmIdentifier","/api/*/auth/test/login",
-                        "/api/*/auth/register", "/api/*/auth/confirmIdentifier", "/api/*/auth/login", "/api/*/auth/logout", "/api/*/auth/reissue", "/api/*/auth/publicKey"
-                )
-                .permitAll()
-                .requestMatchers(
-                        "/api/*/auth/test/manager"
-                )
-                .hasRole("MANAGER")
-                //Club & Event
-                .requestMatchers(
-                        "/api/v1/members",
+                        "/api/*/auth/register", "/api/*/auth/confirmIdentifier", "/api/*/auth/login", "/api/*/auth/reissue", "/api/*/auth/publicKey",
+                        //club
+                        "/api/v1/clubs/forAlert",
+                        //event
                         "/api/v1/fees",
                         "/api/v1/events", "/api/v1/events/{eventId}",
                         "/api/v1/eventMembers",
                         "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
-                        "/api/v1/clubs", "/api/v1/clubs/{clubId}","/api/v1/clubs/forAlert",
                         "/api/v1/url-generate",
-                        "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub")
+                        "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub"
+                        )
                 .permitAll()
-                //swagger
-                .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**")
-                .permitAll()
+                .requestMatchers(
+                        //auth
+                        "/api/*/auth/logout",
+                        //club
+                        "/api/v1/clubs", "/api/v1/clubs/{clubId}",
+                        "/api/v1/members",
+                        //test
+                        "/api/*/auth/test/manager"
+                )
+                .hasRole("MANAGER")
                 .anyRequest().authenticated()
         );
 
