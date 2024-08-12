@@ -29,28 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final AuthTokenService authTokenService;
     private final AntPathMatcher pathMatcher;
 
-    // TODO: HTTP Method 구별을 위해 Map 사용
     private static final List<String> EXCLUDED_PATHS = List.of(
-            //auth
-            "/api/v1/auth/test/register",
-            "/api/v1/auth/test/confirmIdentifier",
+            // 클라이언트측에서 로그인 상태(만료된 토큰 포함)에서 한번 더 요청을 보낼 경우, 현재 필터에서 만료시간 에러를 발생시키기 때문에 무조건 패스
             "/api/v1/auth/test/login",
-            "/api/v1/auth/register",
-            "/api/v1/auth/confirmIdentifier",
-            "/api/v1/auth/login",
-            "/api/v1/auth/reissue", // reissue 요청에는 accessToken이 포함되어있지 않다.
-            "/api/v1/auth/publicKey",
-            //모임, 이벤트 조회
-//            "/api/v1/members",
-//            "/api/v1/fees",
-//            "/api/v1/events", "/api/v1/events/{eventId}",
-//            "/api/v1/eventMembers",
-//            "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
-//            "/api/v1/clubs", "/api/v1/clubs/{clubId}",
-//            "/api/v1/url-generate",
-//            "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub",
-            //swagger
-            "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**"
+            // reissue의 요청헤더에 accessToken이 포함되어 있을 경우, 현재 필터에서 만료시간 에러를 발생시키기 때문에 무조건 패스
+            "/api/v1/auth/reissue"
     );
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthTokenService authTokenService) {
@@ -70,29 +53,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        // token 문자열 형식 검사
-        String accessToken = jwtUtil.resolveToken(request.getHeader(jwtUtil.getACCESS_TOKEN_NAME()));
-        if (!StringUtils.hasText(accessToken)) {
+        // token이 존재하지 않는다면, 그대로 통과
+        String accessTokenWithBearer = request.getHeader(jwtUtil.getACCESS_TOKEN_NAME());
+        if(!StringUtils.hasText(accessTokenWithBearer)){
+            filterChain.doFilter(request, response);
+        }
 
+        // Bearer 포함 검사 및 제거
+        String accessToken;
+        if (accessTokenWithBearer.startsWith("Bearer ")) {
+            accessToken = accessTokenWithBearer.substring(7);
+        } else {
             throw new BaseException("옳바르지 않은 토큰 형식입니다. ", ErrorCode.INVALID_TOKEN_FORMAT);
         }
 
         // accessToken 여부 검사
         if (!jwtUtil.getTokenType(accessToken).equals(jwtUtil.getACCESS_TOKEN_NAME())){
-
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 
         // token 유효성 검사
         try {
-
             jwtUtil.validateToken(accessToken);
         } catch (ExpiredJwtException e) {
-
             throw new BaseException("토큰이 만료되었습니다. 토큰을 재발급 해주세요. ", ErrorCode.EXPIRED_TOKEN);
         }
         catch (JwtException e) {
-
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 
@@ -101,7 +87,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         AuthToken savedAuthToken = authTokenService.findByIdentifier(identifier).orElseThrow(() ->
                 new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN));
         if (!accessToken.equals(savedAuthToken.getAccessToken())){
-
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 

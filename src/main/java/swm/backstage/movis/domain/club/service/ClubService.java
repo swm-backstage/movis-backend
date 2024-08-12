@@ -33,13 +33,7 @@ public class ClubService {
      * NULL 허용 X
      * */
     public Club getClubByUuId(String id) throws BaseException {
-        User user = userService.findByIdentifier(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(()->new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
-        Club club = clubRepository.findByUuidAndIsDeleted(id,Boolean.FALSE).orElseThrow(()->new BaseException("clubId is not found", ErrorCode.ELEMENT_NOT_FOUND));
-        if(!club.getUser().equals(user)){
-            throw new BaseException("Unauthorized Permission",ErrorCode.UNAUTHORIZED_PERMISSION);
-        }
-        return club;
+        return clubRepository.findByUuidAndIsDeleted(id,Boolean.FALSE).orElseThrow(()->new BaseException("clubId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     /**
