@@ -58,9 +58,9 @@ public class SecurityConfig {
                         "/api/*/auth/test/register","/api/*/auth/test/confirmIdentifier","/api/*/auth/test/login",
                         "/api/*/auth/register", "/api/*/auth/confirmIdentifier", "/api/*/auth/login", "/api/*/auth/reissue", "/api/*/auth/publicKey",
                         //club
-                        "/api/v1/clubs/forAlert",
+                        "/api/v1/clubs/forAlert", "/api/v1/clubs/{clubId}",
                         //event
-                        "/api/v1/fees",
+                        "/api/v1/fees/**",
                         "/api/v1/events", "/api/v1/events/{eventId}", "/api/v1/events/funding/**",
                         "/api/v1/eventMembers",
                         "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
