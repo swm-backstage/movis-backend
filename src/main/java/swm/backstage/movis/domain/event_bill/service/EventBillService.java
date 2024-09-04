@@ -39,6 +39,9 @@ public class EventBillService {
     @Transactional
     public void createEventBill(EventBillCreateReqDto eventBillCreateReqDto){
         EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(), eventBillCreateReqDto,clubService.getClubByUuId(eventBillCreateReqDto.getClubId())));
+        AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillCreateReqDto.getClubId());
+        accountBook.updateUnClassifiedWithdrawal(eventBillCreateReqDto.getAmount());
+        accountBook.updateBalance(eventBillCreateReqDto.getAmount());
         transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
     }
 
@@ -51,7 +54,8 @@ public class EventBillService {
         AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillUpdateReqDto.getClubId());
         EventBill eventBill = getEventBillByUuid(eventBillId);
         Event event = eventService.getEventByUuid(eventBillUpdateReqDto.getEventId());
-        accountBook.updateBalanceWithEventBill(eventBill.getAmount());
+        accountBook.updateClassifiedWithdrawal(eventBill.getAmount());
+        accountBook.updateUnClassifiedWithdrawal(-eventBill.getAmount());
         event.updateBalance(eventBill.getAmount());
         eventBill.setEvent(event);
         transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(eventBillId,eventBill.getPayName(),event));

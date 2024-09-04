@@ -2,6 +2,7 @@ package swm.backstage.movis.domain.fee.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FeeService {
     private final FeeRepository feeRepository;
     private final ClubService clubService;
@@ -87,28 +89,32 @@ public class FeeService {
 
     @Transactional
     protected void  saveFee(FeeReqDto feeReqDto, Club club, boolean isClassified, Fee fee) {
+        // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
+        AccountBook accountBook = accountService.getAccountBookByClubId(feeReqDto.getClubId());
         if(!isClassified){
             fee = feeRepository.save(new Fee(UUID.randomUUID().toString(), feeReqDto,club));
             transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.FALSE));
+            accountBook.updateUnClassifiedDeposit(feeReqDto.getPaidAmount());
+            accountBook.updateBalance(feeReqDto.getPaidAmount());
         }
         else{
-            // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
-            AccountBook accountBook = accountService.getAccountBookByClubId(feeReqDto.getClubId());
             EventMember eventMember = eventMemberService.getEventMemberByUuid(feeReqDto.getEventMemberId());
             //자동 분류
             if(fee == null){
                 fee = new Fee(UUID.randomUUID().toString(), feeReqDto, club, eventMember);
                 feeRepository.save(fee);
                 transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.TRUE));
+                accountBook.updateBalance(feeReqDto.getPaidAmount());
             }
             //수동분류
             else{
                 fee.updateBlankElement(eventMember, feeReqDto);
                 transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(fee.getUuid(),fee.getName(),fee.getEvent()));
+                accountBook.updateUnClassifiedDeposit(-feeReqDto.getPaidAmount());
             }
             eventMember.updateEventMember();
             eventMember.getEvent().updateBalance(feeReqDto.getPaidAmount());
-            accountBook.updateBalanceWithFee(feeReqDto.getPaidAmount());
+            accountBook.updateClassifiedDeposit(feeReqDto.getPaidAmount());
         }
     }
     /**

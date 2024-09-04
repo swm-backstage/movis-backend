@@ -3,7 +3,6 @@ package swm.backstage.movis.domain.accout_book;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 
@@ -20,13 +19,17 @@ public class AccountBook {
     private Long id;
 
     private Long balance;
-    private Long totalDeposit;
-    private Long totalWithdrawal;
+    private Long classifiedDeposit;
+    private Long unClassifiedDeposit;
+    private Long classifiedWithdrawal;
+    private Long unClassifiedWithdrawal;
 
     public AccountBook() {
         this.balance = 0L;
-        this.totalDeposit = 0L;
-        this.totalWithdrawal = 0L;
+        this.classifiedDeposit = 0L;
+        this.unClassifiedDeposit = 0L;
+        this.classifiedWithdrawal = 0L;
+        this.unClassifiedWithdrawal = 0L;
     }
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -42,16 +45,25 @@ public class AccountBook {
 
     public AccountBook(Long balance) {
         this.balance = balance;
-
     }
 
-    public void updateBalanceWithFee(Long paidAmount) {
-        this.balance += paidAmount;
-        this.totalDeposit += paidAmount;
+    public void updateClassifiedDeposit(Long paidAmount) {
+        this.classifiedDeposit += paidAmount;
     }
 
-    public void updateBalanceWithEventBill(Long paidAmount) {
+    public void updateUnClassifiedDeposit(Long paidAmount) {
+        this.unClassifiedDeposit += paidAmount;
+    }
+
+    public void updateUnClassifiedWithdrawal(Long paidAmount) {
+        this.unClassifiedWithdrawal += paidAmount;
+    }
+
+    public void updateBalance(Long paidAmount) {
         this.balance += paidAmount;
-        this.totalWithdrawal += paidAmount;
+    }
+
+    public void updateClassifiedWithdrawal(Long amount) {
+        this.classifiedWithdrawal +=amount;
     }
 }
