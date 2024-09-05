@@ -15,8 +15,10 @@ public class TransactionHistoryGetPagingListResDto {
     List<TransactionHistoryGetElementResDto> feeElements;
     private Boolean isLast;
     private Long totalBalance;
-    private Long totalDeposit;
-    private Long totalWithdraw;
+    private Long totalClassifiedDeposit;
+    private Long totalUnClassifiedDeposit;
+    private Long totalClassifiedWithdrawal;
+    private Long totalUnClassifiedWithdrawal;
 
     public TransactionHistoryGetPagingListResDto(List<TransactionHistory> feeList, Boolean isLast, AccountBook accountBook) {
         this.isLast = isLast;
@@ -25,8 +27,10 @@ public class TransactionHistoryGetPagingListResDto {
                 .toList();
         if(accountBook!=null) {
             this.totalBalance = accountBook.getBalance();
-            this.totalDeposit = accountBook.getTotalDeposit();
-            this.totalWithdraw = accountBook.getTotalWithdrawal();
+            this.totalClassifiedDeposit = accountBook.getClassifiedDeposit();
+            this.totalUnClassifiedDeposit = accountBook.getUnClassifiedDeposit();
+            this.totalClassifiedWithdrawal = accountBook.getClassifiedWithdrawal();
+            this.totalUnClassifiedWithdrawal = accountBook.getUnClassifiedWithdrawal();
         }
     }
 }

@@ -60,7 +60,7 @@ public class TransactionHistoryService {
         Club club = clubService.getClubByUuId(clubId);
         List<TransactionHistory> transactionHistoryListList;
 
-        System.out.println("second");
+
         if (lastId.equals("first")) {
             transactionHistoryListList = transactionHistoryRepository.getFirstPageByClub(club.getId(), lastPaidAt, size + 1);
         } else {
