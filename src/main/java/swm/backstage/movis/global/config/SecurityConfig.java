@@ -1,6 +1,7 @@
 package swm.backstage.movis.global.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +24,22 @@ import swm.backstage.movis.domain.auth.utils.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final AuthTokenService authTokenService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final HandlerExceptionResolver handlerExceptionResolver;
+
+    public SecurityConfig(JwtUtil jwtUtil,
+                          AuthTokenService authTokenService,
+                          @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigurationSource,
+                          @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
+        this.jwtUtil = jwtUtil;
+        this.authTokenService = authTokenService;
+        this.corsConfigurationSource = corsConfigurationSource;
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
