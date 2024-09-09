@@ -3,7 +3,6 @@ package swm.backstage.movis.domain.fee.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.accout_book.AccountBook;
@@ -16,6 +15,7 @@ import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.event_member.service.EventMemberService;
 import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.fee.dto.FeeCreateExplanationReqDto;
+import swm.backstage.movis.domain.fee.dto.FeeInputReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
 import swm.backstage.movis.domain.fee.repository.FeeRepository;
@@ -39,13 +39,33 @@ public class FeeService {
     private final EventMemberService eventMemberService;
     private final EventService eventService;
     private final TransactionHistoryService transactionHistoryService;
+    /**
+     * Fee 등록 (직접 입력)
+     * */
+    @Transactional
+    public void createFeeByInput(String eventId, FeeInputReqDto feeInputReqDto) {
 
-
+        Event event = eventService.getEventByUuid(eventId);
+        AccountBook accountBook = accountService.getAccountBookByClubId(event.getClub().getUuid());
+        Fee fee;
+        if(feeInputReqDto.getEventMemberId() == null){
+            log.info("no memberId");
+            fee = feeRepository.save(new Fee(UUID.randomUUID().toString(),feeInputReqDto,event.getClub(),event,null));
+        }
+        else{
+            log.info("yes memberId {}", feeInputReqDto.getEventMemberId());
+            EventMember eventMember = eventMemberService.getEventMemberByUuid(feeInputReqDto.getEventMemberId());
+            fee = feeRepository.save(new Fee(UUID.randomUUID().toString(),feeInputReqDto,event.getClub(),event,eventMember));
+        }
+        accountBook.updateBalance(feeInputReqDto.getPaidAmount());
+        accountBook.updateClassifiedDeposit(feeInputReqDto.getPaidAmount());
+        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.TRUE));
+    }
     /**
      * Fee 등록 (알림)
      * */
     @Transactional
-    public void createFee(FeeReqDto feeReqDto) {
+    public void createFeeByAlert(FeeReqDto feeReqDto) {
         Club club = clubService.getClubByUuId(feeReqDto.getClubId());
         // 미분류시
         if(feeReqDto.getEventMemberId() == null) {

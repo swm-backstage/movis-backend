@@ -39,7 +39,7 @@ public class AlertManager {
                 dto.getCash(),
                 dto.getCreatedAt()
         );
-        feeService.createFee(newFeeReqDto);
+        feeService.createFeeByAlert(newFeeReqDto);
     }
 
     public void alertToEventBill(AlertGetRequestDTO dto){

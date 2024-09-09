@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event_bill.dto.EventBIllCreateExplanationReqDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillGetResDto;
-import swm.backstage.movis.domain.fee.dto.FeeCreateExplanationReqDto;
-import swm.backstage.movis.domain.fee.dto.FeeGetResDto;
-import swm.backstage.movis.domain.fee.dto.FeeReqDto;
-import swm.backstage.movis.domain.fee.dto.FeeGetPagingListResDto;
+import swm.backstage.movis.domain.fee.dto.*;
 import swm.backstage.movis.domain.fee.service.FeeService;
 
 import java.time.LocalDateTime;
@@ -21,11 +18,19 @@ import java.time.LocalDateTime;
 public class FeeController {
     private final FeeService feeService;
     /**
-     * 회비 생성
+     * 회비 수동 입력
+     * */
+    @PostMapping("/input")
+    public void createFeeByInput(@RequestParam("eventId") String eventId,
+                                 @RequestBody FeeInputReqDto feeInputReqDto){
+        feeService.createFeeByInput(eventId,feeInputReqDto);
+    }
+    /**
+     * 회비 생성 (알림용)
      * */
     @PostMapping()
-    public void createFee(@RequestBody FeeReqDto feeReqDto){
-        feeService.createFee(feeReqDto);
+    public void createFeeByAlert(@RequestBody FeeReqDto feeReqDto){
+        feeService.createFeeByAlert(feeReqDto);
     }
     /**
      * 회비 수동 분류

@@ -8,6 +8,7 @@ import lombok.Setter;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_member.EventMember;
+import swm.backstage.movis.domain.fee.dto.FeeInputReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeReqDto;
 
 import java.time.LocalDateTime;
@@ -47,6 +48,8 @@ public class Fee {
     @JoinColumn(name = "event_member_id")
     private EventMember eventMember;
 
+
+
     public Fee(String uuid, FeeReqDto feeReqDto, Club club) {
         this.uuid = uuid;
         this.paidAmount = feeReqDto.getPaidAmount();
@@ -63,6 +66,17 @@ public class Fee {
         this.club = club;
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
+    }
+
+    public Fee(String uuid, FeeInputReqDto feeInputReqDto, Club club, Event event, EventMember eventMember) {
+        this.uuid = uuid;
+        this.paidAmount = feeInputReqDto.getPaidAmount();
+        this.paidAt = feeInputReqDto.getPaidAt();
+        this.name = feeInputReqDto.getName();
+        this.explanation = feeInputReqDto.getExplanation();
+        this.club = club;
+        this.event = event;
+        this.eventMember = eventMember;
     }
 
     public void updateBlankElement(EventMember eventMember, FeeReqDto feeReqDto) {
