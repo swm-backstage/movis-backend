@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillInputReqDto;
 
 import java.time.LocalDateTime;
 
@@ -64,6 +65,16 @@ public class EventBill {
         this.club = club;
         this.paidAt = eventBillCreateReqDto.getPaidAt();
         this.isDeleted = false;
+    }
+
+    public EventBill(String string, EventBillInputReqDto dto, Club club, Event event) {
+        this.uuid = string;
+        this.payName = dto.getName();
+        this.amount = dto.getPaidAmount();
+        this.club = club;
+        this.event = event;
+        this.isDeleted = false;
+        this.paidAt = dto.getPaidAt();
     }
 
     public void setEvent(Event event) {

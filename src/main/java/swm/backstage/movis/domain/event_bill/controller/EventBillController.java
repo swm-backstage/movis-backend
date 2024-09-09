@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event_bill.dto.*;
 import swm.backstage.movis.domain.event_bill.service.EventBillService;
+import swm.backstage.movis.domain.fee.dto.FeeInputReqDto;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,14 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/v1/eventBill")
 public class EventBillController {
     private final EventBillService eventBillService;
+    /**
+     * 회비 수동 입력
+     * */
+    @PostMapping("/input")
+    public void createEventBillByInput(@RequestParam("eventId") String eventId,
+                                       @RequestBody EventBillInputReqDto dto){
+        eventBillService.createEventBillByInput(eventId,dto);
+    }
     /**
      * 지출 내역 추가 (알림으로)
      * */
