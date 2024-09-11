@@ -1,9 +1,11 @@
-package swm.backstage.movis.domain.user;
+package swm.backstage.movis.domain.auth;
 
 public enum RoleType {
 
     ROLE_MANAGER("ROLE_MANAGER"),
-    ROLE_COORDINATOR("ROLE_COORDINATOR")
+    ROLE_EXECUTIVE("ROLE_EXECUTIVE"),
+    ROLE_MEMBER("ROLE_MEMBER"),
+    ROLE_AUTHENTICATED("ROLE_AUTHENTICATED");
     ;
 
     private final String role;

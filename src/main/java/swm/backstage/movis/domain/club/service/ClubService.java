@@ -9,6 +9,7 @@ import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club.repository.ClubRepository;
+import swm.backstage.movis.domain.club_user.ClubUser;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.service.UserService;
 import swm.backstage.movis.global.error.ErrorCode;
@@ -26,7 +27,7 @@ public class ClubService {
     @Transactional
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
-        return clubRepository.save(new Club(clubCreateReqDto,UUID.randomUUID().toString(),new AccountBook(),user));
+        return clubRepository.save(new Club(clubCreateReqDto,UUID.randomUUID().toString(),new AccountBook()));
     }
 
     /**

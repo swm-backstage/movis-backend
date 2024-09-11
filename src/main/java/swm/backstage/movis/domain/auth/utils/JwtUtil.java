@@ -38,17 +38,17 @@ public class JwtUtil {
     // TODO: Refactoring
     public String getTokenType(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("type", String.class);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("tokenType", String.class);
+    }
+
+    public String getPlatformType(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("platformType", String.class);
     }
 
     public String getIdentifier(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("identifier", String.class);
-    }
-
-    public String getRole(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }
 
     public Date getExpirationDate(String token){
@@ -75,12 +75,12 @@ public class JwtUtil {
         Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
     }
 
-    public String createToken(String type, String identifier, String role, Long expiredTime) {
+    public String createToken(String tokenType, String platformType, String identifier, Long expiredTime) {
 
         return Jwts.builder()
-                .claim("type", type)
+                .claim("tokenType", tokenType)
+                .claim("platformType", platformType)
                 .claim("identifier", identifier)
-                .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredTime))
                 .signWith(secretKey)

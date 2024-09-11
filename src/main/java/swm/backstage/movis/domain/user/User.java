@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import swm.backstage.movis.domain.club.Club;
-import swm.backstage.movis.global.common.DateTimeField;
 import swm.backstage.movis.domain.auth.dto.request.UserCreateReqDto;
+import swm.backstage.movis.domain.club_user.ClubUser;
+import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,11 +45,8 @@ public class User extends DateTimeField {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "role")
-    private String role;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Club> clubList = new ArrayList<>();
+    @OneToMany(mappedBy = "club",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    private List<ClubUser> clubUserList = new ArrayList<>();
 
     public User(String uuid, UserCreateReqDto userCreateReqDto) {
 
@@ -62,9 +59,6 @@ public class User extends DateTimeField {
         // TODO: soft delete
         this.isDeleted = Boolean.FALSE;
         this.deletedAt = null;
-
-        // TODO: Entity(Club..) Update, Delete 기능이 추가될 때 다중 권한으로 변경
-        this.role = RoleType.ROLE_MANAGER.value();
     }
 
     public void setUserDeleted() {

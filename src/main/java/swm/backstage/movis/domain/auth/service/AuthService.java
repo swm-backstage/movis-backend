@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import swm.backstage.movis.domain.auth.AuthToken;
+import swm.backstage.movis.domain.auth.PlatformType;
 import swm.backstage.movis.domain.auth.RsaPrivateKey;
 import swm.backstage.movis.domain.auth.dto.RSAKeyPairDto;
 import swm.backstage.movis.domain.auth.dto.request.*;
@@ -116,18 +117,16 @@ public class AuthService {
             throw new BaseException("비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_PASSWORD);
         }
 
-        String role = user.getRole();
-
         String accessToken = jwtUtil.createToken(
                 jwtUtil.getACCESS_TOKEN_NAME(),
+                PlatformType.APP.value(),
                 identifier,
-                role,
                 jwtUtil.getACCESS_TOKEN_EXPIRED_TIME()
         );
         String refreshToken = jwtUtil.createToken(
                 jwtUtil.getREFRESH_TOKEN_NAME(),
+                PlatformType.APP.value(),
                 identifier,
-                role,
                 jwtUtil.getREFRESH_TOKEN_EXPIRED_TIME()
         );
 
@@ -210,18 +209,16 @@ public class AuthService {
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 
-        String role = jwtUtil.getRole(refreshToken);
-
         String newAccessToken = jwtUtil.createToken(
                 jwtUtil.getACCESS_TOKEN_NAME(),
+                PlatformType.APP.value(),
                 identifier,
-                role,
                 jwtUtil.getACCESS_TOKEN_EXPIRED_TIME()
         );
         String newRefreshToken = jwtUtil.createToken(
                 jwtUtil.getREFRESH_TOKEN_NAME(),
+                PlatformType.APP.value(),
                 identifier,
-                role,
                 jwtUtil.getREFRESH_TOKEN_EXPIRED_TIME()
         );
 

@@ -8,12 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import swm.backstage.movis.domain.auth.AuthToken;
+import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.auth.service.AuthTokenService;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 import swm.backstage.movis.global.error.ErrorCode;
@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     );
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthTokenService authTokenService) {
-        
         this.jwtUtil = jwtUtil;
         this.authTokenService = authTokenService;
         this.pathMatcher = new AntPathMatcher();
@@ -91,9 +90,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                identifier,
+                new AuthenticationPrincipalDetails(identifier, jwtUtil.getPlatformType(accessToken)),
                 null,
-                List.of(new SimpleGrantedAuthority(jwtUtil.getRole(accessToken))));
+                null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);

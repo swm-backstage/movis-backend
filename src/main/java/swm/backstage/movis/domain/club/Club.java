@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
+import swm.backstage.movis.domain.club_user.ClubUser;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.fee.Fee;
@@ -38,9 +39,12 @@ public class Club extends DateTimeField {
     @Column(name = "description", length = 100)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
+
+    @OneToMany(mappedBy = "club",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    private List<ClubUser> clubUserList = new ArrayList<>();
 
     @OneToOne(mappedBy = "club", fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private AccountBook accountBook;
@@ -74,7 +78,7 @@ public class Club extends DateTimeField {
 
 
 
-    public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook, User user) {
+    public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook) {
         this.uuid = uuid;
         this.description = clubCreateReqDto.getDescription();
         this.name = clubCreateReqDto.getName();
@@ -83,6 +87,5 @@ public class Club extends DateTimeField {
         this.isDeleted = Boolean.FALSE;
         this.accountBook = accountBook;
         accountBook.setClub(this);
-        this.user = user;
     }
 }
