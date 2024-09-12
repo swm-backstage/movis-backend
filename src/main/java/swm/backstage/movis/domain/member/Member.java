@@ -14,7 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "member")
+@Table(name = "member",
+        indexes = {
+                @Index(name = "idx_name_club_uuid", columnList = "name, club_uuid")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_name_club_uuid", columnNames = {"name", "club_uuid"})
+        })
 @NoArgsConstructor
 @Getter
 public class Member extends DateTimeField {
@@ -27,7 +33,7 @@ public class Member extends DateTimeField {
     @Column(unique = true, nullable = false, length = 36)
     private String uuid;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(unique = true, name = "name", nullable = false, length = 255)
     private String name;
 
     @Column(name = "phone_no", nullable = false, length = 255)
@@ -42,14 +48,15 @@ public class Member extends DateTimeField {
     @Column(name = "deleted_at", nullable = true)
     private LocalDateTime deletedAt;
 
+    @Column(name = "club_uuid", length = 36)
+    private String clubUuid;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<EventMember> eventMembers = new ArrayList<>();
-
-
 
     public Member(String uuid, Club club, MemberCreateReqDto memberCreateReqDto) {
         this.uuid = uuid;

@@ -50,11 +50,9 @@ public class AuthorityFilter extends OncePerRequestFilter {
         String identifier = principal.getIdentifier();
         String platformType = principal.getPlatformType();
         String clubId = extractClubIdFromRequest(request);
-
-        String role = RoleType.ROLE_AUTHENTICATED.value();
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
 
         if (StringUtils.hasText(clubId)) {
-
             if (platformType.equals(PlatformType.APP.value())){
                 //앱을 사용하는 총무(운영진)일 경우, ClubUser에서 권한 조회
                 ClubUser clubUser = clubUserService.getClubUser(identifier, clubId);
@@ -63,9 +61,9 @@ public class AuthorityFilter extends OncePerRequestFilter {
                 }
             } else if (platformType.equals(PlatformType.WEB.value())) {
                 //웹을 사용하는 회원일 경우, Club에 해당 Member의 존재 여부 조회
-
-                //TODO: 조회 기능 구현
-                role = RoleType.ROLE_MEMBER.value();
+                if (memberService.existedByNameAndClubUuid(identifier, clubId)) {
+                    role = RoleType.ROLE_MEMBER.value();
+                }
             }
         }
 

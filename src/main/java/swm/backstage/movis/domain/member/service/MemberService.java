@@ -43,6 +43,9 @@ public class MemberService {
         memberJdbcRepository.bulkSave(memberList);
     }
 
+    public Boolean existedByNameAndClubUuid(String name, String clubId){
+        return memberJpaRepository.existsByNameAndClub_Uuid(name, clubId);
+    }
 
     public List<Member> getMemberList(String clubId) {
         return memberJpaRepository.findAllByClub(clubService.getClubByUuId(clubId));
