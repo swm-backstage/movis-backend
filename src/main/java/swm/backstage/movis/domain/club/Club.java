@@ -39,11 +39,7 @@ public class Club extends DateTimeField {
     @Column(name = "description", length = 100)
     private String description;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
-
-    @OneToMany(mappedBy = "club",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<ClubUser> clubUserList = new ArrayList<>();
 
     @OneToOne(mappedBy = "club", fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REMOVE})

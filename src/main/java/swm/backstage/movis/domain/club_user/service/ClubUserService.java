@@ -26,9 +26,7 @@ public class ClubUserService {
     public void createClubUser(ClubUserCreateReqDto clubUserCreateReqDto) {
         Club club = clubService.findClubByUuId(clubUserCreateReqDto.getClubId());
         User user = userService.findByIdentifier(clubUserCreateReqDto.getIdentifier()).orElseThrow(()-> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND));
-
         ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_EXECUTIVE.value(), user, club);
-
         clubUserRepository.save(clubUser);
     }
 

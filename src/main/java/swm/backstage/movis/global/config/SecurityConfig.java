@@ -170,7 +170,7 @@ public class SecurityConfig {
         http.addFilterBefore(
                 new AuthorityFilter(eventService, clubUserService, memberService),
                 UsernamePasswordAuthenticationFilter.class
-        )
+        );
 
         http.sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

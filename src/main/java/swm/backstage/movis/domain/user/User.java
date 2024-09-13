@@ -45,7 +45,7 @@ public class User extends DateTimeField {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "club",fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<ClubUser> clubUserList = new ArrayList<>();
 
     public User(String uuid, UserCreateReqDto userCreateReqDto) {

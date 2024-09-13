@@ -61,6 +61,7 @@ public class Member extends DateTimeField {
     public Member(String uuid, Club club, MemberCreateReqDto memberCreateReqDto) {
         this.uuid = uuid;
         this.club = club;
+        this.clubUuid = club.getUuid();
         this.name = memberCreateReqDto.getName();
         this.phoneNo = memberCreateReqDto.getPhoneNo();
         this.isEnrolled = Boolean.TRUE;
