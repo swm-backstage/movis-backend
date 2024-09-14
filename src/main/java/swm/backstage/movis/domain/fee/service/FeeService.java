@@ -145,4 +145,11 @@ public class FeeService {
         fee.setExplanation(reqDto.getExplanation());
         return fee;
     }
+    /**
+     * 입금 여러개 isDeleted 수정
+     * */
+    @Transactional
+    public int updateIsDeleted(Long eventId){
+        return feeRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId);
+    }
 }

@@ -31,6 +31,7 @@ public class Fee {
     private Long paidAmount;
     private LocalDateTime paidAt;
     private String name;
+    private Boolean isDeleted;
 
     @Setter
     @Column(length = 100)
@@ -56,6 +57,7 @@ public class Fee {
         this.paidAt = feeReqDto.getPaidAt();
         this.name = feeReqDto.getName();
         this.club = club;
+        this.isDeleted = false;
     }
 
     public Fee(String uuid, FeeReqDto feeReqDto, Club club, EventMember eventMember) {
@@ -66,6 +68,7 @@ public class Fee {
         this.club = club;
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
+        this.isDeleted = false;
     }
 
     public Fee(String uuid, FeeInputReqDto feeInputReqDto, Club club, Event event, EventMember eventMember) {
@@ -77,12 +80,17 @@ public class Fee {
         this.club = club;
         this.event = event;
         this.eventMember = eventMember;
+        this.isDeleted = false;
     }
 
     public void updateBlankElement(EventMember eventMember, FeeReqDto feeReqDto) {
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
         this.name = feeReqDto.getName();
+    }
+
+    public void updateIsDeleted(Boolean isDeleted){
+        this.isDeleted = isDeleted;
     }
 }
 

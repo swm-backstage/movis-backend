@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.fee.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import swm.backstage.movis.domain.fee.Fee;
@@ -34,4 +35,11 @@ public interface FeeRepository extends JpaRepository<Fee, Long> {
                                             @Param("lastPaidAt") LocalDateTime lastPaidAt,
                                             @Param("lastId") Long lastId,
                                             @Param("size") int size);
+
+    @Modifying
+    @Query("UPDATE Fee f " +
+            "SET f.isDeleted = :status " +
+            "WHERE f.event.id = :eventId ")
+    int updateIsDeletedByEventId(@Param("status") Boolean status,
+                                 @Param("eventId") Long eventId);
 }

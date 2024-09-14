@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
+import swm.backstage.movis.domain.event.dto.EventUpdateReqDto;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.event_member.EventMember;
+import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
 
 import java.time.LocalDate;
@@ -51,6 +53,9 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private List<TransactionHistory> transactionHistorys = new ArrayList<>();
 
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<Fee> fees = new ArrayList<>();
+
     @Column(name="balance")
     private Long balance;
 
@@ -60,7 +65,8 @@ public class Event {
     @Column(name="payment_deadline")
     private LocalDate paymentDeadline;
 
-
+    @Column(name="is_deleted")
+    private Boolean isDeleted;
 
     public Event(String uuid, EventCreateReqDto eventCreateReqDto, Club club, AccountBook accountBook) {
         this.uuid = uuid;
@@ -68,6 +74,7 @@ public class Event {
         this.club =club;
         this.accountBook = accountBook;
         this.balance = 0L;
+        this.isDeleted = Boolean.FALSE;
         if(eventCreateReqDto.getGatherFeeInfo() == null){
             this.totalPaymentAmount = 0L;
         }
@@ -76,14 +83,19 @@ public class Event {
             this.paymentDeadline = eventCreateReqDto.getGatherFeeInfo().getPaymentDeadline();
         }
     }
-
     public void updateBalance(Long balance) {
         this.balance +=  balance;
-
     }
-
     public void updateGatherFeeInfo(Long totalPaymentAmount, LocalDate paymentDeadline) {
         this.totalPaymentAmount = totalPaymentAmount;
         this.paymentDeadline = paymentDeadline;
+    }
+    public void updateIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+    public void updateEvent(EventUpdateReqDto eventUpdateReqDto) {
+        this.name = eventUpdateReqDto.getName();
+        this.totalPaymentAmount = eventUpdateReqDto.getTotalPaymentAmount();
+        this.paymentDeadline = eventUpdateReqDto.getPaymentDeadline();
     }
 }
