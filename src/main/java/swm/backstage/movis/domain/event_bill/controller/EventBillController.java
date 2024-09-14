@@ -1,11 +1,10 @@
 package swm.backstage.movis.domain.event_bill.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event_bill.dto.*;
 import swm.backstage.movis.domain.event_bill.service.EventBillService;
-import swm.backstage.movis.domain.fee.dto.FeeInputReqDto;
 
 import java.time.LocalDateTime;
 

@@ -35,7 +35,7 @@ public class TransactionHistoryCreateDto {
     }
 
 
-    public static TransactionHistoryCreateDto fromEventBill(EventBill eventBill) {
+    public static TransactionHistoryCreateDto fromEventBill(EventBill eventBill, Boolean isClassified) {
         return new TransactionHistoryCreateDto(
                 eventBill.getClub(),
                 eventBill.getEvent(),
@@ -44,7 +44,7 @@ public class TransactionHistoryCreateDto {
                 eventBill.getAmount(),
                 eventBill.getPaidAt(),
                 TransactionStatus.BILL,
-                Boolean.FALSE);
+                isClassified);
     }
     public static TransactionHistoryCreateDto fromFee(Fee fee, Boolean isClassified) {
         return new TransactionHistoryCreateDto(

@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillInputReqDto;
+import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 })
 @NoArgsConstructor
 @Getter
-public class EventBill {
+public class EventBill extends DateTimeField {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +36,6 @@ public class EventBill {
     private String payName;
 
     private LocalDateTime paidAt;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     @Column(name = "image", length = 500)
     private String image;
@@ -79,5 +76,9 @@ public class EventBill {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public void updateIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

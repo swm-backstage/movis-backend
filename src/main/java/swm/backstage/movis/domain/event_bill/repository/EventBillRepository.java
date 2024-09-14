@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.event_bill.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import swm.backstage.movis.domain.event_bill.EventBill;
@@ -32,4 +33,11 @@ public interface EventBillRepository extends JpaRepository<EventBill, Long> {
                                 @Param("lastPaidAt") LocalDateTime lastPaidAt,
                                 @Param("lastId") Long lastId,
                                 @Param("size") int size);
+
+    @Modifying
+    @Query("UPDATE EventBill e " +
+            "SET e.isDeleted = :status " +
+            "WHERE e.event.id = :eventId ")
+    int updateIsDeletedByEventId(@Param("status") Boolean status,
+                                 @Param("eventId") Long eventId);
 }

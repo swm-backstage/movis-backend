@@ -41,7 +41,8 @@ public class EventBillService {
         EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(), dto, event.getClub(), event));
         accountBook.updateBalance(dto.getPaidAmount());
         accountBook.updateClassifiedWithdrawal(dto.getPaidAmount());
-        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
+        event.updateBalance(dto.getPaidAmount());
+        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill,Boolean.TRUE));
     }
     /**
      * 지출 내역 추가 (알림)
@@ -52,7 +53,7 @@ public class EventBillService {
         AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillCreateReqDto.getClubId());
         accountBook.updateUnClassifiedWithdrawal(eventBillCreateReqDto.getAmount());
         accountBook.updateBalance(eventBillCreateReqDto.getAmount());
-        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill));
+        transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill, Boolean.FALSE));
     }
 
     public EventBill getEventBillByUuid(String eventBillId) {
