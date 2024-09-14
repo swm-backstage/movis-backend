@@ -2,6 +2,7 @@ package swm.backstage.movis.domain.transaction_history.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
@@ -56,7 +57,15 @@ public interface TransactionHistoryRepository extends JpaRepository<TransactionH
                                                 @Param("lastId") Long lastId,
                                                 @Param("size") int size);
 
+    @Modifying
+    @Query("UPDATE TransactionHistory t " +
+            "SET t.isDeleted = :status " +
+            "WHERE t.event.id = :eventId ")
+    int updateIsDeletedByEventId(@Param("status") Boolean status,
+                                 @Param("eventId") Long eventId);
+
     Optional<TransactionHistory> findByElementUuid(String elementUuid);
     List<TransactionHistory> findAllByClubUuidAndIsClassifiedOrderByPaidAtDesc(String clubId, boolean isClassified);
     Long countByClubUuidAndIsClassified(String clubUuid, boolean isClassified);
+
 }

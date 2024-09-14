@@ -33,6 +33,7 @@ public class TransactionHistory {
     private Long amount;
     private LocalDateTime paidAt;
     private Boolean isClassified;
+    private Boolean isDeleted;
 
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
@@ -55,11 +56,15 @@ public class TransactionHistory {
         this.paidAt = dto.getPaidAt();
         this.isClassified = dto.getIsClassified();
         this.status = dto.getStatus();
+        this.isDeleted = Boolean.FALSE;
     }
     public void updateTransactionHistory(Event event, String name){
         this.event = event;
         this.name = name;
         this.isClassified = Boolean.TRUE;
+    }
+    public void updateIsDeleted(Boolean isDeleted){
+        this.isDeleted = isDeleted;
     }
 }
 

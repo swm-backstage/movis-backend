@@ -46,4 +46,21 @@ public class EventController {
                                                          @RequestParam("now") LocalDate now) {
         return new EventGetFundingListResDto(eventService.getCollectingMoneyEventList(clubId,now));
     }
+    /**
+     * 이벤트 수정
+     * */
+    @PatchMapping()
+    public EventGetDto updateEvent(@RequestParam(name = "eventId") String eventId,
+                            @RequestBody EventUpdateReqDto eventUpdateReqDto) {
+        return new EventGetDto(eventService.updateEvent(eventId,eventUpdateReqDto));
+    }
+    /**
+     * 이벤트 삭제
+     * */
+    @DeleteMapping()
+    public void deleteEvent(@RequestParam(name = "clubId") String clubId,
+                            @RequestParam(name = "eventId") String eventId) {
+        eventService.deleteEvent(clubId,eventId);
+    }
+
 }
