@@ -21,9 +21,9 @@ public class ClubUserController {
         clubUserService.createClubUser(clubUserCreateReqDto);
     }
 
-    @GetMapping()
-    public ClubUserGetResDto getClubUser(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
-                                         @RequestParam(name = "clubId") String clubId){
-        return new ClubUserGetResDto(clubUserService.getClubUser(principal.getIdentifier(), clubId));
-    }
+//    @GetMapping()
+//    public ClubUserGetResDto getClubUser(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
+//                                         @RequestParam(name = "clubId") String clubId){
+//        return new ClubUserGetResDto(clubUserService.getClubUser(principal.getIdentifier(), clubId));
+//    }
 }

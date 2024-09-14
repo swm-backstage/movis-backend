@@ -31,6 +31,6 @@ public class ClubUserService {
     }
 
     public ClubUser getClubUser(String identifier, String clubId) {
-        return clubUserRepository.findByIdentifierAndClub_Uuid(identifier, clubId).orElse(null);
+        return clubUserRepository.findByIdentifierAndClub_Uuid(identifier, clubId).orElseThrow(() -> new BaseException("clubUser is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 }

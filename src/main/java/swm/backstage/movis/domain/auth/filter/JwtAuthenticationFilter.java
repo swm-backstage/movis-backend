@@ -58,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessTokenWithBearer = request.getHeader(jwtUtil.getACCESS_TOKEN_NAME());
         if(!StringUtils.hasText(accessTokenWithBearer)){
             filterChain.doFilter(request, response);
+            return;
         }
 
         // Bearer 포함 검사 및 제거

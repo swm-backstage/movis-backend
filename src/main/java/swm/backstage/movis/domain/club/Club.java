@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club_user.ClubUser;
+import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.fee.Fee;
@@ -72,8 +73,6 @@ public class Club extends DateTimeField {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-
-
     public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook) {
         this.uuid = uuid;
         this.description = clubCreateReqDto.getDescription();
@@ -83,5 +82,9 @@ public class Club extends DateTimeField {
         this.isDeleted = Boolean.FALSE;
         this.accountBook = accountBook;
         accountBook.setClub(this);
+    }
+
+    public void addClubUser(ClubUser clubUser) {
+        clubUserList.add(clubUser);
     }
 }

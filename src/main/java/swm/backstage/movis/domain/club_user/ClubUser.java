@@ -50,6 +50,7 @@ public class ClubUser {
         this.clubUuid = club.getUuid();
         this.user = user;
         this.club = club;
+        club.addClubUser(this);
     }
 
     public void updateRole(String role){

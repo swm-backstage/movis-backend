@@ -2,14 +2,15 @@ package swm.backstage.movis.domain.club.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
-import swm.backstage.movis.domain.club.dto.ClubGetResDto;
 import swm.backstage.movis.domain.club.dto.ClubGetListResDto;
+import swm.backstage.movis.domain.club.dto.ClubGetResDto;
 import swm.backstage.movis.domain.club.dto.ClubGetUidResDto;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.user.service.UserService;
@@ -28,8 +29,10 @@ public class ClubController {
                                     @RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
         return new ClubGetResDto(clubService.createClub(clubCreateReqDto, principal.getIdentifier()));
     }
+
+    @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @GetMapping("/{clubId}")
-    public ClubGetResDto getClub(@PathVariable("clubId") String clubId){
+    public ClubGetResDto getClub(@PathVariable("clubId") @Param("clubId") String clubId){
         return new ClubGetResDto(clubService.getClubByUuId(clubId));
     }
 
