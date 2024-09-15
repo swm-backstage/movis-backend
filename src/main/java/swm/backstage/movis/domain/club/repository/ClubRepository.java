@@ -11,4 +11,6 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     Optional<Club> findByUuidAndIsDeleted(String id, Boolean deleted);
     List<Club> findAllByUser_Id(Long userId);
     Optional<Club> findByUser_IdAndAccountNumber(Long userId, String accountNumber);
+    Optional<Club> findByEntryCode(String entryCode);
+    Optional<Club> findByInviteCode(String inviteCode);
 }

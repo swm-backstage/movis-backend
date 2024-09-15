@@ -68,14 +68,16 @@ public class SecurityConfig {
                         "/api/*/auth/test/register","/api/*/auth/test/confirmIdentifier","/api/*/auth/test/login",
                         "/api/*/auth/register", "/api/*/auth/confirmIdentifier", "/api/*/auth/login", "/api/*/auth/reissue", "/api/*/auth/publicKey",
                         //club
-                        "/api/v1/clubs/forAlert", "/api/v1/clubs/{clubId}",
+                        "/api/v1/clubs/forAlert", "/api/v1/clubs/{clubId}/**", "/api/v1/clubs/entryCode/**",
                         //event
                         "/api/v1/fees/**",
                         "/api/v1/events", "/api/v1/events/{eventId}", "/api/v1/events/funding/**",
                         "/api/v1/eventMembers",
                         "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
                         "/api/v1/url-generate",
-                        "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub", "/api/v1/transactionHistories/unClassification/**"
+                        "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub", "/api/v1/transactionHistories/unClassification/**",
+                        //invite
+                        "/api/v1/invitations/**"
                         )
                 .permitAll()
                 .requestMatchers(
