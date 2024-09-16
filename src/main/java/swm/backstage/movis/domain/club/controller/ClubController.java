@@ -8,12 +8,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
-import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
-import swm.backstage.movis.domain.club.dto.ClubGetListResDto;
-import swm.backstage.movis.domain.club.dto.ClubGetResDto;
-import swm.backstage.movis.domain.club.dto.ClubGetUidResDto;
+import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
-import swm.backstage.movis.domain.user.service.UserService;
+import swm.backstage.movis.domain.member.service.MemberService;
 
 
 @RestController
@@ -22,7 +19,7 @@ import swm.backstage.movis.domain.user.service.UserService;
 public class ClubController {
 
     private final ClubService clubService;
-    private final UserService userService;
+    private final MemberService memberService;
 
     @PostMapping()
     public ClubGetResDto createClub(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
@@ -45,5 +42,36 @@ public class ClubController {
     public ClubGetUidResDto getClubUid(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
                                        @RequestParam("accountNumber") String accountNumber){
         return new ClubGetUidResDto(clubService.getClubUid(accountNumber, principal.getIdentifier()));
+    }
+
+    /**
+     * 입장 코드
+     */
+    @PostMapping("/{clubId}/entryCode")
+    public String updateEntryCode(@PathVariable("clubId") String clubId){
+        return clubService.updateEntryCode(clubId);
+    }
+
+    @GetMapping("/entryCode/{entryCode}")
+    public boolean isEntryCodeValid(@PathVariable("entryCode") String entryCode){
+        clubService.getClubUuidByEntryCode(entryCode); // 없으면 메소드 내에서 예외처리 됨
+        return true;
+    }
+
+    // 해당 멤버가 있는지 확인 후, clubId 반환
+    // TODO : 멤버에게 JWT 토큰 전달
+    @GetMapping("/entryCode/verify")
+    public String verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
+        String clubId = clubService.getClubUuidByEntryCode(clubEntryReqDto.getEntryCode());
+        memberService.isMemberExist(clubId, clubEntryReqDto.getName(), clubEntryReqDto.getPhoneNumber());
+        return clubId;
+    }
+
+    /**
+     * 초대 코드
+     */
+    @PostMapping("/{clubId}/inviteCode")
+    public String updateInviteCode(@PathVariable("clubId") String clubId){
+        return clubService.updateInviteCode(clubId);
     }
 }

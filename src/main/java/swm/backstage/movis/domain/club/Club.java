@@ -3,16 +3,15 @@ package swm.backstage.movis.domain.club;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club_user.ClubUser;
-import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.member.Member;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
-import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
@@ -72,6 +71,15 @@ public class Club extends DateTimeField {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @Setter
+    @Column(name = "entry_code", length = 6)
+    private String entryCode;
+
+    @Setter
+    @Column(name = "invite_code", length = 6)
+    private String inviteCode;
+
 
     public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook) {
         this.uuid = uuid;
