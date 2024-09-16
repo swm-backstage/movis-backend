@@ -1,11 +1,13 @@
 package swm.backstage.movis.global.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,37 +16,54 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import swm.backstage.movis.domain.auth.filter.JwtAccessDeniedHandler;
-import swm.backstage.movis.domain.auth.filter.JwtAuthenticationEntryPoint;
-import swm.backstage.movis.domain.auth.filter.JwtExceptionFilter;
-import swm.backstage.movis.domain.auth.filter.JwtAuthenticationFilter;
+import swm.backstage.movis.domain.auth.filter.*;
 import swm.backstage.movis.domain.auth.service.AuthTokenService;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
+import swm.backstage.movis.domain.club_user.service.ClubUserService;
+import swm.backstage.movis.domain.event.service.EventService;
+import swm.backstage.movis.domain.member.service.MemberService;
 
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final AuthTokenService authTokenService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final HandlerExceptionResolver handlerExceptionResolver;
+    private final AuthTokenService authTokenService;
+    private final ClubUserService clubUserService;
+    private final MemberService memberService;
+    private final EventService eventService;
 
     public SecurityConfig(JwtUtil jwtUtil,
-                          AuthTokenService authTokenService,
                           @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigurationSource,
-                          @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
+                          @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver,
+                          AuthTokenService authTokenService,
+                          ClubUserService clubUserService,
+                          MemberService memberService,
+                          EventService eventService
+                          ) {
         this.jwtUtil = jwtUtil;
-        this.authTokenService = authTokenService;
         this.corsConfigurationSource = corsConfigurationSource;
         this.handlerExceptionResolver = handlerExceptionResolver;
+        this.authTokenService = authTokenService;
+        this.clubUserService = clubUserService;
+        this.memberService = memberService;
+        this.eventService = eventService;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public MethodSecurityExpressionHandler expressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(new CustomPermissionEvaluator(clubUserService, memberService, eventService));
+        return expressionHandler;
     }
 
     @Bean
@@ -62,39 +81,21 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers(
-                        //swagger
-                        "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**",
-                        //auth
-                        "/api/*/auth/test/register","/api/*/auth/test/confirmIdentifier","/api/*/auth/test/login",
-                        "/api/*/auth/register", "/api/*/auth/confirmIdentifier", "/api/*/auth/login", "/api/*/auth/reissue", "/api/*/auth/publicKey",
-                        //club
-                        "/api/v1/clubs/forAlert", "/api/v1/clubs/{clubId}/**", "/api/v1/clubs/entryCode/**",
-                        //event
-                        "/api/v1/fees/**",
-                        "/api/v1/events", "/api/v1/events/{eventId}", "/api/v1/events/funding/**",
-                        "/api/v1/eventMembers",
-                        "/api/v1/eventBill", "/api/v1/eventBill/{eventBillId}",
-                        "/api/v1/url-generate",
-                        "/api/v1/transactionHistories/fromEvent", "/api/v1/transactionHistories/fromClub", "/api/v1/transactionHistories/unClassification/**",
-                        //invite
-                        "/api/v1/invitations/**"
-                        )
-                .permitAll()
-                .requestMatchers(
-                        //auth
-                        "/api/*/auth/logout",
-                        //club
-                        "/api/v1/clubs", "/api/v1/clubs/{clubId}",
-                        "/api/v1/members",
-                        //test
-                        "/api/*/auth/test/manager"
+                        //s3
+                        "/api/v1/url-generate"
                 )
-                .hasRole("MANAGER")
-                .anyRequest().authenticated()
+                .authenticated()
+                .requestMatchers(
+                        //swagger
+                        "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**"
+                )
+                .permitAll()
+                .anyRequest()
+                .permitAll()
         );
 
         http.addFilterBefore(
-                new JwtExceptionFilter(handlerExceptionResolver),
+                new CustomExceptionFilter(handlerExceptionResolver),
                 UsernamePasswordAuthenticationFilter.class
         );
 
@@ -108,8 +109,8 @@ public class SecurityConfig {
         );
 
         http.exceptionHandling(e -> e
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint(handlerExceptionResolver))
-                .accessDeniedHandler(new JwtAccessDeniedHandler(handlerExceptionResolver)));
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint(handlerExceptionResolver))
+                .accessDeniedHandler(new CustomAccessDeniedHandler(handlerExceptionResolver)));
 
         return http.build();
     }

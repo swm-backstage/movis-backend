@@ -3,7 +3,6 @@ package swm.backstage.movis.domain.member.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.dialect.function.array.JsonArrayViaElementArgumentReturnTypeResolver;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubService;
@@ -15,7 +14,9 @@ import swm.backstage.movis.domain.member.repository.MemberJpaRepository;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +47,9 @@ public class MemberService {
         memberJdbcRepository.bulkSave(memberList);
     }
 
+    public Boolean existedByNameAndClubUuid(String name, String clubId){
+        return memberJpaRepository.existsByNameAndClub_Uuid(name, clubId);
+    }
     public void create(String clubUid, MemberCreateReqDto memberCreateReqDto) {
         Club club = clubService.getClubByUuId(clubUid);
         Member member = new Member(UUID.randomUUID().toString(), club, memberCreateReqDto);

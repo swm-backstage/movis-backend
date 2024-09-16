@@ -2,39 +2,46 @@ package swm.backstage.movis.domain.club.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.member.service.MemberService;
-import swm.backstage.movis.domain.user.service.UserService;
 
 
 @RestController
 @RequestMapping("/api/v1/clubs")
 @RequiredArgsConstructor
 public class ClubController {
+
     private final ClubService clubService;
     private final MemberService memberService;
 
     @PostMapping()
-    public ClubGetResDto createClub(Authentication authentication,@RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
-        return new ClubGetResDto(clubService.createClub(clubCreateReqDto,authentication.getName()));
+    public ClubGetResDto createClub(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
+                                    @RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
+        return new ClubGetResDto(clubService.createClub(clubCreateReqDto, principal.getIdentifier()));
     }
+
+    @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @GetMapping("/{clubId}")
-    public ClubGetResDto getClub(@PathVariable("clubId") String clubId){
+    public ClubGetResDto getClub(@PathVariable("clubId") @Param("clubId") String clubId){
         return new ClubGetResDto(clubService.getClubByUuId(clubId));
     }
 
     @GetMapping()
-    public ClubGetListResDto getClubList(Authentication authentication){
-        return new ClubGetListResDto(clubService.getClubList(authentication.getName()));
+    public ClubGetListResDto getClubList(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
+        return new ClubGetListResDto(clubService.getClubList(principal.getIdentifier()));
     }
 
     @GetMapping("/forAlert")
-    public ClubGetUidResDto getClubUid(Authentication authentication, @RequestParam("accountNumber") String accountNumber){
-        return new ClubGetUidResDto(clubService.getClubUid(accountNumber, authentication.getName()));
+    public ClubGetUidResDto getClubUid(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
+                                       @RequestParam("accountNumber") String accountNumber){
+        return new ClubGetUidResDto(clubService.getClubUid(accountNumber, principal.getIdentifier()));
     }
 
     /**

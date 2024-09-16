@@ -14,6 +14,8 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import swm.backstage.movis.domain.auth.AuthToken;
+import swm.backstage.movis.domain.auth.RoleType;
+import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.auth.service.AuthTokenService;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 import swm.backstage.movis.global.error.ErrorCode;
@@ -37,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     );
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthTokenService authTokenService) {
-        
         this.jwtUtil = jwtUtil;
         this.authTokenService = authTokenService;
         this.pathMatcher = new AntPathMatcher();
@@ -57,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessTokenWithBearer = request.getHeader(jwtUtil.getACCESS_TOKEN_NAME());
         if(!StringUtils.hasText(accessTokenWithBearer)){
             filterChain.doFilter(request, response);
+            return;
         }
 
         // Bearer 포함 검사 및 제거
@@ -91,9 +93,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                identifier,
+                new AuthenticationPrincipalDetails(identifier, jwtUtil.getPlatformType(accessToken)),
                 null,
-                List.of(new SimpleGrantedAuthority(jwtUtil.getRole(accessToken))));
+                List.of(new SimpleGrantedAuthority(RoleType.ROLE_AUTHENTICATED.value())));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
