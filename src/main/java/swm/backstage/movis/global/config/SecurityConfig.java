@@ -80,7 +80,18 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests((auth) -> auth
-                        .anyRequest().permitAll()
+                .requestMatchers(
+                        //s3
+                        "/api/v1/url-generate"
+                )
+                .authenticated()
+                .requestMatchers(
+                        //swagger
+                        "/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**",
+                )
+                .permitAll()
+                .anyRequest()
+                .permitAll()
         );
 
         http.addFilterBefore(

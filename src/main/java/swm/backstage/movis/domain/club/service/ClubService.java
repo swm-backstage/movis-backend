@@ -30,7 +30,7 @@ public class ClubService {
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
         Club newClub = new Club(clubCreateReqDto, UUID.randomUUID().toString(), new AccountBook());
-        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_EXECUTIVE.value(), user, newClub);
+        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_MANAGER.value(), user, newClub);
 
         newClub.setEntryCode(createRandomCode());
         newClub.setInviteCode(createRandomCode());
