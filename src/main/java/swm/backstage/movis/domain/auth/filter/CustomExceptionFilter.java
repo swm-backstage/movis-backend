@@ -9,11 +9,11 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
-public class JwtExceptionFilter extends OncePerRequestFilter {
+public class CustomExceptionFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
-    public JwtExceptionFilter(HandlerExceptionResolver handlerExceptionResolver) {
+    public CustomExceptionFilter(HandlerExceptionResolver handlerExceptionResolver) {
 
         this.handlerExceptionResolver = handlerExceptionResolver;
     }

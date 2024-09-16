@@ -31,7 +31,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-        System.out.println("targetId = " + targetId);
         if(authentication == null || targetId == null || targetType == null || permission == null) {
             throw new BaseException("PreAuthorize 매개변수의 형식이 일치하지 않습니다. ", ErrorCode.INTERNAL_SERVER_ERROR);
         }

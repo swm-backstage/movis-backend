@@ -58,7 +58,7 @@ public class EventController {
      * */
     @PreAuthorize("hasPermission(#eventId, 'eventId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PatchMapping()
-    public EventGetDto updateEvent(@RequestParam(name = "eventId") String eventId,
+    public EventGetDto updateEvent(@RequestParam(name = "eventId") @Param("eventId") String eventId,
                             @RequestBody EventUpdateReqDto eventUpdateReqDto) {
         return new EventGetDto(eventService.updateEvent(eventId,eventUpdateReqDto));
     }
@@ -67,7 +67,7 @@ public class EventController {
      * */
     @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_MANAGER'})")
     @DeleteMapping()
-    public void deleteEvent(@RequestParam(name = "clubId") String clubId,
+    public void deleteEvent(@RequestParam(name = "clubId") @Param("clubId") String clubId,
                             @RequestParam(name = "eventId") String eventId) {
         eventService.deleteEvent(clubId,eventId);
     }

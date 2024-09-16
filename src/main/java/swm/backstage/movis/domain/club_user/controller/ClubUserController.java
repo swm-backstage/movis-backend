@@ -18,7 +18,7 @@ public class ClubUserController {
 
     private ClubUserService clubUserService;
 
-    @PreAuthorize("hasPermission(#clubUserCreateReqDto, 'clubId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
+    @PreAuthorize("hasPermission(#clubUserCreateReqDto.clubId, 'clubId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping
     public void createClubUser(@RequestBody @Param("clubUserCreateReqDto") ClubUserCreateReqDto clubUserCreateReqDto) {
         clubUserService.createClubUser(clubUserCreateReqDto);

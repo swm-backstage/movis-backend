@@ -12,12 +12,12 @@ import swm.backstage.movis.global.error.exception.BaseException;
 
 import java.io.IOException;
 
-public class JwtAccessDeniedHandler implements AccessDeniedHandler {
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 
     private final HandlerExceptionResolver resolver;
 
-    public JwtAccessDeniedHandler(@Qualifier("handlerExceptionResolver")HandlerExceptionResolver resolver) {
+    public CustomAccessDeniedHandler(@Qualifier("handlerExceptionResolver")HandlerExceptionResolver resolver) {
 
         this.resolver = resolver;
     }
