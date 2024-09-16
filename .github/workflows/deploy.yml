@@ -34,6 +34,9 @@ jobs:
         echo "${{ secrets.APPLICATION_SECURITY }}" | while IFS= read -r line; do
           echo "$line" >> ${PWD}/src/main/resources/application-security.yml
         done
+        echo "${{ secrets.APPLICATION_SMS }}" | while IFS= read -r line; do
+          echo "$line" >> ${PWD}/src/main/resources/application-sms.yml
+        done
         ls -al ${PWD}/src/main/resources
 
     - name: Build with Gradle
