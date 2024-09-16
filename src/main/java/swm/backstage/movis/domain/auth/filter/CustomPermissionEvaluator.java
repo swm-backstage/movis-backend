@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
 @RequiredArgsConstructor
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
@@ -32,6 +31,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+        System.out.println("targetId = " + targetId);
         if(authentication == null || targetId == null || targetType == null || permission == null) {
             throw new BaseException("PreAuthorize 매개변수의 형식이 일치하지 않습니다. ", ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -62,7 +62,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             permissions.add((String) permission);
         } else if (permission instanceof Collection<?>) {
             permissions.addAll((Collection<String>) permission);
-
         }
 
         if (platformType.equals(PlatformType.APP.value())){

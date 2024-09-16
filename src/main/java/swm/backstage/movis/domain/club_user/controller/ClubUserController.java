@@ -2,6 +2,8 @@ package swm.backstage.movis.domain.club_user.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
@@ -16,8 +18,9 @@ public class ClubUserController {
 
     private ClubUserService clubUserService;
 
+    @PreAuthorize("hasPermission(#clubUserCreateReqDto, 'clubId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping
-    public void createClubUser(@RequestBody ClubUserCreateReqDto clubUserCreateReqDto) {
+    public void createClubUser(@RequestBody @Param("clubUserCreateReqDto") ClubUserCreateReqDto clubUserCreateReqDto) {
         clubUserService.createClubUser(clubUserCreateReqDto);
     }
 
