@@ -8,6 +8,8 @@ import swm.backstage.movis.domain.invitation.dto.GetVerifyCodeReqDto;
 import swm.backstage.movis.domain.invitation.dto.MemberInviteReqDto;
 import swm.backstage.movis.domain.member.dto.MemberCreateReqDto;
 import swm.backstage.movis.domain.member.service.MemberService;
+import swm.backstage.movis.global.error.ErrorCode;
+import swm.backstage.movis.global.error.exception.BaseException;
 
 @Component
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class MemberInviteManager {
     // 멤버 가입
     public String createMember(MemberInviteReqDto dto) {
         if (!verifyService.isVerifiedPhoneNumber(dto.getPhoneNumber())) {
-            throw new RuntimeException("인증되지 않은 번호입니다 : "+dto.getPhoneNumber());
+            throw new BaseException("인증되지 않은 번호입니다 : "+dto.getPhoneNumber(), ErrorCode.UNAUTHENTICATED_REQUEST);
         }
         verifyService.deleteVerifyCode(dto.getPhoneNumber());
         String clubId = clubService.getClubUuidByInviteCode(dto.getInviteCode());

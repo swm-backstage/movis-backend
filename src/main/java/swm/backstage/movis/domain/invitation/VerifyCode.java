@@ -19,6 +19,7 @@ public class VerifyCode {
     private String phoneNumber;
     private String verifyCode;
     private LocalDateTime expiredAt;
+    @Setter
     private boolean verified;
     @Setter
     private LocalDateTime verifiedExpiredAt;
