@@ -23,6 +23,7 @@ public class VerifyService {
 
     // TODO : redis의 TTL로 처리
     public void deleteVerifyCode(String phoneNumber) {
+        System.out.println(verifyCodeRepository.findByPhoneNumber(phoneNumber).toString());
         verifyCodeRepository.findByPhoneNumber(phoneNumber).ifPresent(verifyCodeRepository::delete);
     }
 
@@ -33,6 +34,7 @@ public class VerifyService {
                 .filter(verify -> verify.getExpiredAt().isAfter(LocalDateTime.now()))
                 .orElseThrow(() -> new BaseException("인증번호가 일치하지 않습니다.", ErrorCode.ELEMENT_NOT_FOUND));
         selectedVerifyCode.setVerified(true);
+        selectedVerifyCode.setVerifiedExpiredAt(LocalDateTime.now().plusHours(1));
         verifyCodeRepository.save(selectedVerifyCode);
         return selectedVerifyCode.isVerified();
     }
