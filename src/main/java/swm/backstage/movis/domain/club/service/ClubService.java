@@ -44,6 +44,11 @@ public class ClubService {
         return clubRepository.findByUuidAndIsDeleted(id,Boolean.FALSE).orElseThrow(()->new BaseException("clubId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
+    public Club getClubByInviteCode(String inviteCode) {
+        return clubRepository.findByInviteCode(inviteCode)
+                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND));
+    }
+
     public String getClubUuidByEntryCode(String entryCode) {
         return clubRepository.findByEntryCode(entryCode)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUuid();

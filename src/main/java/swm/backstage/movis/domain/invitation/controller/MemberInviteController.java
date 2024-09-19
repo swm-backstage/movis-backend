@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.invitation.dto.CheckVerifyCodeReqDto;
 import swm.backstage.movis.domain.invitation.dto.GetVerifyCodeReqDto;
+import swm.backstage.movis.domain.invitation.dto.InviteClubInfoResDto;
 import swm.backstage.movis.domain.invitation.dto.MemberInviteReqDto;
 import swm.backstage.movis.domain.invitation.service.MemberInviteManager;
 
@@ -14,8 +15,8 @@ public class MemberInviteController {
     private final MemberInviteManager memberInviteManager;
 
     @GetMapping("/verify/{inviteCode}")
-    public boolean isInviteCodeValid(@PathVariable String inviteCode) {
-        return memberInviteManager.isInviteCodeValid(inviteCode);
+    public InviteClubInfoResDto getInviteClubInfo(@PathVariable String inviteCode) {
+        return memberInviteManager.getInviteClubInfo(inviteCode);
     }
 
     // 전화번호 인증
