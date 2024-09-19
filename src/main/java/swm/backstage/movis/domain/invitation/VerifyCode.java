@@ -1,6 +1,8 @@
 package swm.backstage.movis.domain.invitation;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class VerifyCode {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String phoneNumber;
     private String verifyCode;
