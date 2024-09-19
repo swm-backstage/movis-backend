@@ -2,9 +2,11 @@ package swm.backstage.movis.domain.invitation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.invitation.dto.CheckVerifyCodeReqDto;
 import swm.backstage.movis.domain.invitation.dto.GetVerifyCodeReqDto;
+import swm.backstage.movis.domain.invitation.dto.InviteClubInfoResDto;
 import swm.backstage.movis.domain.invitation.dto.MemberInviteReqDto;
 import swm.backstage.movis.domain.member.dto.MemberCreateReqDto;
 import swm.backstage.movis.domain.member.service.MemberService;
@@ -20,10 +22,9 @@ public class MemberInviteManager {
     private final ClubService clubService;
 
     // 초대장 조회
-    public boolean isInviteCodeValid(String inviteCode) {
-        // 오류 발생 시, 메소드 내에서 예외처리 됨
-        clubService.getClubUuidByInviteCode(inviteCode);
-        return true;
+    public InviteClubInfoResDto getInviteClubInfo(String inviteCode) {
+        Club selectedClub = clubService.getClubByInviteCode(inviteCode);
+        return new InviteClubInfoResDto(selectedClub.getName(), "", selectedClub.getDescription());
     }
 
     // 전화번호 인증코드 생성
@@ -42,11 +43,15 @@ public class MemberInviteManager {
         if (!verifyService.isVerifiedPhoneNumber(dto.getPhoneNumber())) {
             throw new BaseException("인증되지 않은 번호입니다 : "+dto.getPhoneNumber(), ErrorCode.UNAUTHENTICATED_REQUEST);
         }
-        verifyService.deleteVerifyCode(dto.getPhoneNumber());
         String clubId = clubService.getClubUuidByInviteCode(dto.getInviteCode());
 
-        MemberCreateReqDto memberCreateReqDto = new MemberCreateReqDto(dto.getName(), dto.getPhoneNumber());
-        memberService.create(clubId, memberCreateReqDto);
+        try {
+            MemberCreateReqDto memberCreateReqDto = new MemberCreateReqDto(dto.getName(), dto.getPhoneNumber());
+            memberService.create(clubId, memberCreateReqDto);
+        } catch (Exception e) {
+            throw new BaseException("멤버 가입에 실패했습니다.", ErrorCode.INVALID_INPUT_VALUE);
+        }
+        verifyService.deleteVerifyCode(dto.getPhoneNumber());
         return clubId;
     }
 
