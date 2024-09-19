@@ -31,8 +31,8 @@ public class MemberInviteController {
 
     // 멤버 가입
     @PostMapping("/member")
-    public void createMember(@RequestBody MemberInviteReqDto dto) {
-        memberInviteManager.createMember(dto);
+    public String createMember(@RequestBody MemberInviteReqDto dto) {
+        return memberInviteManager.createMember(dto);
     }
 
 }

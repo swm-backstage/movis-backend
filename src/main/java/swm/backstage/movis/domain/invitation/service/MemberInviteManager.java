@@ -36,7 +36,7 @@ public class MemberInviteManager {
     }
 
     // 멤버 가입
-    public void createMember(MemberInviteReqDto dto) {
+    public String createMember(MemberInviteReqDto dto) {
         if (!verifyService.isVerifiedPhoneNumber(dto.getPhoneNumber())) {
             throw new RuntimeException("인증되지 않은 번호입니다 : "+dto.getPhoneNumber());
         }
@@ -45,6 +45,7 @@ public class MemberInviteManager {
 
         MemberCreateReqDto memberCreateReqDto = new MemberCreateReqDto(dto.getName(), dto.getPhoneNumber());
         memberService.create(clubId, memberCreateReqDto);
+        return clubId;
     }
 
 }
