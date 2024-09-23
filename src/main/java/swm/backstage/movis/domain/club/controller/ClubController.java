@@ -53,9 +53,8 @@ public class ClubController {
     }
 
     @GetMapping("/entryCode/{entryCode}")
-    public boolean isEntryCodeValid(@PathVariable("entryCode") String entryCode){
-        clubService.getClubUuidByEntryCode(entryCode); // 없으면 메소드 내에서 예외처리 됨
-        return true;
+    public ClubEntryResDto getEntryClubInfo(@PathVariable("entryCode") String entryCode){
+        return clubService.getClubInfoByEntryCode(entryCode); // 없으면 메소드 내에서 예외처리 됨
     }
 
     // 해당 멤버가 있는지 확인 후, clubId 반환
