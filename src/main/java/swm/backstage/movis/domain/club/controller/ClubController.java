@@ -5,12 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
+import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.member.service.MemberService;
+
+import java.util.List;
 
 
 @RestController
@@ -34,7 +38,9 @@ public class ClubController {
     }
 
     @GetMapping()
+    @Transactional
     public ClubGetListResDto getClubList(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
+        List<Club> clubList = clubService.getClubList((principal.getIdentifier()));
         return new ClubGetListResDto(clubService.getClubList(principal.getIdentifier()));
     }
 

@@ -3,6 +3,8 @@ package swm.backstage.movis.domain.club.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.auth.RoleType;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ClubService {
+    private static final Logger log = LoggerFactory.getLogger(ClubService.class);
     private final ClubRepository clubRepository;
     private final UserService userService;
 
@@ -68,11 +71,8 @@ public class ClubService {
     }
 
     public List<Club> getClubList(String identifier){
-        User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
-        List<ClubUser> clubUserList = user.getClubUserList();
-        return clubUserList.stream()
-                .map(ClubUser::getClub)
-                .collect(Collectors.toList());
+        User user = userService.findUserWithInfoByIdentifier(identifier);
+        return user.getClubUserList().stream().map(ClubUser::getClub).collect(Collectors.toList());
     }
 
     public String getClubUid(String accountNumber, String identifier) {
