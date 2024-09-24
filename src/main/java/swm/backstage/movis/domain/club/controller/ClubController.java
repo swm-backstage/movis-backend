@@ -75,7 +75,7 @@ public class ClubController {
         String clubId = clubService.getClubUuidByEntryCode(clubEntryReqDto.getEntryCode());
         memberService.isMemberExist(clubId, clubEntryReqDto.getName(), clubEntryReqDto.getPhoneNumber());
 
-        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(clubEntryReqDto.getName(), PlatformType.APP.value());
+        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(clubEntryReqDto.getName(), PlatformType.WEB.value());
 
         return new MemberVerifyResDto(
                 clubId,
