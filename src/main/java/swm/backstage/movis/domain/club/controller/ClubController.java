@@ -8,7 +8,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import swm.backstage.movis.domain.auth.PlatformType;
+import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
+import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
+import swm.backstage.movis.domain.auth.service.AuthTokenService;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
@@ -24,6 +28,7 @@ public class ClubController {
 
     private final ClubService clubService;
     private final MemberService memberService;
+    private final AuthTokenService authTokenService;
 
     @PostMapping()
     public ClubGetResDto createClub(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
@@ -66,10 +71,17 @@ public class ClubController {
     // 해당 멤버가 있는지 확인 후, clubId 반환
     // TODO : 멤버에게 JWT 토큰 전달
     @PostMapping("/entryCode/verify")
-    public String verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
+    public MemberVerifyResDto verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
         String clubId = clubService.getClubUuidByEntryCode(clubEntryReqDto.getEntryCode());
         memberService.isMemberExist(clubId, clubEntryReqDto.getName(), clubEntryReqDto.getPhoneNumber());
-        return clubId;
+
+        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(clubEntryReqDto.getName(), PlatformType.APP.value());
+
+        return new MemberVerifyResDto(
+                clubId,
+                authTokenDto.getAccessToken(),
+                authTokenDto.getAccessToken()
+        );
     }
 
     /**
