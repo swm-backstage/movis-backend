@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ClubEntryResDto {
+public class ClubInfoResDto {
     public String clubName;
     public String clubImageUrl;
     public String clubDescription;
