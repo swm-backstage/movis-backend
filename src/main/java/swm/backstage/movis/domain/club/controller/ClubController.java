@@ -59,13 +59,13 @@ public class ClubController {
     }
 
     @GetMapping("/entryCode/{entryCode}")
-    public ClubEntryResDto getEntryClubInfo(@PathVariable("entryCode") String entryCode){
+    public ClubInfoResDto getEntryClubInfo(@PathVariable("entryCode") String entryCode){
         return clubService.getClubInfoByEntryCode(entryCode); // 없으면 메소드 내에서 예외처리 됨
     }
 
     // 해당 멤버가 있는지 확인 후, clubId 반환
     // TODO : 멤버에게 JWT 토큰 전달
-    @GetMapping("/entryCode/verify")
+    @PostMapping("/entryCode/verify")
     public String verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
         String clubId = clubService.getClubUuidByEntryCode(clubEntryReqDto.getEntryCode());
         memberService.isMemberExist(clubId, clubEntryReqDto.getName(), clubEntryReqDto.getPhoneNumber());

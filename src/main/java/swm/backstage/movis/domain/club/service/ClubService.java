@@ -10,7 +10,7 @@ import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.auth.RoleType;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
-import swm.backstage.movis.domain.club.dto.ClubEntryResDto;
+import swm.backstage.movis.domain.club.dto.ClubInfoResDto;
 import swm.backstage.movis.domain.club.dto.CodeType;
 import swm.backstage.movis.domain.club.repository.ClubRepository;
 import swm.backstage.movis.domain.club_user.ClubUser;
@@ -90,10 +90,10 @@ public class ClubService {
         return updateCode(clubId, CodeType.ENTRY);
     }
 
-    public ClubEntryResDto getClubInfoByEntryCode(String entryCode) {
+    public ClubInfoResDto getClubInfoByEntryCode(String entryCode) {
         Club club = clubRepository.findByEntryCode(entryCode)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
-        return new ClubEntryResDto(club.getName(), "", club.getDescription());
+        return new ClubInfoResDto(club.getName(), "", club.getDescription());
     }
 
     // 초대 코드
