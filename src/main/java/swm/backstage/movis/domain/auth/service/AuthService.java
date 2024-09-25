@@ -122,7 +122,7 @@ public class AuthService {
 
         return new UserLoginResDto(
                 authTokenDto.getAccessToken(),
-                authTokenDto.getAccessToken()
+                authTokenDto.getRefreshToken()
         );
     }
 
@@ -200,7 +200,7 @@ public class AuthService {
 
         return new JwtCreateResDto(
                 authTokenDto.getAccessToken(),
-                authTokenDto.getAccessToken()
+                authTokenDto.getRefreshToken()
         );
     }
 

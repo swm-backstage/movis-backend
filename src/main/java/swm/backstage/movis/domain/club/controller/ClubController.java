@@ -80,7 +80,7 @@ public class ClubController {
         return new MemberVerifyResDto(
                 clubId,
                 authTokenDto.getAccessToken(),
-                authTokenDto.getAccessToken()
+                authTokenDto.getRefreshToken()
         );
     }
 
