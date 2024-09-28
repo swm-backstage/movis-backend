@@ -23,4 +23,6 @@ public class ClubCreateReqDto {
     @NotNull
     @Pattern(regexp = "^\\d{3}$", message = "Bank code must be exactly 3 digits")
     private String bankCode;
+
+    private String thumbnail;
 }
