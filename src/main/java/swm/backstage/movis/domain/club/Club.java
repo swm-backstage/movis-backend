@@ -39,6 +39,9 @@ public class Club extends DateTimeField {
     @Column(name = "description", length = 100)
     private String description;
 
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<ClubUser> clubUserList = new ArrayList<>();
 
@@ -89,6 +92,7 @@ public class Club extends DateTimeField {
         this.bankCode = clubCreateReqDto.getBankCode();
         this.isDeleted = Boolean.FALSE;
         this.accountBook = accountBook;
+        this.thumbnail = clubCreateReqDto.getThumbnail();
         accountBook.setClub(this);
     }
 
