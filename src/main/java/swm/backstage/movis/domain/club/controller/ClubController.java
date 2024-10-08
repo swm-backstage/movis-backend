@@ -8,10 +8,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import swm.backstage.movis.domain.auth.PlatformType;
+import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
-import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
 import swm.backstage.movis.domain.auth.service.AuthTokenService;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.*;
@@ -45,7 +44,6 @@ public class ClubController {
     @GetMapping()
     @Transactional
     public ClubGetListResDto getClubList(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
-        List<Club> clubList = clubService.getClubList((principal.getIdentifier()));
         return new ClubGetListResDto(clubService.getClubList(principal.getIdentifier()));
     }
 

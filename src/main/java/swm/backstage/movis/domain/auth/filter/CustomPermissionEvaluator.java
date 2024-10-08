@@ -3,8 +3,7 @@ package swm.backstage.movis.domain.auth.filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-import swm.backstage.movis.domain.auth.PlatformType;
+import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.service.EventService;
@@ -64,7 +63,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         if (platformType.equals(PlatformType.APP.value())){
-            return permissions.contains(clubUserService.getClubUser(identifier, clubId).getRole());
+            return permissions.contains(clubUserService.getClubUser(identifier, clubId).getRoleType().getRole());
         } else if (platformType.equals(PlatformType.WEB.value())){
             return memberService.existedByNameAndClubUuid(identifier, clubId);
         }

@@ -39,8 +39,9 @@ public class ClubUserController {
     @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @GetMapping()
     public ClubUserListGetResDto getClubUserList(@RequestParam(name = "clubId") @Param("clubId") String clubId) {
+
         return new ClubUserListGetResDto(clubUserService.getClubUserList(clubId)
                 .stream()
-                .map(clubUser -> new ClubUserGetResDto(clubUser.getUuid(), clubUser.getIdentifier(), clubUser.getRole())).toList());
+                .map(clubUser -> new ClubUserGetResDto(clubUser.getUuid(), clubUser.getIdentifier(), clubUser.getRoleType())).toList());
     }
 }

@@ -1,4 +1,4 @@
-package swm.backstage.movis.domain.auth;
+package swm.backstage.movis.domain.auth.enums;
 
 public enum PlatformType {
 

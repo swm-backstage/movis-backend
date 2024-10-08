@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.accout_book.AccountBook;
-import swm.backstage.movis.domain.auth.RoleType;
+import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club.dto.ClubInfoResDto;
@@ -34,7 +34,7 @@ public class ClubService {
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
         Club newClub = new Club(clubCreateReqDto, UUID.randomUUID().toString(), new AccountBook());
-        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_MANAGER.value(), user, newClub);
+        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_MANAGER, user, newClub);
 
         newClub.setEntryCode(createRandomCode());
         newClub.setInviteCode(createRandomCode());

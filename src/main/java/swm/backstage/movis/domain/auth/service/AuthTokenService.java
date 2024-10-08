@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.auth.AuthToken;
-import swm.backstage.movis.domain.auth.PlatformType;
 import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.repository.AuthTokenRepository;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
