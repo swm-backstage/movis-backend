@@ -67,6 +67,6 @@ public class MemberService {
 
     public boolean isMemberExist(String clubId, String name, String phoneNo) {
         return memberJpaRepository.findByClubAndNameAndPhoneNo(clubService.getClubByUuId(clubId), name, phoneNo)
-                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND)) != null;
+                .orElseThrow(() -> new BaseException("일치하는 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND)) != null;
     }
 }

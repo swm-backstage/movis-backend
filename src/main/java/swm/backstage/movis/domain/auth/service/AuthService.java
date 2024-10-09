@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import swm.backstage.movis.domain.auth.AuthToken;
-import swm.backstage.movis.domain.auth.PlatformType;
+import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.RsaPrivateKey;
+import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.RSAKeyPairDto;
 import swm.backstage.movis.domain.auth.dto.request.*;
 import swm.backstage.movis.domain.auth.dto.response.ConfirmIdentifierResDto;
@@ -117,25 +118,11 @@ public class AuthService {
             throw new BaseException("비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_PASSWORD);
         }
 
-        String accessToken = jwtUtil.createToken(
-                jwtUtil.getACCESS_TOKEN_NAME(),
-                PlatformType.APP.value(),
-                identifier,
-                jwtUtil.getACCESS_TOKEN_EXPIRED_TIME()
-        );
-        String refreshToken = jwtUtil.createToken(
-                jwtUtil.getREFRESH_TOKEN_NAME(),
-                PlatformType.APP.value(),
-                identifier,
-                jwtUtil.getREFRESH_TOKEN_EXPIRED_TIME()
-        );
-
-        authTokenService.deleteAllByIdentifier(identifier);
-        authTokenService.addAuthToken(identifier, accessToken, refreshToken);
+        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(identifier, PlatformType.APP.value());
 
         return new UserLoginResDto(
-                accessToken,
-                refreshToken
+                authTokenDto.getAccessToken(),
+                authTokenDto.getRefreshToken()
         );
     }
 
@@ -209,23 +196,12 @@ public class AuthService {
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 
-        String newAccessToken = jwtUtil.createToken(
-                jwtUtil.getACCESS_TOKEN_NAME(),
-                PlatformType.APP.value(),
-                identifier,
-                jwtUtil.getACCESS_TOKEN_EXPIRED_TIME()
-        );
-        String newRefreshToken = jwtUtil.createToken(
-                jwtUtil.getREFRESH_TOKEN_NAME(),
-                PlatformType.APP.value(),
-                identifier,
-                jwtUtil.getREFRESH_TOKEN_EXPIRED_TIME()
-        );
+        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(identifier, PlatformType.APP.value());
 
-        authTokenService.deleteAllByIdentifier(identifier);
-        authTokenService.addAuthToken(identifier, newAccessToken, newRefreshToken);
-
-        return new JwtCreateResDto(newAccessToken, newRefreshToken);
+        return new JwtCreateResDto(
+                authTokenDto.getAccessToken(),
+                authTokenDto.getRefreshToken()
+        );
     }
 
     public PublicKeyGetResDto getPublicKey() {

@@ -5,12 +5,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import swm.backstage.movis.domain.auth.enums.PlatformType;
+import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
+import swm.backstage.movis.domain.auth.service.AuthTokenService;
+import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.member.service.MemberService;
+
+import java.util.List;
 
 
 @RestController
@@ -20,6 +27,7 @@ public class ClubController {
 
     private final ClubService clubService;
     private final MemberService memberService;
+    private final AuthTokenService authTokenService;
 
     @PostMapping()
     public ClubGetResDto createClub(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
@@ -34,6 +42,7 @@ public class ClubController {
     }
 
     @GetMapping()
+    @Transactional
     public ClubGetListResDto getClubList(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
         return new ClubGetListResDto(clubService.getClubList(principal.getIdentifier()));
     }
@@ -53,18 +62,23 @@ public class ClubController {
     }
 
     @GetMapping("/entryCode/{entryCode}")
-    public boolean isEntryCodeValid(@PathVariable("entryCode") String entryCode){
-        clubService.getClubUuidByEntryCode(entryCode); // 없으면 메소드 내에서 예외처리 됨
-        return true;
+    public ClubInfoResDto getEntryClubInfo(@PathVariable("entryCode") String entryCode){
+        return clubService.getClubInfoByEntryCode(entryCode); // 없으면 메소드 내에서 예외처리 됨
     }
 
     // 해당 멤버가 있는지 확인 후, clubId 반환
-    // TODO : 멤버에게 JWT 토큰 전달
-    @GetMapping("/entryCode/verify")
-    public String verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
+    @PostMapping("/entryCode/verify")
+    public MemberVerifyResDto verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
         String clubId = clubService.getClubUuidByEntryCode(clubEntryReqDto.getEntryCode());
         memberService.isMemberExist(clubId, clubEntryReqDto.getName(), clubEntryReqDto.getPhoneNumber());
-        return clubId;
+
+        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(clubEntryReqDto.getName(), PlatformType.WEB.value());
+
+        return new MemberVerifyResDto(
+                clubId,
+                authTokenDto.getAccessToken(),
+                authTokenDto.getRefreshToken()
+        );
     }
 
     /**

@@ -3,6 +3,8 @@ package swm.backstage.movis.domain.club_user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import swm.backstage.movis.domain.auth.enums.RoleType;
+import swm.backstage.movis.domain.auth.enums.RoleTypeConverter;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.user.User;
 
@@ -26,8 +28,8 @@ public class ClubUser {
     @Column(unique = true, name = "uuid", length = 36)
     private String uuid;
 
-    @Column(name = "role", nullable = false, length = 30)
-    private String role;
+    @Convert(converter = RoleTypeConverter.class)
+    private RoleType roleType;
 
     @Column(name = "identifier", nullable = false, length = 255)
     private String identifier;
@@ -43,9 +45,9 @@ public class ClubUser {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    public ClubUser(String uuid, String role, User user, Club club) {
+    public ClubUser(String uuid, RoleType roleType, User user, Club club) {
         this.uuid = uuid;
-        this.role = role;
+        this.roleType = roleType;
         this.identifier = user.getIdentifier();
         this.clubUuid = club.getUuid();
         this.user = user;
@@ -53,7 +55,7 @@ public class ClubUser {
         club.addClubUser(this);
     }
 
-    public void updateRole(String role){
-        this.role = role;
+    public void updateRole(RoleType roleType){
+        this.roleType = roleType;
     }
 }

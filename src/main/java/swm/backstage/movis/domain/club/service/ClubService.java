@@ -3,11 +3,14 @@ package swm.backstage.movis.domain.club.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.accout_book.AccountBook;
-import swm.backstage.movis.domain.auth.RoleType;
+import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
+import swm.backstage.movis.domain.club.dto.ClubInfoResDto;
 import swm.backstage.movis.domain.club.dto.CodeType;
 import swm.backstage.movis.domain.club.repository.ClubRepository;
 import swm.backstage.movis.domain.club_user.ClubUser;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ClubService {
+    private static final Logger log = LoggerFactory.getLogger(ClubService.class);
     private final ClubRepository clubRepository;
     private final UserService userService;
 
@@ -30,7 +34,7 @@ public class ClubService {
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
         Club newClub = new Club(clubCreateReqDto, UUID.randomUUID().toString(), new AccountBook());
-        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_MANAGER.value(), user, newClub);
+        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_MANAGER, user, newClub);
 
         newClub.setEntryCode(createRandomCode());
         newClub.setInviteCode(createRandomCode());
@@ -67,11 +71,8 @@ public class ClubService {
     }
 
     public List<Club> getClubList(String identifier){
-        User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
-        List<ClubUser> clubUserList = user.getClubUserList();
-        return clubUserList.stream()
-                .map(ClubUser::getClub)
-                .collect(Collectors.toList());
+        User user = userService.findUserWithInfoByIdentifier(identifier);
+        return user.getClubUserList().stream().map(ClubUser::getClub).collect(Collectors.toList());
     }
 
     public String getClubUid(String accountNumber, String identifier) {
@@ -87,6 +88,12 @@ public class ClubService {
     // 입장 코드
     public String updateEntryCode(String clubId) {
         return updateCode(clubId, CodeType.ENTRY);
+    }
+
+    public ClubInfoResDto getClubInfoByEntryCode(String entryCode) {
+        Club club = clubRepository.findByEntryCode(entryCode)
+                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
+        return new ClubInfoResDto(club.getName(), "", club.getDescription());
     }
 
     // 초대 코드

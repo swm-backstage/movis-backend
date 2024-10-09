@@ -7,16 +7,14 @@ import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.club_user.ClubUser;
 import swm.backstage.movis.domain.club_user.dto.ClubUserCreateReqDto;
-import swm.backstage.movis.domain.club_user.dto.ClubUserListGetResDto;
 import swm.backstage.movis.domain.club_user.repository.ClubUserRepository;
-import swm.backstage.movis.domain.auth.RoleType;
+import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.service.UserService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,7 +29,7 @@ public class ClubUserService {
     public void createClubUser(ClubUserCreateReqDto clubUserCreateReqDto) {
         Club club = clubService.findClubByUuId(clubUserCreateReqDto.getClubId());
         User user = userService.findByIdentifier(clubUserCreateReqDto.getIdentifier()).orElseThrow(()-> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND));
-        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_EXECUTIVE.value(), user, club);
+        ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_EXECUTIVE, user, club);
         clubUserRepository.save(clubUser);
     }
 
@@ -45,8 +43,8 @@ public class ClubUserService {
         ClubUser toClubUser = clubUserRepository.findByIdentifierAndClub_Uuid(toIdentifier, clubId)
                 .orElseThrow(() -> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND));
 
-        fromClubUser.updateRole(RoleType.ROLE_EXECUTIVE.value());
-        toClubUser.updateRole(RoleType.ROLE_MANAGER.value());
+        fromClubUser.updateRole(RoleType.ROLE_EXECUTIVE);
+        toClubUser.updateRole(RoleType.ROLE_MANAGER);
 
         clubUserRepository.save(fromClubUser);
         clubUserRepository.save(toClubUser);

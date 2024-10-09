@@ -3,11 +3,12 @@ package swm.backstage.movis.domain.auth.filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-import swm.backstage.movis.domain.auth.PlatformType;
+import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.service.EventService;
+import swm.backstage.movis.domain.event_bill.service.EventBillService;
+import swm.backstage.movis.domain.fee.service.FeeService;
 import swm.backstage.movis.domain.member.service.MemberService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
@@ -23,6 +24,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     private final ClubUserService clubUserService;
     private final MemberService memberService;
     private final EventService eventService;
+    private final EventBillService eventBillService;
+    private final FeeService feeService;
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
@@ -47,6 +50,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             return targetId;
         } else if(targetType.equals("eventId")){
             return eventService.getEventByUuid(targetId).getClub().getUuid();
+        } else if(targetType.equals("eventBillId")){
+            return eventBillService.getEventBillByUuid(targetId).getClub().getUuid();
+        } else if(targetType.equals("feeId")){
+            return feeService.getFeeByUuId(targetId).getClub().getUuid();
         }
         return null;
     }
@@ -64,7 +71,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         if (platformType.equals(PlatformType.APP.value())){
-            return permissions.contains(clubUserService.getClubUser(identifier, clubId).getRole());
+            return permissions.contains(clubUserService.getClubUser(identifier, clubId).getRoleType().getRole());
         } else if (platformType.equals(PlatformType.WEB.value())){
             return memberService.existedByNameAndClubUuid(identifier, clubId);
         }
