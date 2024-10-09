@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import swm.backstage.movis.domain.auth.AuthToken;
-import swm.backstage.movis.domain.auth.PlatformType;
+import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.RsaPrivateKey;
 import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.RSAKeyPairDto;
