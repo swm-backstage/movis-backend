@@ -21,6 +21,8 @@ import swm.backstage.movis.domain.auth.service.AuthTokenService;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.service.EventService;
+import swm.backstage.movis.domain.event_bill.service.EventBillService;
+import swm.backstage.movis.domain.fee.service.FeeService;
 import swm.backstage.movis.domain.member.service.MemberService;
 
 
@@ -36,6 +38,8 @@ public class SecurityConfig {
     private final ClubUserService clubUserService;
     private final MemberService memberService;
     private final EventService eventService;
+    private final EventBillService eventBillService;
+    private final FeeService feeService;
 
     public SecurityConfig(JwtUtil jwtUtil,
                           @Qualifier("corsConfigurationSource") CorsConfigurationSource corsConfigurationSource,
@@ -43,7 +47,9 @@ public class SecurityConfig {
                           AuthTokenService authTokenService,
                           ClubUserService clubUserService,
                           MemberService memberService,
-                          EventService eventService
+                          EventService eventService,
+                          EventBillService eventBillService,
+                          FeeService feeService
                           ) {
         this.jwtUtil = jwtUtil;
         this.corsConfigurationSource = corsConfigurationSource;
@@ -52,6 +58,8 @@ public class SecurityConfig {
         this.clubUserService = clubUserService;
         this.memberService = memberService;
         this.eventService = eventService;
+        this.eventBillService = eventBillService;
+        this.feeService = feeService;
     }
 
     @Bean
@@ -62,7 +70,7 @@ public class SecurityConfig {
     @Bean
     public MethodSecurityExpressionHandler expressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(new CustomPermissionEvaluator(clubUserService, memberService, eventService));
+        expressionHandler.setPermissionEvaluator(new CustomPermissionEvaluator(clubUserService, memberService, eventService, eventBillService, feeService));
         return expressionHandler;
     }
 

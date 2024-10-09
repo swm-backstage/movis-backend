@@ -55,17 +55,17 @@ public class EventBillController {
     /**
      *  단일 조회
      * */
-    //TODO: 권한 검증
+    @PreAuthorize("hasPermission(#eventBillId, 'eventBillId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @GetMapping("/{eventBillId}")
-    public EventBillGetResDto getEventBill(@PathVariable String eventBillId) {
+    public EventBillGetResDto getEventBill(@PathVariable @Param("eventBillId") String eventBillId) {
         return new EventBillGetResDto(eventBillService.getEventBillByUuid(eventBillId));
     }
     /**
      * 지출 내역 설명 추가
      * */
-    //TODO: 권한 검증
+    @PreAuthorize("hasPermission(#EventBIllCreateExplanationReqDto.eventBillID, 'eventBillId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping("/explanation")
-    public EventBillGetResDto createEventBillExplanation(@RequestBody EventBIllCreateExplanationReqDto  eventBIllCreateExplanationReqDto){
+    public EventBillGetResDto createEventBillExplanation(@RequestBody @Param("eventBIllCreateExplanationReqDto") EventBIllCreateExplanationReqDto  eventBIllCreateExplanationReqDto){
         return new EventBillGetResDto(eventBillService.createEventBillExplanation(eventBIllCreateExplanationReqDto));
     }
 

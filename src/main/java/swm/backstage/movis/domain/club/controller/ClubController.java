@@ -67,7 +67,6 @@ public class ClubController {
     }
 
     // 해당 멤버가 있는지 확인 후, clubId 반환
-    // TODO : 멤버에게 JWT 토큰 전달
     @PostMapping("/entryCode/verify")
     public MemberVerifyResDto verifyMember(@RequestBody ClubEntryReqDto clubEntryReqDto){
         String clubId = clubService.getClubUuidByEntryCode(clubEntryReqDto.getEntryCode());

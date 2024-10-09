@@ -59,17 +59,17 @@ public class FeeController {
     /**
      * 회비 단일 조회
      * */
-    //TODO: 권한 검증
+    @PreAuthorize("hasPermission(#feeId, 'feeId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @GetMapping("/{feeId}")
-    public FeeGetResDto getFee(@PathVariable String feeId) {
+    public FeeGetResDto getFee(@PathVariable @Param("feeId") String feeId) {
         return new FeeGetResDto(feeService.getFeeByUuId(feeId));
     }
     /**
      * 회비 설명 추가
      * */
-    //TODO: 권한 검증
+    @PreAuthorize("hasPermission(#reqDto.feeId, 'feeId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping("/explanation")
-    public FeeGetResDto createEventBillExplanation(@RequestBody FeeCreateExplanationReqDto reqDto){
+    public FeeGetResDto createEventBillExplanation(@RequestBody @Param("reqDto") FeeCreateExplanationReqDto reqDto){
         return new FeeGetResDto(feeService.createFeeExplanation(reqDto));
     }
 
