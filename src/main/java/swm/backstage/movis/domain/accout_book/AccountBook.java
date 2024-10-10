@@ -32,7 +32,7 @@ public class AccountBook {
         this.unClassifiedWithdrawal = 0L;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "club_id")
     private Club club;
 

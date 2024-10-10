@@ -19,7 +19,7 @@ public class EventGetFundingElementResDto {
     private LocalDate paymentDeadline;
 
     public EventGetFundingElementResDto(Event event) {
-        this.eventId = event.getUuid();
+        this.eventId = event.getUlid();
         this.name = event.getName();
         this.totalPaymentAmount = event.getTotalPaymentAmount();
         this.paymentDeadline = event.getPaymentDeadline();

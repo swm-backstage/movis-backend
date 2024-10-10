@@ -41,18 +41,18 @@ public class MemberService {
         // memberCreateListDto에 받아온 Member 중복 비교
         List<Member> memberList =  memberCreateListDto.getMemberList().stream()
                 .filter(memberCreateDto -> !existMemberSet.contains(memberCreateDto.getPhoneNo()+"+"+memberCreateDto.getName()))
-                .map(memberCreateDto -> new Member(UUID.randomUUID().toString(),club,memberCreateDto))
+                .map(memberCreateDto -> new Member(club,memberCreateDto))
                 .toList();
 
         memberJdbcRepository.bulkSave(memberList);
     }
 
     public Boolean existedByNameAndClubUuid(String name, String clubId){
-        return memberJpaRepository.existsByNameAndClub_Uuid(name, clubId);
+        return memberJpaRepository.existsByNameAndClub_Ulid(name, clubId);
     }
     public void create(String clubUid, MemberCreateReqDto memberCreateReqDto) {
         Club club = clubService.getClubByUuId(clubUid);
-        Member member = new Member(UUID.randomUUID().toString(), club, memberCreateReqDto);
+        Member member = new Member( club, memberCreateReqDto);
         memberJpaRepository.save(member);
     }
 
@@ -62,7 +62,7 @@ public class MemberService {
     }
 
     public List<Member> getMemberListByUuids(List<String> uuids) {
-        return memberJpaRepository.findAllByUuidIn(uuids);
+        return memberJpaRepository.findAllByUlidIn(uuids);
     }
 
     public boolean isMemberExist(String clubId, String name, String phoneNo) {

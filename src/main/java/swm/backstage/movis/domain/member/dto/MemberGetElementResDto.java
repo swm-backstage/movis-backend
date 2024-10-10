@@ -20,8 +20,8 @@ public class MemberGetElementResDto {
     private LocalDateTime updatedAt;
 
     public MemberGetElementResDto(Member member) {
-        this.memberId = member.getUuid();
-        this.clubId = member.getClub().getUuid();
+        this.memberId = member.getUlid();
+        this.clubId = member.getClub().getUlid();
         this.name = member.getName();
         this.phoneNo = member.getPhoneNo();
         this.isDeleted = member.getIsDeleted();

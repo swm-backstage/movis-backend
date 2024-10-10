@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.fee;
 
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,17 +17,14 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "fee", indexes = {
         @Index(name = "idx_event_id", columnList = "event_id"),
-        @Index(name = "idx_event_id_fee_id", columnList = "event_id, id")})
+        @Index(name = "idx_event_id_fee_id", columnList = "event_id, ulid")})
 @Getter
 @NoArgsConstructor
 public class Fee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String uuid;
+    @Column(nullable = false, unique = true, length = 26)
+    private String ulid;
 
     private Long paidAmount;
     private LocalDateTime paidAt;
@@ -51,8 +49,8 @@ public class Fee {
 
 
 
-    public Fee(String uuid, FeeReqDto feeReqDto, Club club) {
-        this.uuid = uuid;
+    public Fee(FeeReqDto feeReqDto, Club club) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.paidAmount = feeReqDto.getPaidAmount();
         this.paidAt = feeReqDto.getPaidAt();
         this.name = feeReqDto.getName();
@@ -60,8 +58,8 @@ public class Fee {
         this.isDeleted = false;
     }
 
-    public Fee(String uuid, FeeReqDto feeReqDto, Club club, EventMember eventMember) {
-        this.uuid = uuid;
+    public Fee(FeeReqDto feeReqDto, Club club, EventMember eventMember) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.paidAmount = feeReqDto.getPaidAmount();
         this.paidAt = feeReqDto.getPaidAt();
         this.name = feeReqDto.getName();
@@ -71,8 +69,8 @@ public class Fee {
         this.isDeleted = false;
     }
 
-    public Fee(String uuid, FeeInputReqDto feeInputReqDto, Club club, Event event, EventMember eventMember) {
-        this.uuid = uuid;
+    public Fee(FeeInputReqDto feeInputReqDto, Club club, Event event, EventMember eventMember) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.paidAmount = feeInputReqDto.getPaidAmount();
         this.paidAt = feeInputReqDto.getPaidAt();
         this.name = feeInputReqDto.getName();

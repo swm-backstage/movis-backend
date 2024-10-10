@@ -22,5 +22,10 @@ public class AccountBookService {
                 .orElseThrow(()->new BaseException("account book is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
+    @Transactional
+    public AccountBook createAccountBook(AccountBook accountBook) {
+        return accountBookRepository.save(accountBook);
+    }
+
 
 }

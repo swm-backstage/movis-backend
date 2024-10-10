@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.member;
 
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,22 +17,19 @@ import java.util.List;
 @Entity
 @Table(name = "member",
         indexes = {
-                @Index(name = "idx_name_club_uuid", columnList = "name, club_uuid")
+                @Index(name = "idx_name_club_uuid", columnList = "name, club_id")
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "unique_name_club_uuid", columnNames = {"name", "club_uuid"})
+                @UniqueConstraint(name = "unique_name_club_uuid", columnNames = {"name", "club_id"})
         })
 @NoArgsConstructor
 @Getter
 public class Member extends DateTimeField {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 
-    @Column(unique = true, nullable = false, length = 36)
-    private String uuid;
+    @Id
+    @Column(unique = true, nullable = false, length = 26)
+    private String ulid;
 
     @Column(unique = true, name = "name", nullable = false, length = 255)
     private String name;
@@ -48,9 +46,6 @@ public class Member extends DateTimeField {
     @Column(name = "deleted_at", nullable = true)
     private LocalDateTime deletedAt;
 
-    @Column(name = "club_uuid", length = 36)
-    private String clubUuid;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
@@ -58,10 +53,9 @@ public class Member extends DateTimeField {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<EventMember> eventMembers = new ArrayList<>();
 
-    public Member(String uuid, Club club, MemberCreateReqDto memberCreateReqDto) {
-        this.uuid = uuid;
+    public Member(Club club, MemberCreateReqDto memberCreateReqDto) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.club = club;
-        this.clubUuid = club.getUuid();
         this.name = memberCreateReqDto.getName();
         this.phoneNo = memberCreateReqDto.getPhoneNo();
         this.isEnrolled = Boolean.TRUE;

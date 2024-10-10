@@ -7,8 +7,8 @@ import swm.backstage.movis.domain.event_member.EventMember;
 import java.util.List;
 import java.util.Optional;
 
-public interface EventMemberJpaRepository extends JpaRepository<EventMember, Long> {
-    Optional<EventMember> findByUuid(String eventId);
+public interface EventMemberJpaRepository extends JpaRepository<EventMember, String> {
+    Optional<EventMember> findByUlid(String eventMemberId);
 
     Optional<EventMember> findByEventAndMemberName(Event event, String memberName);
 

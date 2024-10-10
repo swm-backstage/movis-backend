@@ -37,8 +37,8 @@ public class EventBillService {
     @Transactional
     public void createEventBillByInput(String eventId, EventBillInputReqDto dto) {
         Event event = eventService.getEventByUuid(eventId);
-        AccountBook accountBook = accountBookService.getAccountBookByClubId(event.getClub().getUuid());
-        EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(), dto, event.getClub(), event));
+        AccountBook accountBook = accountBookService.getAccountBookByClubId(event.getClub().getUlid());
+        EventBill eventBill = eventBillRepository.save(new EventBill(dto, event.getClub(), event));
         accountBook.updateBalance(dto.getPaidAmount());
         accountBook.updateClassifiedWithdrawal(dto.getPaidAmount());
         event.updateBalance(dto.getPaidAmount());
@@ -49,7 +49,7 @@ public class EventBillService {
      */
     @Transactional
     public void createEventBill(EventBillCreateReqDto eventBillCreateReqDto) {
-        EventBill eventBill = eventBillRepository.save(new EventBill(UUID.randomUUID().toString(), eventBillCreateReqDto, clubService.getClubByUuId(eventBillCreateReqDto.getClubId())));
+        EventBill eventBill = eventBillRepository.save(new EventBill(eventBillCreateReqDto, clubService.getClubByUuId(eventBillCreateReqDto.getClubId())));
         AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBillCreateReqDto.getClubId());
         accountBook.updateUnClassifiedWithdrawal(eventBillCreateReqDto.getAmount());
         accountBook.updateBalance(eventBillCreateReqDto.getAmount());
@@ -57,7 +57,7 @@ public class EventBillService {
     }
 
     public EventBill getEventBillByUuid(String eventBillId) {
-        return eventBillRepository.findByUuid(eventBillId).orElseThrow(() -> new BaseException("eventBill is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return eventBillRepository.findByUlid(eventBillId).orElseThrow(() -> new BaseException("eventBill is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     @Transactional
@@ -76,10 +76,10 @@ public class EventBillService {
         Event event = eventService.getEventByUuid(eventId);
         List<EventBill> eventBillList;
         if (lastId.equals("first")) {
-            eventBillList = eventBillRepository.getFirstPage(event.getId(), lastPaidAt, size + 1);
+            eventBillList = eventBillRepository.getFirstPage(event.getUlid(), lastPaidAt, size + 1);
         } else {
             EventBill eventBill = getEventBillByUuid(lastId);
-            eventBillList = eventBillRepository.getNextPage(event.getId(), lastPaidAt, eventBill.getId(), size + 1);
+            eventBillList = eventBillRepository.getNextPage(event.getUlid(), lastPaidAt, eventBill.getUlid(), size + 1);
         }
 
         //하나 추가해서 조회한거 삭제해주기

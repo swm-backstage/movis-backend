@@ -42,14 +42,14 @@ public class EventService {
     @Transactional
     public Event createEvent(EventCreateReqDto eventCreateReqDto) {
         Club club = clubService.getClubByUuId(eventCreateReqDto.getClubId());
-        return eventRepository.save(new Event(UUID.randomUUID().toString(), eventCreateReqDto,club,club.getAccountBook()));
+        return eventRepository.save(new Event( eventCreateReqDto,club,club.getAccountBook()));
     }
 
     /**
      * null 허용 X
      * */
     public Event getEventByUuid(String eventId) {
-        return eventRepository.findByUuid(eventId).orElseThrow(()->new BaseException("eventId is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return eventRepository.findByUlid(eventId).orElseThrow(()->new BaseException("eventId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     /**
@@ -66,8 +66,8 @@ public class EventService {
     /**
      * null 허용 O
      * */
-    public Event findEventByUuid(String eventUuid) {
-        return eventRepository.findByUuid(eventUuid).orElse(null);
+    public Event findEventByUlid(String eventUlid) {
+        return eventRepository.findByUlid(eventUlid).orElse(null);
     }
 
 
@@ -78,11 +78,11 @@ public class EventService {
         Club club = clubService.getClubByUuId(clubId);
         List<Event> eventList;
         if(lastId.equals("first")){
-            eventList = eventRepository.getFirstPage(club.getId(),size+1);
+            eventList = eventRepository.getFirstPage(club.getUlid(),size+1);
         }
         else{
             Event event = getEventByUuid(lastId);
-            eventList = eventRepository.getNextPageByEventIdAndLastId(club.getId(),event.getId(),size+1);
+            eventList = eventRepository.getNextPageByEventIdAndLastId(club.getUlid(),event.getUlid(),size+1);
         }
         Boolean isLast = eventList.size() < size + 1;
         if(!isLast){
@@ -123,14 +123,14 @@ public class EventService {
 
         //2. deposit 관련 수정
         long deposit = 0;
-        feeManager.updateIsDeleted(event.getId());
+        feeManager.updateIsDeleted(event.getUlid());
         for(Fee fee : event.getFees()){
            deposit = deposit + fee.getPaidAmount();
         }
         accountBook.updateClassifiedDeposit(-deposit);
 
         //3. eventBill 수정
-        eventBillManager.updateIsDeleted(event.getId());
+        eventBillManager.updateIsDeleted(event.getUlid());
         long withdraw = 0L;
         for(EventBill eventBill : event.getEventBills()){
             withdraw = withdraw + eventBill.getAmount();
@@ -138,7 +138,7 @@ public class EventService {
         accountBook.updateClassifiedWithdrawal(-withdraw);
 
         //4. transactionHistory 수정
-        transactionHistoryManager.updateIsDeleted(event.getId());
+        transactionHistoryManager.updateIsDeleted(event.getUlid());
     }
 
 

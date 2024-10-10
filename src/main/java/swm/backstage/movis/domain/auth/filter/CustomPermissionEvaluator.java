@@ -49,11 +49,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         if(targetType.equals("clubId")){
             return targetId;
         } else if(targetType.equals("eventId")){
-            return eventService.getEventByUuid(targetId).getClub().getUuid();
+            return eventService.getEventByUuid(targetId).getClub().getUlid();
         } else if(targetType.equals("eventBillId")){
-            return eventBillService.getEventBillByUuid(targetId).getClub().getUuid();
+            return eventBillService.getEventBillByUuid(targetId).getClub().getUlid();
         } else if(targetType.equals("feeId")){
-            return feeService.getFeeByUuId(targetId).getClub().getUuid();
+            return feeService.getFeeByUuId(targetId).getClub().getUlid();
         }
         return null;
     }

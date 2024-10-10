@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.transaction_history;
 
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,20 +15,18 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "transaction_history", indexes = {
         @Index(name = "event_id_paid_at", columnList = "event_id, paid_at"),
-        @Index(name = "idx_event_id_paid_at_th_id", columnList = "event_id, paid_at , id"),
+        @Index(name = "idx_event_id_paid_at_th_id", columnList = "event_id, paid_at , ulid"),
         @Index(name = "club_id_paid_at", columnList = "club_id, paid_at"),
-        @Index(name = "idx_club_id_paid_at_th_id", columnList = "club_id, paid_at , id")
+        @Index(name = "idx_club_id_paid_at_th_id", columnList = "club_id, paid_at , ulid")
 })
 @NoArgsConstructor
 @Getter
 public class TransactionHistory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(nullable = false, unique = true, length = 36)
-    private String uuid;
-    private String elementUuid;
+    @Id
+    @Column(nullable = false, unique = true, length = 26)
+    private String ulid;
+    private String elementUlid;
 
     private String name;
     private Long amount;
@@ -46,10 +45,10 @@ public class TransactionHistory {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    public TransactionHistory(String uuid, TransactionHistoryCreateDto dto) {
+    public TransactionHistory( TransactionHistoryCreateDto dto) {
         this.club =dto.getClub();
-        this.uuid = uuid;
-        this.elementUuid = dto.getElementUuid();
+        this.ulid = UlidCreator.getUlid().toString();
+        this.elementUlid = dto.getElementUlid();
         this.name = dto.getName();
         this.amount = dto.getAmount();
         this.event = dto.getEvent();

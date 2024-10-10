@@ -49,7 +49,7 @@ public class ClubUser {
         this.uuid = uuid;
         this.roleType = roleType;
         this.identifier = user.getIdentifier();
-        this.clubUuid = club.getUuid();
+        this.clubUuid = club.getUlid();
         this.user = user;
         this.club = club;
         club.addClubUser(this);

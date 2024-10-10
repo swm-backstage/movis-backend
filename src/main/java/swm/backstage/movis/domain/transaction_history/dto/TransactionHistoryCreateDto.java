@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class TransactionHistoryCreateDto {
 
     private Club club;
-    private String elementUuid;
+    private String elementUlid;
     private String name;
     private Long amount;
     private LocalDateTime paidAt;
@@ -23,10 +23,10 @@ public class TransactionHistoryCreateDto {
     private TransactionStatus status;
     private Boolean isClassified;
 
-    public TransactionHistoryCreateDto(Club club, Event event, String elementUuid, String name, Long amount, LocalDateTime paidAt, TransactionStatus status, Boolean isClassified) {
+    public TransactionHistoryCreateDto(Club club, Event event, String elementUlid, String name, Long amount, LocalDateTime paidAt, TransactionStatus status, Boolean isClassified) {
         this.club = club;
         this.event = event;
-        this.elementUuid = elementUuid;
+        this.elementUlid = elementUlid;
         this.name = name;
         this.amount = amount;
         this.paidAt = paidAt;
@@ -39,7 +39,7 @@ public class TransactionHistoryCreateDto {
         return new TransactionHistoryCreateDto(
                 eventBill.getClub(),
                 eventBill.getEvent(),
-                eventBill.getUuid(),
+                eventBill.getUlid(),
                 eventBill.getPayName(),
                 eventBill.getAmount(),
                 eventBill.getPaidAt(),
@@ -50,7 +50,7 @@ public class TransactionHistoryCreateDto {
         return new TransactionHistoryCreateDto(
                 fee.getClub(),
                 fee.getEvent(),
-                fee.getUuid(),
+                fee.getUlid(),
                 fee.getName(),
                 fee.getPaidAmount(),
                 fee.getPaidAt(),

@@ -10,27 +10,27 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface EventRepository extends JpaRepository<Event, Long> {
-    Optional<Event> findByUuid(String uuid);
+public interface EventRepository extends JpaRepository<Event, String> {
+    Optional<Event> findByUlid(String ulid);
 
-    @Query("SELECT e from Event e where e.club.uuid= :clubId and e.totalPaymentAmount= :amount")
+    @Query("SELECT e from Event e where e.club.ulid= :clubId and e.totalPaymentAmount= :amount")
     List<Event> findByClubIdAndTotalPaymentAmount(String clubId, Long amount);
 
     // 1 회차용
     @Query("SELECT e FROM Event e " +
-            "WHERE e.club.id = :clubId " +
+            "WHERE e.club.ulid = :clubId " +
             "ORDER BY e.id DESC " +
             "LIMIT :size")
-    List<Event> getFirstPage(@Param("clubId") Long clubId,
+    List<Event> getFirstPage(@Param("clubId") String clubId,
                            @Param("size") int size);
 
     // n 회차용
     @Query("SELECT e FROM Event e " +
-            "WHERE e.club.id = :clubId AND e.id < :lastId  " +
-            "ORDER BY e.id DESC " +
+            "WHERE e.club.ulid = :clubId AND e.ulid < :lastId  " +
+            "ORDER BY e.ulid DESC " +
             "LIMIT :size")
-    List<Event> getNextPageByEventIdAndLastId(@Param("clubId") Long clubId,
-                                            @Param("lastId") Long lastId,
+    List<Event> getNextPageByEventIdAndLastId(@Param("clubId") String clubId,
+                                            @Param("lastId") String lastId,
                                             @Param("size") int size);
 
     @Query("SELECT e FROM Event e " +

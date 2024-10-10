@@ -15,7 +15,7 @@ public class EventGetPagingListElementDto {
     private Long balance;
 
     public EventGetPagingListElementDto(Event event) {
-        this.eventId = event.getUuid();
+        this.eventId = event.getUlid();
         this.name = event.getName();
         this.balance = event.getBalance();
     }

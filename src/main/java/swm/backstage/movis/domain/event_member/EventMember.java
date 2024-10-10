@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.event_member;
 
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,12 +19,11 @@ import java.util.List;
 @Getter
 public class EventMember extends DateTimeField {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(unique = true, nullable = false, length = 36)
-    private String uuid;
+
+    @Id
+    @Column(unique = true, nullable = false, length = 26)
+    private String ulid;
 
     private Long amountToPay;
 
@@ -45,8 +45,8 @@ public class EventMember extends DateTimeField {
         this.isPaid = true;
     }
 
-    public EventMember(String uuid, Member member, Event event) {
-        this.uuid = uuid;
+    public EventMember( Member member, Event event) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.member = member;
         this.event = event;
         isPaid = false;

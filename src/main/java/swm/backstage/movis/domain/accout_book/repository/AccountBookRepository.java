@@ -14,7 +14,7 @@ public interface AccountBookRepository extends JpaRepository<AccountBook, Long> 
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.query.timeout", value = "10000")})
-    @Query("SELECT a FROM AccountBook a WHERE a.club.uuid = :clubId ")
+    @Query("SELECT a FROM AccountBook a WHERE a.club.ulid = :clubId ")
     Optional<AccountBook> findByClubIdWithLock(String clubId);
 
 }
