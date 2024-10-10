@@ -30,7 +30,7 @@ public class EventMemberService {
 
     @Transactional
     public EventMember getEventMemberByUuid(String eventMemberId) {
-        return eventMemberJpaRepository.findByUuid(eventMemberId)
+        return eventMemberJpaRepository.findByUlid(eventMemberId)
                 .orElseThrow(()->new BaseException("account book is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
@@ -38,15 +38,15 @@ public class EventMemberService {
     public void addEventMembers(EventMemberListReqDto eventMemberListReqDto) {
         Event event = eventService.getEventByUuid(eventMemberListReqDto.getEventId());
 
-        Set<Long> memberSet = event.getEventMembers().stream()
-                .map(eventMember -> eventMember.getMember().getId())
+        Set<String> memberSet = event.getEventMembers().stream()
+                .map(eventMember -> eventMember.getMember().getUlid())
                 .collect(Collectors.toSet());
 
 
         eventMemberJdbcRepository.bulkSave(
                 memberService.getMemberListByUuids(eventMemberListReqDto.getEventMemberIdList()).stream()
-                        .filter(member -> !memberSet.contains(member.getId()))
-                        .map(member->new EventMember(UUID.randomUUID().toString(),member,event))
+                        .filter(member -> !memberSet.contains(member.getUlid()))
+                        .map(member->new EventMember(member,event))
                         .toList()
         );
     }
@@ -67,7 +67,7 @@ public class EventMemberService {
         if(eventMember == null){
             return null;
         }
-        return eventMember.getUuid();
+        return eventMember.getUlid();
     }
 
 

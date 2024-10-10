@@ -59,6 +59,9 @@ dependencies {
 	//aws
 	implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
+
+	//ulid
+	implementation 'com.github.f4b6a3:ulid-creator:5.2.3'
 }
 
 tasks.named('test') {

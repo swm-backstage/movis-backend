@@ -23,7 +23,7 @@ public class EventGetDto {
     private LocalDate paymentDeadline;
 
     public EventGetDto(Event event) {
-        this.eventId = event.getUuid();
+        this.eventId = event.getUlid();
         this.name = event.getName();
         this.balance = event.getBalance();
         this.totalPaymentAmount = event.getTotalPaymentAmount();

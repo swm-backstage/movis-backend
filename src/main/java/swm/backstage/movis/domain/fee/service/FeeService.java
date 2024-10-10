@@ -46,16 +46,16 @@ public class FeeService {
     public void createFeeByInput(String eventId, FeeInputReqDto feeInputReqDto) {
 
         Event event = eventService.getEventByUuid(eventId);
-        AccountBook accountBook = accountService.getAccountBookByClubId(event.getClub().getUuid());
+        AccountBook accountBook = accountService.getAccountBookByClubId(event.getClub().getUlid());
         Fee fee;
         if(feeInputReqDto.getEventMemberId() == null){
             log.info("no memberId");
-            fee = feeRepository.save(new Fee(UUID.randomUUID().toString(),feeInputReqDto,event.getClub(),event,null));
+            fee = feeRepository.save(new Fee(feeInputReqDto,event.getClub(),event,null));
         }
         else{
             log.info("yes memberId {}", feeInputReqDto.getEventMemberId());
             EventMember eventMember = eventMemberService.getEventMemberByUuid(feeInputReqDto.getEventMemberId());
-            fee = feeRepository.save(new Fee(UUID.randomUUID().toString(),feeInputReqDto,event.getClub(),event,eventMember));
+            fee = feeRepository.save(new Fee(feeInputReqDto,event.getClub(),event,eventMember));
         }
         accountBook.updateBalance(feeInputReqDto.getPaidAmount());
         accountBook.updateClassifiedDeposit(feeInputReqDto.getPaidAmount());
@@ -85,18 +85,18 @@ public class FeeService {
     }
 
     public Fee getFeeByUuId(String feeId){
-        return feeRepository.findByUuid(feeId).orElseThrow(()-> new BaseException("feeId is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return feeRepository.findByUlid(feeId).orElseThrow(()-> new BaseException("feeId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     public FeeGetPagingListResDto getFeePagingList(String eventId, LocalDateTime localDateTime , String lastId, int size){
         Event event = eventService.getEventByUuid(eventId);
         List<Fee> feeList;
         if(lastId.equals("first")){
-            feeList = feeRepository.getFirstPage(event.getId(),localDateTime,size+1);
+            feeList = feeRepository.getFirstPage(event.getUlid(),localDateTime,size+1);
         }
         else{
            Fee fee = getFeeByUuId(lastId);
-            feeList = feeRepository.getNextPageByEventIdAndLastId(event.getId(),localDateTime,fee.getId(),size+1);
+            feeList = feeRepository.getNextPageByEventIdAndLastId(event.getUlid(),localDateTime,fee.getUlid(),size+1);
         }
 
         //하나 추가해서 조회한거 삭제해주기
@@ -112,7 +112,7 @@ public class FeeService {
         // accountBook금액 수정 -> event 금액 수정 -> 회비 금액 저장 로직
         AccountBook accountBook = accountService.getAccountBookByClubId(feeReqDto.getClubId());
         if(!isClassified){
-            fee = feeRepository.save(new Fee(UUID.randomUUID().toString(), feeReqDto,club));
+            fee = feeRepository.save(new Fee(feeReqDto,club));
             transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.FALSE));
             accountBook.updateUnClassifiedDeposit(feeReqDto.getPaidAmount());
             accountBook.updateBalance(feeReqDto.getPaidAmount());
@@ -121,7 +121,7 @@ public class FeeService {
             EventMember eventMember = eventMemberService.getEventMemberByUuid(feeReqDto.getEventMemberId());
             //자동 분류
             if(fee == null){
-                fee = new Fee(UUID.randomUUID().toString(), feeReqDto, club, eventMember);
+                fee = new Fee(feeReqDto, club, eventMember);
                 feeRepository.save(fee);
                 transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.TRUE));
                 accountBook.updateBalance(feeReqDto.getPaidAmount());
@@ -129,7 +129,7 @@ public class FeeService {
             //수동분류
             else{
                 fee.updateBlankElement(eventMember, feeReqDto);
-                transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(fee.getUuid(),fee.getName(),fee.getEvent()));
+                transactionHistoryService.updateTransactionHistory(new TransactionHistoryUpdateDto(fee.getUlid(),fee.getName(),fee.getEvent()));
                 accountBook.updateUnClassifiedDeposit(-feeReqDto.getPaidAmount());
             }
             eventMember.updateEventMember();
@@ -149,7 +149,7 @@ public class FeeService {
      * 입금 여러개 isDeleted 수정
      * */
     @Transactional
-    public int updateIsDeleted(Long eventId){
+    public int updateIsDeleted(String eventId){
         return feeRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId);
     }
 }

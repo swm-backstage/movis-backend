@@ -12,7 +12,7 @@ public class EventMemberListElementDto {
     private Long amountToPay;
 
     public EventMemberListElementDto(EventMember eventMember) {
-        this.eventMemberId = eventMember.getUuid();
+        this.eventMemberId = eventMember.getUlid();
         this.isPaid = eventMember.getIsPaid();
         this.amountToPay = eventMember.getAmountToPay();
     }

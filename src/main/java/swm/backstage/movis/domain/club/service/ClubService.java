@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.accout_book.AccountBook;
+import swm.backstage.movis.domain.accout_book.service.AccountBookService;
 import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
@@ -29,23 +30,28 @@ public class ClubService {
     private static final Logger log = LoggerFactory.getLogger(ClubService.class);
     private final ClubRepository clubRepository;
     private final UserService userService;
+    private final AccountBookService accountBookService;
 
     @Transactional
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
-        Club newClub = new Club(clubCreateReqDto, UUID.randomUUID().toString(), new AccountBook());
+
+        // AccountBook 생성
+        AccountBook accountBook = new AccountBook();
+        Club newClub = new Club(clubCreateReqDto, accountBook,createRandomCode(),createRandomCode());
+        accountBook.setClub(newClub);
+        accountBookService.createAccountBook(accountBook);
+        newClub = clubRepository.save(newClub);
         ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_MANAGER, user, newClub);
 
-        newClub.setEntryCode(createRandomCode());
-        newClub.setInviteCode(createRandomCode());
-        return clubRepository.save(newClub);
+        return newClub;
     }
 
     /**
      * NULL 허용 X
      * */
     public Club getClubByUuId(String id) throws BaseException {
-        return clubRepository.findByUuidAndIsDeleted(id,Boolean.FALSE).orElseThrow(()->new BaseException("clubId is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return clubRepository.findByUlidAndIsDeleted(id,Boolean.FALSE).orElseThrow(()->new BaseException("clubId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     public Club getClubByInviteCode(String inviteCode) {
@@ -55,19 +61,19 @@ public class ClubService {
 
     public String getClubUuidByEntryCode(String entryCode) {
         return clubRepository.findByEntryCode(entryCode)
-                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUuid();
+                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUlid();
     }
 
     public String getClubUuidByInviteCode(String inviteCode) {
         return clubRepository.findByInviteCode(inviteCode)
-                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUuid();
+                .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUlid();
     }
 
     /**
      * NULL 허용
      * */
     public Club findClubByUuId(String id) throws BaseException {
-        return clubRepository.findByUuidAndIsDeleted(id,Boolean.FALSE).orElse(null);
+        return clubRepository.findByUlidAndIsDeleted(id,Boolean.FALSE).orElse(null);
     }
 
     public List<Club> getClubList(String identifier){
@@ -102,7 +108,7 @@ public class ClubService {
     }
 
     public String updateCode(String clubId, CodeType codeType) {
-        Club club = clubRepository.findByUuidAndIsDeleted(clubId, Boolean.FALSE)
+        Club club = clubRepository.findByUlidAndIsDeleted(clubId, Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
 
         String randomCode = createRandomCode();

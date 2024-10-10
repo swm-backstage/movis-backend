@@ -8,10 +8,10 @@ import swm.backstage.movis.domain.member.Member;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberJpaRepository extends JpaRepository<Member, Long> {
+public interface MemberJpaRepository extends JpaRepository<Member, String> {
     Boolean existsByClubAndPhoneNo(Club clubId, String phoneNo);
-    Boolean existsByNameAndClub_Uuid(String name, String clubUid);
+    Boolean existsByNameAndClub_Ulid(String name, String clubUid);
     List<Member> findAllByClub(Club club);
-    List<Member> findAllByUuidIn(List<String> uuids);
+    List<Member> findAllByUlidIn(List<String> ulids);
     Optional<Member> findByClubAndNameAndPhoneNo(Club club, String name, String phoneNo);
 }

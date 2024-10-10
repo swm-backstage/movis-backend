@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.event_bill;
 
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,18 +17,15 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "event_bill", indexes = {
         @Index(name = "idx_event_id", columnList = "event_id"),
-        @Index(name = "idx_event_id_eb_id", columnList = "event_id, id")
+        @Index(name = "idx_event_id_eb_id", columnList = "event_id, ulid")
 })
 @NoArgsConstructor
 @Getter
 public class EventBill extends DateTimeField {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "uuid",unique = true,nullable = false)
-    private String uuid;
+    private String ulid;
 
     @Column(name = "amount")
     private Long amount;
@@ -55,8 +53,8 @@ public class EventBill extends DateTimeField {
     @JoinColumn(name = "club_id")
     private Club club;
 
-    public EventBill(String uuid, EventBillCreateReqDto eventBillCreateReqDto, Club club) {
-        this.uuid = uuid;
+    public EventBill(EventBillCreateReqDto eventBillCreateReqDto, Club club) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.payName = eventBillCreateReqDto.getPayName();
         this.amount = eventBillCreateReqDto.getAmount();
         this.club = club;
@@ -64,8 +62,8 @@ public class EventBill extends DateTimeField {
         this.isDeleted = false;
     }
 
-    public EventBill(String string, EventBillInputReqDto dto, Club club, Event event) {
-        this.uuid = string;
+    public EventBill(EventBillInputReqDto dto, Club club, Event event) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.payName = dto.getName();
         this.amount = dto.getPaidAmount();
         this.club = club;

@@ -10,36 +10,36 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface FeeRepository extends JpaRepository<Fee, Long> {
+public interface FeeRepository extends JpaRepository<Fee, String> {
 
 
-    Optional<Fee> findByUuid(String id);
+    Optional<Fee> findByUlid(String id);
 
     // 1 회차용
     @Query("SELECT f FROM Fee f " +
-            "WHERE f.event.id = :eventId " +
+            "WHERE f.event.ulid = :eventId " +
             "AND f.paidAt <= :lastPaidAt " +
-            "ORDER BY f.id DESC " +
+            "ORDER BY f.ulid DESC " +
             "LIMIT :size")
-    List<Fee> getFirstPage(@Param("eventId") Long eventId,
+    List<Fee> getFirstPage(@Param("eventId") String eventId,
                            @Param("lastPaidAt") LocalDateTime lastPaidAt,
                            @Param("size") int size);
 
     // n 회차용
     @Query("SELECT f FROM Fee f " +
-            "WHERE f.event.id = :eventId AND f.id < :lastId  " +
-            "AND ((f.paidAt = :lastPaidAt AND f.id > :lastId) OR (f.paidAt < :lastPaidAt)) " +
-            "ORDER BY f.id DESC " +
+            "WHERE f.event.ulid = :eventId AND f.ulid < :lastId  " +
+            "AND ((f.paidAt = :lastPaidAt AND f.ulid> :lastId) OR (f.paidAt < :lastPaidAt)) " +
+            "ORDER BY f.ulid DESC " +
             "LIMIT :size")
-    List<Fee> getNextPageByEventIdAndLastId(@Param("eventId") Long eventId,
+    List<Fee> getNextPageByEventIdAndLastId(@Param("eventId") String eventId,
                                             @Param("lastPaidAt") LocalDateTime lastPaidAt,
-                                            @Param("lastId") Long lastId,
+                                            @Param("lastId") String lastId,
                                             @Param("size") int size);
 
     @Modifying
     @Query("UPDATE Fee f " +
             "SET f.isDeleted = :status " +
-            "WHERE f.event.id = :eventId ")
+            "WHERE f.event.ulid = :eventId ")
     int updateIsDeletedByEventId(@Param("status") Boolean status,
-                                 @Param("eventId") Long eventId);
+                                 @Param("eventId") String eventId);
 }

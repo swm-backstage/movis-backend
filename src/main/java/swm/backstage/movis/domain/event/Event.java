@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.event;
 
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,18 +21,14 @@ import java.util.List;
 @Entity
 @Table(name = "event", indexes = {
         @Index(name = "idx_club_id", columnList = "club_id"),
-        @Index(name = "idx_club_id_event_id", columnList = "club_id, id")})
+        @Index(name = "idx_club_id_event_id", columnList = "club_id, ulid")})
 @NoArgsConstructor
 @Getter
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(unique = true, nullable = false, length = 36)
-    private String uuid;
+    @Column(unique = true, nullable = false, length = 26)
+    private String ulid;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -68,8 +65,8 @@ public class Event {
     @Column(name="is_deleted")
     private Boolean isDeleted;
 
-    public Event(String uuid, EventCreateReqDto eventCreateReqDto, Club club, AccountBook accountBook) {
-        this.uuid = uuid;
+    public Event( EventCreateReqDto eventCreateReqDto, Club club, AccountBook accountBook) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.name = eventCreateReqDto.getEventName();
         this.club =club;
         this.accountBook = accountBook;

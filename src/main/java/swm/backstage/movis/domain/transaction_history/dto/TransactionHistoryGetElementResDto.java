@@ -17,8 +17,8 @@ public class TransactionHistoryGetElementResDto {
     private LocalDateTime paidAt;
 
     public TransactionHistoryGetElementResDto(TransactionHistory transactionHistory) {
-        this.transactionHistoryId = transactionHistory.getUuid();
-        this.elementId = transactionHistory.getElementUuid();
+        this.transactionHistoryId = transactionHistory.getUlid();
+        this.elementId = transactionHistory.getElementUlid();
         this.name = transactionHistory.getName();
         this.amount =transactionHistory.getAmount();
         this.paidAt = transactionHistory.getPaidAt();

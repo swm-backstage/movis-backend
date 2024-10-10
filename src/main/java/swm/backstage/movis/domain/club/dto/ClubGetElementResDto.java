@@ -21,7 +21,7 @@ public class ClubGetElementResDto {
     private int memberCnt;
 
     public ClubGetElementResDto(Club club) {
-        this.clubId = club.getUuid();
+        this.clubId = club.getUlid();
         this.name = club.getName();
         this.description = club.getDescription();
         this.accountNumber = club.getAccountNumber();

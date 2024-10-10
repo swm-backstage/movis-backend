@@ -13,7 +13,7 @@ public class EventBillGetElementResDto {
     private Long amount;
 
     public EventBillGetElementResDto(EventBill eventBill) {
-        this.eventId = eventBill.getUuid();
+        this.eventId = eventBill.getUlid();
         this.name = eventBill.getPayName();
         this.amount = eventBill.getAmount();
     }

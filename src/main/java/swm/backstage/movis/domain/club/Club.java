@@ -1,5 +1,6 @@
 package swm.backstage.movis.domain.club;
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,8 @@ import java.util.List;
 public class Club extends DateTimeField {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(unique = true ,name = "uuid", length = 36)
-    private String uuid;
+    @Column(unique = true , length = 26)
+    private String ulid;
 
     @Column(name="name", nullable = false, length = 30)
     private String name;
@@ -84,19 +81,21 @@ public class Club extends DateTimeField {
     private String inviteCode;
 
 
-    public Club(ClubCreateReqDto clubCreateReqDto, String uuid, AccountBook accountBook) {
-        this.uuid = uuid;
+    public Club(ClubCreateReqDto clubCreateReqDto, AccountBook accountBook, String entryCode, String inviteCode) {
+        this.ulid = UlidCreator.getUlid().toString();
         this.description = clubCreateReqDto.getDescription();
         this.name = clubCreateReqDto.getName();
         this.accountNumber = clubCreateReqDto.getAccountNumber();
         this.bankCode = clubCreateReqDto.getBankCode();
         this.isDeleted = Boolean.FALSE;
-        this.accountBook = accountBook;
         this.thumbnail = clubCreateReqDto.getThumbnail();
-        accountBook.setClub(this);
+        this.accountBook = accountBook;
+        this.entryCode = entryCode;
+        this.inviteCode = inviteCode;
     }
 
     public void addClubUser(ClubUser clubUser) {
         clubUserList.add(clubUser);
     }
+
 }

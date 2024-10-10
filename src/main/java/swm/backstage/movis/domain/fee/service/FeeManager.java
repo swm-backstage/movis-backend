@@ -15,7 +15,7 @@ public class FeeManager {
      * 입금 여러개 isDeleted 수정
      * */
     @Transactional
-    public int updateIsDeleted(Long eventId){
+    public int updateIsDeleted(String eventId){
         return feeRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId);
     }
 }

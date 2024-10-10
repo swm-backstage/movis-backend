@@ -38,9 +38,9 @@ public class ClubUserService {
         if (fromIdentifier.equals(toIdentifier)) {
             throw new BaseException("자기 자신에게 권한을 위임할 수 없습니다. ", ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        ClubUser fromClubUser = clubUserRepository.findByIdentifierAndClub_Uuid(fromIdentifier, clubId)
+        ClubUser fromClubUser = clubUserRepository.findByIdentifierAndClub_Ulid(fromIdentifier, clubId)
                 .orElseThrow(() -> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND));
-        ClubUser toClubUser = clubUserRepository.findByIdentifierAndClub_Uuid(toIdentifier, clubId)
+        ClubUser toClubUser = clubUserRepository.findByIdentifierAndClub_Ulid(toIdentifier, clubId)
                 .orElseThrow(() -> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND));
 
         fromClubUser.updateRole(RoleType.ROLE_EXECUTIVE);
@@ -51,10 +51,10 @@ public class ClubUserService {
     }
 
     public ClubUser getClubUser(String identifier, String clubId) {
-        return clubUserRepository.findByIdentifierAndClub_Uuid(identifier, clubId).orElseThrow(() -> new BaseException("clubUser is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return clubUserRepository.findByIdentifierAndClub_Ulid(identifier, clubId).orElseThrow(() -> new BaseException("clubUser is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     public List<ClubUser> getClubUserList(String clubId) {
-        return clubUserRepository.findAllByClub_Uuid(clubId);
+        return clubUserRepository.findAllByClub_Ulid(clubId);
     }
 }

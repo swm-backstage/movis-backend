@@ -17,16 +17,16 @@ public class EventMemberJdbcRepository {
 
     public void bulkSave(List<EventMember> memberList) {
         String sql = "INSERT INTO event_member " +
-                "(uuid, amount_to_pay, is_paid ,member_id, event_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "(ulid, amount_to_pay, is_paid ,member_id, event_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 EventMember member = memberList.get(i);
-                ps.setString(1, member.getUuid());
+                ps.setString(1, member.getUlid());
                 ps.setLong(2, member.getAmountToPay());
                 ps.setBoolean(3, member.getIsPaid());
-                ps.setLong(4, member.getMember().getId());
-                ps.setLong(5, member.getEvent().getId());
+                ps.setString(4, member.getMember().getUlid());
+                ps.setString(5, member.getEvent().getUlid());
                 ps.setObject(6, LocalDateTime.now());
                 ps.setObject(7, LocalDateTime.now());
             }

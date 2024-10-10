@@ -18,7 +18,7 @@ public class EventManager {
         Event event = eventService.createEvent(eventCreateReqDto);
 
         // 2. 생성된 event로 eventMemberList가 있다면 eventMemberList도 등록한다.
-        eventMemberService.addEventMembers(new EventMemberListReqDto(event.getUuid(),eventCreateReqDto.getEventMemberIdList()));
+        eventMemberService.addEventMembers(new EventMemberListReqDto(event.getUlid(),eventCreateReqDto.getEventMemberIdList()));
 
     }
 }

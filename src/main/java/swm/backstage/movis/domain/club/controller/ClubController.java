@@ -32,7 +32,8 @@ public class ClubController {
     @PostMapping()
     public ClubGetResDto createClub(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
                                     @RequestBody @Validated ClubCreateReqDto clubCreateReqDto) {
-        return new ClubGetResDto(clubService.createClub(clubCreateReqDto, principal.getIdentifier()));
+        ClubGetResDto response = new ClubGetResDto(clubService.createClub(clubCreateReqDto, principal.getIdentifier()));
+        return response;
     }
 
     @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")

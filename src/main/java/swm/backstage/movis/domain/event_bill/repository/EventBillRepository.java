@@ -10,34 +10,34 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface EventBillRepository extends JpaRepository<EventBill, Long> {
-    Optional<EventBill> findByUuid(String uuid);
+public interface EventBillRepository extends JpaRepository<EventBill, String> {
+    Optional<EventBill> findByUlid(String ulid);
 
     // 1 회차용
     @Query("SELECT eb FROM EventBill eb " +
-            "WHERE eb.event.id = :eventId " +
+            "WHERE eb.event.ulid = :eventId " +
             "AND eb.paidAt <= :lastPaidAt " +
-            "ORDER BY eb.paidAt DESC , eb.id ASC " +
+            "ORDER BY eb.paidAt DESC , eb.ulid ASC " +
             "LIMIT :size")
-    List<EventBill> getFirstPage(@Param("eventId") Long eventId,
+    List<EventBill> getFirstPage(@Param("eventId") String eventId,
                                  @Param("lastPaidAt") LocalDateTime lastPaidAt,
                                  @Param("size") int size);
 
     // n 회차용
     @Query("SELECT eb FROM EventBill eb " +
-            "WHERE eb.event.id = :eventId AND eb.id < :lastId  " +
-            "AND ((eb.paidAt = :lastPaidAt AND eb.id > :lastId) OR (eb.paidAt < :lastPaidAt)) " +
-            "ORDER BY eb.paidAt DESC , eb.id ASC " +
+            "WHERE eb.event.ulid = :eventId AND eb.ulid < :lastId  " +
+            "AND ((eb.paidAt = :lastPaidAt AND eb.ulid > :lastId) OR (eb.paidAt < :lastPaidAt)) " +
+            "ORDER BY eb.paidAt DESC , eb.ulid ASC " +
             "LIMIT :size")
-    List<EventBill> getNextPage(@Param("eventId") Long eventId,
+    List<EventBill> getNextPage(@Param("eventId") String eventId,
                                 @Param("lastPaidAt") LocalDateTime lastPaidAt,
-                                @Param("lastId") Long lastId,
+                                @Param("lastId") String lastId,
                                 @Param("size") int size);
 
     @Modifying
     @Query("UPDATE EventBill e " +
             "SET e.isDeleted = :status " +
-            "WHERE e.event.id = :eventId ")
+            "WHERE e.event.ulid = :eventId ")
     int updateIsDeletedByEventId(@Param("status") Boolean status,
-                                 @Param("eventId") Long eventId);
+                                 @Param("eventId") String eventId);
 }
