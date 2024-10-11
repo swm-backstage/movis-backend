@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface AccountBookRepository extends JpaRepository<AccountBook, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @QueryHints({@QueryHint(name = "javax.persistence.query.timeout", value = "10000")})
+    @QueryHints({@QueryHint(name = "jakarta.persistence.query.timeout", value = "10000")})
     @Query("SELECT a FROM AccountBook a WHERE a.club.ulid = :clubId ")
     Optional<AccountBook> findByClubIdWithLock(String clubId);
 

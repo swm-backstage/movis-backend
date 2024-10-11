@@ -59,6 +59,7 @@ public class FeeService {
         }
         accountBook.updateBalance(feeInputReqDto.getPaidAmount());
         accountBook.updateClassifiedDeposit(feeInputReqDto.getPaidAmount());
+        event.updateBalance(feeInputReqDto.getPaidAmount());
         transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromFee(fee,Boolean.TRUE));
     }
     /**

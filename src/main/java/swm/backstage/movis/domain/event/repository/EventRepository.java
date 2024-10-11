@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, String> {
-    Optional<Event> findByUlid(String ulid);
+    Optional<Event> findByUlidAndIsDeleted(String ulid, Boolean no);
 
     @Query("SELECT e from Event e where e.club.ulid= :clubId and e.totalPaymentAmount= :amount")
     List<Event> findByClubIdAndTotalPaymentAmount(String clubId, Long amount);
@@ -19,7 +19,7 @@ public interface EventRepository extends JpaRepository<Event, String> {
     // 1 회차용
     @Query("SELECT e FROM Event e " +
             "WHERE e.club.ulid = :clubId " +
-            "ORDER BY e.id DESC " +
+            "ORDER BY e.ulid DESC " +
             "LIMIT :size")
     List<Event> getFirstPage(@Param("clubId") String clubId,
                            @Param("size") int size);

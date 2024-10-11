@@ -15,4 +15,9 @@ public class MemberCreateListDto {
     private String clubId;
 
     private List<MemberCreateReqDto> memberList;
+
+    public MemberCreateListDto(String clubId, List<MemberCreateReqDto> memberList) {
+        this.clubId = clubId;
+        this.memberList = memberList;
+    }
 }
