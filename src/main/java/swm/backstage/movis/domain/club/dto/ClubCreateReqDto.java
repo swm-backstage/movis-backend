@@ -25,4 +25,12 @@ public class ClubCreateReqDto {
     private String bankCode;
 
     private String thumbnail;
+
+    public ClubCreateReqDto(String name, String description, String accountNumber, String bankCode, String thumbnail) {
+        this.name = name;
+        this.description = description;
+        this.accountNumber = accountNumber;
+        this.bankCode = bankCode;
+        this.thumbnail = thumbnail;
+    }
 }

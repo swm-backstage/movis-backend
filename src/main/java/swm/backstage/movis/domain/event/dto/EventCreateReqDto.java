@@ -20,4 +20,11 @@ public class EventCreateReqDto {
     private EventGatherFeeReqDto gatherFeeInfo;
 
     private List<String> eventMemberIdList;
+
+    public EventCreateReqDto(String clubId, String eventName, EventGatherFeeReqDto gatherFeeInfo, List<String> eventMemberIdList) {
+        this.clubId = clubId;
+        this.eventName = eventName;
+        this.gatherFeeInfo = gatherFeeInfo;
+        this.eventMemberIdList = eventMemberIdList;
+    }
 }

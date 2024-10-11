@@ -14,4 +14,12 @@ public class EventBillInputReqDto {
     private String name;
     private String explanation;
     private String image;
+
+    public EventBillInputReqDto(Long paidAmount, LocalDateTime paidAt, String name, String explanation, String image) {
+        this.paidAmount = paidAmount;
+        this.paidAt = paidAt;
+        this.name = name;
+        this.explanation = explanation;
+        this.image = image;
+    }
 }

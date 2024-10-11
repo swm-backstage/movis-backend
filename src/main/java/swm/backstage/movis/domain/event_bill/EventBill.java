@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class EventBill extends DateTimeField {
 
     @Id
-    @Column(name = "uuid",unique = true,nullable = false)
+    @Column(name = "ulid",unique = true,nullable = false,length = 26)
     private String ulid;
 
     @Column(name = "amount")

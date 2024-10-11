@@ -15,4 +15,12 @@ public class FeeInputReqDto {
     private LocalDateTime paidAt;
     private String name;
     private String explanation;
+
+    public FeeInputReqDto(String eventMemberId, Long paidAmount, LocalDateTime paidAt, String name, String explanation) {
+        this.eventMemberId = eventMemberId;
+        this.paidAmount = paidAmount;
+        this.paidAt = paidAt;
+        this.name = name;
+        this.explanation = explanation;
+    }
 }

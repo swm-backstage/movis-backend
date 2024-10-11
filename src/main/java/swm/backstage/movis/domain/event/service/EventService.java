@@ -3,6 +3,7 @@ package swm.backstage.movis.domain.event.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.accout_book.AccountBook;
@@ -30,6 +31,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventService {
 
     private final EventRepository eventRepository;
@@ -49,7 +51,7 @@ public class EventService {
      * null 허용 X
      * */
     public Event getEventByUuid(String eventId) {
-        return eventRepository.findByUlid(eventId).orElseThrow(()->new BaseException("eventId is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return eventRepository.findByUlidAndIsDeleted(eventId,Boolean.FALSE).orElseThrow(()->new BaseException("eventId is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     /**
@@ -67,7 +69,7 @@ public class EventService {
      * null 허용 O
      * */
     public Event findEventByUlid(String eventUlid) {
-        return eventRepository.findByUlid(eventUlid).orElse(null);
+        return eventRepository.findByUlidAndIsDeleted(eventUlid, Boolean.FALSE).orElse(null);
     }
 
 
@@ -114,31 +116,30 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(String clubId, String eventId) {
-
+        log.info("deleteEvent Start");
         //1. lock 걸고
         AccountBook accountBook = accountBookService.getAccountBookByClubId(clubId);
+        log.info("Catch lock");
+
         Event event = getEventByUuid(eventId);
         event.updateIsDeleted(Boolean.TRUE);
-        accountBook.updateBalance(-event.getBalance());
+
+        log.info("이벤트 soft delete");
 
         //2. deposit 관련 수정
-        long deposit = 0;
         feeManager.updateIsDeleted(event.getUlid());
-        for(Fee fee : event.getFees()){
-           deposit = deposit + fee.getPaidAmount();
-        }
-        accountBook.updateClassifiedDeposit(-deposit);
+
+        log.info("deposit soft delete");
 
         //3. eventBill 수정
         eventBillManager.updateIsDeleted(event.getUlid());
-        long withdraw = 0L;
-        for(EventBill eventBill : event.getEventBills()){
-            withdraw = withdraw + eventBill.getAmount();
-        }
-        accountBook.updateClassifiedWithdrawal(-withdraw);
+
+        log.info("eventBill soft delete");
 
         //4. transactionHistory 수정
         transactionHistoryManager.updateIsDeleted(event.getUlid());
+
+        log.info("transactionHistory soft delete");
     }
 
 
