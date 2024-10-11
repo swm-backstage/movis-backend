@@ -42,7 +42,7 @@ public class FeeController {
      * */
     @PreAuthorize("hasPermission(#feeReqDto.clubId, 'clubId', {'ROLE_MANAGER'})")
     @PatchMapping()
-    public void updateUnClassifiedFee(@RequestParam("feeId") String feeId ,@RequestBody @Param("feeReaDto") FeeReqDto feeReqDto){
+    public void updateUnClassifiedFee(@RequestParam("feeId") String feeId ,@RequestBody @Param("feeReqDto") FeeReqDto feeReqDto){
         feeService.updateUnClassifiedFee(feeId, feeReqDto);
     }
     /**
