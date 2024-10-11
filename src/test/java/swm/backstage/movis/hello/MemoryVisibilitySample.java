@@ -1,7 +1,10 @@
 package swm.backstage.movis.hello;
 
 
+import org.junit.jupiter.api.Disabled;
+
 // MemoryVisibility
+@Disabled
 public class MemoryVisibilitySample {
     private static volatile boolean flag = false;
     public static void main(String[] args) throws InterruptedException {
