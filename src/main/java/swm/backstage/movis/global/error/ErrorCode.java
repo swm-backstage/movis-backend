@@ -21,7 +21,8 @@ public enum ErrorCode {
     DUPLICATE_USER("C010", "Duplicate User", DisplayType.POPUP),
     UNAUTHORIZED_PERMISSION("C011", "Unauthorized Permission", DisplayType.POPUP),
     UNAUTHENTICATED_REQUEST("C012", "Unauthenticated Request", DisplayType.POPUP),
-    DECRYPTION_FAILED("C013", "Decryption Failed", DisplayType.POPUP);
+    DECRYPTION_FAILED("C013", "Decryption Failed", DisplayType.POPUP),
+    DUPLICATE_CLUB_USER("C014", "Duplicate ClubUser", DisplayType.POPUP);
 
     private final String code;
     private final String message;

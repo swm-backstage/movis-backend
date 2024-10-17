@@ -29,6 +29,11 @@ public class ClubUserService {
     public void createClubUser(ClubUserCreateReqDto clubUserCreateReqDto) {
         Club club = clubService.findClubByUuId(clubUserCreateReqDto.getClubId());
         User user = userService.findByIdentifier(clubUserCreateReqDto.getIdentifier()).orElseThrow(()-> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND));
+
+        if(clubUserRepository.existsByIdentifierAndClub_Ulid(user.getIdentifier(), club.getUlid())){
+            throw new BaseException("해당 클럽에 이미 등록된 사용자입니다.", ErrorCode.DUPLICATE_CLUB_USER);
+        }
+
         ClubUser clubUser = new ClubUser(UUID.randomUUID().toString(), RoleType.ROLE_EXECUTIVE, user, club);
         clubUserRepository.save(clubUser);
     }
