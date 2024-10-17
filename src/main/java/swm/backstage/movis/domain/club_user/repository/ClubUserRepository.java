@@ -9,5 +9,8 @@ import java.util.Optional;
 public interface ClubUserRepository extends JpaRepository<ClubUser, Long> {
 
     Optional<ClubUser> findByIdentifierAndClub_Ulid(String identifier, String clubId);
+
+    boolean existsByIdentifierAndClub_Ulid(String identifier, String clubId);
+
     List<ClubUser> findAllByClub_Ulid(String clubId);
 }
