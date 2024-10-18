@@ -22,7 +22,8 @@ public enum ErrorCode {
     UNAUTHORIZED_PERMISSION("C011", "Unauthorized Permission", DisplayType.POPUP),
     UNAUTHENTICATED_REQUEST("C012", "Unauthenticated Request", DisplayType.POPUP),
     DECRYPTION_FAILED("C013", "Decryption Failed", DisplayType.POPUP),
-    DUPLICATE_CLUB_USER("C014", "Duplicate ClubUser", DisplayType.POPUP);
+    DUPLICATE_CLUB_USER("C014", "Duplicate ClubUser", DisplayType.POPUP),
+    CLASSIFIED_ERROR("C015", "Classified", DisplayType.POPUP);
 
     private final String code;
     private final String message;

@@ -11,6 +11,7 @@ import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.fee.dto.FeeInputReqDto;
 import swm.backstage.movis.domain.fee.dto.FeeReqDto;
+import swm.backstage.movis.domain.fee.dto.FeeUpdateContentReqDto;
 
 import java.time.LocalDateTime;
 
@@ -85,6 +86,13 @@ public class Fee {
         this.eventMember = eventMember;
         this.event = eventMember.getEvent();
         this.name = feeReqDto.getName();
+    }
+
+    public void updateContent(FeeUpdateContentReqDto feeUpdateContentReqDto){
+        this.paidAmount =feeUpdateContentReqDto.getPaidAmount();
+        this.paidAt =feeUpdateContentReqDto.getPaidAt();
+        this.name = feeUpdateContentReqDto.getName();
+        this.explanation = feeUpdateContentReqDto.getExplanation();
     }
 
     public void updateIsDeleted(Boolean isDeleted){

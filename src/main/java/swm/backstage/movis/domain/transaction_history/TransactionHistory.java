@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.backstage.movis.domain.club.Club;
+import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateContentReqDto;
+import swm.backstage.movis.domain.fee.dto.FeeUpdateContentReqDto;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionStatus;
@@ -64,6 +66,20 @@ public class TransactionHistory {
     }
     public void updateIsDeleted(Boolean isDeleted){
         this.isDeleted = isDeleted;
+    }
+    public void updateContent(Object dto){
+        if(dto instanceof FeeUpdateContentReqDto){
+            FeeUpdateContentReqDto feeDto = (FeeUpdateContentReqDto) dto;
+            this.name = feeDto.getName();
+            this.paidAt = feeDto.getPaidAt();
+            this.amount = feeDto.getPaidAmount();
+        }
+        else{
+            EventBillUpdateContentReqDto eventBillDto = (EventBillUpdateContentReqDto) dto;
+            this.name = eventBillDto.getPayName();
+            this.paidAt = eventBillDto.getPaidAt();
+            this.amount = eventBillDto.getAmount();
+        }
     }
 }
 

@@ -16,6 +16,6 @@ public class FeeManager {
      * */
     @Transactional
     public int updateIsDeleted(String eventId){
-        return feeRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId);
+        return feeRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId,Boolean.FALSE);
     }
 }

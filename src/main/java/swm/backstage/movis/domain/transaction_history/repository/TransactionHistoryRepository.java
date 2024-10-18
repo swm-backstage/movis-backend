@@ -40,32 +40,38 @@ public interface TransactionHistoryRepository extends JpaRepository<TransactionH
     @Query("SELECT th FROM TransactionHistory th " +
             "WHERE th.club.ulid = :clubId " +
             "AND th.paidAt <= :lastPaidAt " +
+            "AND th.isDeleted = :isDeleted " +
             "ORDER BY th.paidAt DESC, th.ulid ASC " +
             "LIMIT :size")
     List<TransactionHistory> getFirstPageByClub(@Param("clubId") String clubId,
-                                                 @Param("lastPaidAt") LocalDateTime lastPaidAt,
-                                                 @Param("size") int size);
+                                                @Param("lastPaidAt") LocalDateTime lastPaidAt,
+                                                @Param("isDeleted") Boolean isDeleted,
+                                                @Param("size") int size);
 
     // n 회차용 Club으로 조회
     @Query("SELECT th FROM TransactionHistory th " +
             "WHERE th.club.ulid = :clubId " +
             "AND ((th.paidAt = :lastPaidAt AND th.ulid > :lastId) OR (th.paidAt < :lastPaidAt)) " +
+            "AND th.isDeleted = :isDeleted " +
             "ORDER BY th.paidAt DESC , th.ulid ASC " +
             "LIMIT :size")
     List<TransactionHistory> getNextPageByClub(@Param("clubId") String clubId,
                                                 @Param("lastPaidAt") LocalDateTime lastPaidAt,
                                                 @Param("lastId") String lastId,
+                                                @Param("isDeleted") Boolean isDeleted,
                                                 @Param("size") int size);
 
     @Modifying
     @Query("UPDATE TransactionHistory t " +
             "SET t.isDeleted = :status " +
-            "WHERE t.event.ulid = :eventId ")
+            "WHERE t.event.ulid = :eventId " +
+            "AND t.isDeleted = :isDeleted")
     int updateIsDeletedByEventId(@Param("status") Boolean status,
-                                 @Param("eventId") String eventId);
+                                 @Param("eventId") String eventId,
+                                 @Param("isDeleted") Boolean isDeleted);
 
     Optional<TransactionHistory> findByElementUlid(String elementUlid);
-    List<TransactionHistory> findAllByClubUlidAndIsClassifiedOrderByPaidAtDesc(String clubId, boolean isClassified);
-    Long countByClubUlidAndIsClassified(String clubId, boolean isClassified);
+    List<TransactionHistory> findAllByClubUlidAndIsClassifiedAndIsDeletedOrderByPaidAtDesc(String clubId, boolean isClassified, boolean isDeleted);
+    Long countByClubUlidAndIsClassifiedAndIsDeleted(String clubId, boolean isClassified, boolean isDeleted);
 
 }

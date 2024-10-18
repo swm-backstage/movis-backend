@@ -13,33 +13,39 @@ import java.util.Optional;
 public interface FeeRepository extends JpaRepository<Fee, String> {
 
 
-    Optional<Fee> findByUlid(String id);
+    Optional<Fee> findByUlidAndIsDeleted(String id, Boolean isDeleted);
 
     // 1 회차용
     @Query("SELECT f FROM Fee f " +
             "WHERE f.event.ulid = :eventId " +
             "AND f.paidAt <= :lastPaidAt " +
+            "AND f.isDeleted = :isDeleted " +
             "ORDER BY f.ulid DESC " +
             "LIMIT :size")
     List<Fee> getFirstPage(@Param("eventId") String eventId,
                            @Param("lastPaidAt") LocalDateTime lastPaidAt,
+                           @Param("isDeleted") Boolean isDeleted,
                            @Param("size") int size);
 
     // n 회차용
     @Query("SELECT f FROM Fee f " +
             "WHERE f.event.ulid = :eventId AND f.ulid < :lastId  " +
             "AND ((f.paidAt = :lastPaidAt AND f.ulid> :lastId) OR (f.paidAt < :lastPaidAt)) " +
+            "AND f.isDeleted = :isDeleted " +
             "ORDER BY f.ulid DESC " +
             "LIMIT :size")
     List<Fee> getNextPageByEventIdAndLastId(@Param("eventId") String eventId,
                                             @Param("lastPaidAt") LocalDateTime lastPaidAt,
                                             @Param("lastId") String lastId,
+                                            @Param("isDeleted") Boolean isDeleted,
                                             @Param("size") int size);
 
     @Modifying
     @Query("UPDATE Fee f " +
             "SET f.isDeleted = :status " +
-            "WHERE f.event.ulid = :eventId ")
+            "WHERE f.event.ulid = :eventId " +
+            "AND f.isDeleted = :isDeleted ")
     int updateIsDeletedByEventId(@Param("status") Boolean status,
-                                 @Param("eventId") String eventId);
+                                 @Param("eventId") String eventId,
+                                 @Param("isDeleted") Boolean isDeleted);
 }

@@ -37,9 +37,6 @@ public class EventService {
     private final EventRepository eventRepository;
     private final ClubService clubService;
     private final AccountBookService accountBookService;
-    private final FeeManager feeManager;
-    private final EventBillManager eventBillManager;
-    private final TransactionHistoryManager transactionHistoryManager;
 
     @Transactional
     public Event createEvent(EventCreateReqDto eventCreateReqDto) {
@@ -113,34 +110,4 @@ public class EventService {
         event.updateEvent(eventUpdateReqDto);
         return event;
     }
-
-    @Transactional
-    public void deleteEvent(String clubId, String eventId) {
-        log.info("deleteEvent Start");
-        //1. lock 걸고
-        AccountBook accountBook = accountBookService.getAccountBookByClubId(clubId);
-        log.info("Catch lock");
-
-        Event event = getEventByUuid(eventId);
-        event.updateIsDeleted(Boolean.TRUE);
-
-        log.info("이벤트 soft delete");
-
-        //2. deposit 관련 수정
-        feeManager.updateIsDeleted(event.getUlid());
-
-        log.info("deposit soft delete");
-
-        //3. eventBill 수정
-        eventBillManager.updateIsDeleted(event.getUlid());
-
-        log.info("eventBill soft delete");
-
-        //4. transactionHistory 수정
-        transactionHistoryManager.updateIsDeleted(event.getUlid());
-
-        log.info("transactionHistory soft delete");
-    }
-
-
 }

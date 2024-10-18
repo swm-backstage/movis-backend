@@ -98,4 +98,8 @@ public class Club extends DateTimeField {
         clubUserList.add(clubUser);
     }
 
+    public void updateIsDeleted(Boolean isDeleted){
+        this.isDeleted = isDeleted;
+    }
+
 }

@@ -69,8 +69,22 @@ public class FeeController {
      * */
     @PreAuthorize("hasPermission(#reqDto.feeId, 'feeId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping("/explanation")
-    public FeeGetResDto createEventBillExplanation(@RequestBody @Param("reqDto") FeeCreateExplanationReqDto reqDto){
+    public FeeGetResDto createFeeExplanation(@RequestBody @Param("reqDto") FeeCreateExplanationReqDto reqDto){
         return new FeeGetResDto(feeService.createFeeExplanation(reqDto));
     }
-
+    /**
+     * 회비 수정 ( 미분류만 가능 )
+     * */
+    @PatchMapping("/content")
+    public void updateFee(@RequestParam("feeId") String feeId,
+                          @RequestBody FeeUpdateContentReqDto feeUpdateContentReqDto){
+        feeService.updateFeeContent(feeId,feeUpdateContentReqDto);
+    }
+    /**
+     * 회비 삭제
+     * */
+    @DeleteMapping()
+    public void deleteFee(@RequestParam("feeId") String feeId){
+        feeService.deleteFee(feeId);
+    }
 }

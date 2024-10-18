@@ -69,7 +69,7 @@ public class EventController {
     @DeleteMapping()
     public void deleteEvent(@RequestParam(name = "clubId") @Param("clubId") String clubId,
                             @RequestParam(name = "eventId") String eventId) {
-        eventService.deleteEvent(clubId,eventId);
+        eventManager.deleteEvent(clubId,eventId);
     }
 
 }

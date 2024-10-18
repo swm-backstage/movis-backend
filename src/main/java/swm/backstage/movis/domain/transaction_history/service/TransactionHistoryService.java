@@ -25,6 +25,10 @@ public class TransactionHistoryService {
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final EventService eventService;
     private final ClubService clubService;
+
+    public TransactionHistory getTransactionHistory(String elementId){
+        return transactionHistoryRepository.findByElementUlid(elementId).orElseThrow(()->new BaseException("해당 거래내역이 존재하지 않습니다.",ErrorCode.ELEMENT_NOT_FOUND));
+    }
     /**
      * 거래내역 저장
      */
@@ -52,7 +56,6 @@ public class TransactionHistoryService {
         }
         return new TransactionHistoryGetPagingListResDto(transactionHistoryListList, isLast, null);
     }
-
     /**
      * 전체 거래내역 페이징 (Club 으로)
      */
@@ -62,11 +65,11 @@ public class TransactionHistoryService {
 
 
         if (lastId.equals("first")) {
-            transactionHistoryListList = transactionHistoryRepository.getFirstPageByClub(club.getUlid(), lastPaidAt, size + 1);
+            transactionHistoryListList = transactionHistoryRepository.getFirstPageByClub(club.getUlid(), lastPaidAt, Boolean.FALSE,size + 1);
         } else {
             TransactionHistory transactionHistory = transactionHistoryRepository.findByUlid(lastId)
                     .orElseThrow(() -> new BaseException("TransactionHistory is not found", ErrorCode.ELEMENT_NOT_FOUND));
-            transactionHistoryListList = transactionHistoryRepository.getNextPageByClub(club.getUlid(), lastPaidAt, transactionHistory.getElementUlid(), size + 1);
+            transactionHistoryListList = transactionHistoryRepository.getNextPageByClub(club.getUlid(), lastPaidAt, transactionHistory.getElementUlid(), Boolean.FALSE,size + 1);
         }
 
         //하나 추가해서 조회한거 삭제해주기
@@ -88,12 +91,12 @@ public class TransactionHistoryService {
      * 미분류 리스트 조회 ( not 페이징 )
      * */
     public List<TransactionHistory> getUnclassifiedTransactionHistory(String clubId) {
-        return transactionHistoryRepository.findAllByClubUlidAndIsClassifiedOrderByPaidAtDesc(clubId,false);
+        return transactionHistoryRepository.findAllByClubUlidAndIsClassifiedAndIsDeletedOrderByPaidAtDesc(clubId,false,false);
     }
     /**
      *  미분류 개수 조회
      * */
     public Long getTransactionHistoryCount(String clubId) {
-        return transactionHistoryRepository.countByClubUlidAndIsClassified(clubId,false);
+        return transactionHistoryRepository.countByClubUlidAndIsClassifiedAndIsDeleted(clubId,false,false);
     }
 }

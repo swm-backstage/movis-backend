@@ -15,6 +15,7 @@ import swm.backstage.movis.domain.club.dto.ClubCreateReqDto;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
+import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.event.service.EventService;
 import swm.backstage.movis.domain.event_bill.dto.EventBillInputReqDto;
 import swm.backstage.movis.domain.event_bill.service.EventBillService;
@@ -62,6 +63,9 @@ public class EventTest {
 
     @Autowired
     private EventMemberService eventMemberService;
+
+    @Autowired
+    private EventManager eventManager;
 
     private String clubId;
     private String eventId;
@@ -126,7 +130,7 @@ public class EventTest {
                 try{
                     countDownLatch.await();
                     log.info("Thread start");
-                    eventService.deleteEvent(clubId,eventId);
+                    eventManager.deleteEvent(clubId,eventId);
                 }
                 catch(BaseException e){
                     log.info(e.getErrorCode().toString());

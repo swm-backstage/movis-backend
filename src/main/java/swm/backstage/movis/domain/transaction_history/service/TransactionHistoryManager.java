@@ -16,6 +16,6 @@ public class TransactionHistoryManager {
      * */
     @Transactional
     public int updateIsDeleted(String eventId){
-        return transactionHistoryRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId);
+        return transactionHistoryRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId,Boolean.FALSE);
     }
 }
