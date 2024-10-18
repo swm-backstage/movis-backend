@@ -15,7 +15,7 @@ public class EventBillManager {
      * */
     @Transactional
     public int updateIsDeleted(String eventId){
-        return eventBillRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId);
+        return eventBillRepository.updateIsDeletedByEventId(Boolean.TRUE,eventId, Boolean.FALSE);
     }
 
 }

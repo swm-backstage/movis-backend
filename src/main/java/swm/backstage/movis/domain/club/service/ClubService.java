@@ -15,6 +15,7 @@ import swm.backstage.movis.domain.club.dto.ClubInfoResDto;
 import swm.backstage.movis.domain.club.dto.CodeType;
 import swm.backstage.movis.domain.club.repository.ClubRepository;
 import swm.backstage.movis.domain.club_user.ClubUser;
+import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.service.UserService;
 import swm.backstage.movis.global.error.ErrorCode;
@@ -55,17 +56,17 @@ public class ClubService {
     }
 
     public Club getClubByInviteCode(String inviteCode) {
-        return clubRepository.findByInviteCode(inviteCode)
+        return clubRepository.findByInviteCodeAndIsDeleted(inviteCode, Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     public String getClubUuidByEntryCode(String entryCode) {
-        return clubRepository.findByEntryCode(entryCode)
+        return clubRepository.findByEntryCodeAndIsDeleted(entryCode,Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUlid();
     }
 
     public String getClubUuidByInviteCode(String inviteCode) {
-        return clubRepository.findByInviteCode(inviteCode)
+        return clubRepository.findByInviteCodeAndIsDeleted(inviteCode,Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND)).getUlid();
     }
 
@@ -78,14 +79,16 @@ public class ClubService {
 
     public List<Club> getClubList(String identifier){
         User user = userService.findUserWithInfoByIdentifier(identifier);
-        return user.getClubUserList().stream().map(ClubUser::getClub).collect(Collectors.toList());
+        return user.getClubUserList().stream()
+                .map(ClubUser::getClub)
+                .filter(club -> !club.getIsDeleted()).collect(Collectors.toList());
     }
 
     public String getClubUid(String accountNumber, String identifier) {
         User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
         List<ClubUser> clubUserList = user.getClubUserList();
         return clubUserList.stream()
-                .filter(clubUser -> clubUser.getClub().getAccountNumber().equals(accountNumber))
+                .filter(clubUser -> clubUser.getClub().getAccountNumber().equals(accountNumber) && !clubUser.getClub().getIsDeleted())
                 .findFirst()
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND))
                 .getUuid();
@@ -97,7 +100,7 @@ public class ClubService {
     }
 
     public ClubInfoResDto getClubInfoByEntryCode(String entryCode) {
-        Club club = clubRepository.findByEntryCode(entryCode)
+        Club club = clubRepository.findByEntryCodeAndIsDeleted(entryCode, Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
         return new ClubInfoResDto(club.getName(), "", club.getDescription());
     }
@@ -135,5 +138,11 @@ public class ClubService {
             }
         }
         return randomCode;
+    }
+
+    @Transactional
+    public void deleteClub(String clubId) {
+        Club club = getClubByUuId(clubId);
+        club.updateIsDeleted(Boolean.TRUE);
     }
 }

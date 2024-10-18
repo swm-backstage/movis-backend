@@ -68,5 +68,20 @@ public class EventBillController {
     public EventBillGetResDto createEventBillExplanation(@RequestBody @Param("eventBIllCreateExplanationReqDto") EventBIllCreateExplanationReqDto  eventBIllCreateExplanationReqDto){
         return new EventBillGetResDto(eventBillService.createEventBillExplanation(eventBIllCreateExplanationReqDto));
     }
+    /**
+     * 출금 내역 수정 (미분류만)
+     * */
+    @PatchMapping("/content")
+    public void updateEventBillContent(@RequestParam("eventBillId")String eventBillId,
+                                       @RequestBody EventBillUpdateContentReqDto dto){
+        eventBillService.updateEventBillContent(eventBillId, dto);
+    }
+    /**
+     * 출금 내역 삭제
+     * */
+    @DeleteMapping
+    public void deleteEventBill(@RequestParam("eventBillId")String eventBillId) {
+        eventBillService.deleteEventBill(eventBillId);
+    }
 
 }

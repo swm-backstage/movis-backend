@@ -1,6 +1,5 @@
 package swm.backstage.movis.domain.event_bill;
 
-
 import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event_bill.dto.EventBillCreateReqDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillInputReqDto;
+import swm.backstage.movis.domain.event_bill.dto.EventBillUpdateContentReqDto;
 import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDateTime;
@@ -37,7 +37,6 @@ public class EventBill extends DateTimeField {
 
     @Column(name = "image", length = 500)
     private String image;
-
 
     @Setter
     @Column(length = 100)
@@ -78,5 +77,13 @@ public class EventBill extends DateTimeField {
 
     public void updateIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void updateContent(EventBillUpdateContentReqDto dto) {
+        this.payName = dto.getPayName();
+        this.amount = dto.getAmount();
+        this.paidAt = dto.getPaidAt();
+        this.image = dto.getImage();
+        this.explanation = dto.getExplanation();
     }
 }

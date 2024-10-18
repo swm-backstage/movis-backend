@@ -13,6 +13,7 @@ import swm.backstage.movis.domain.event_bill.dto.*;
 import swm.backstage.movis.domain.event_bill.repository.EventBillRepository;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.fee.Fee;
+import swm.backstage.movis.domain.transaction_history.TransactionHistory;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryCreateDto;
 import swm.backstage.movis.domain.transaction_history.dto.TransactionHistoryUpdateDto;
 import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryService;
@@ -57,7 +58,7 @@ public class EventBillService {
     }
 
     public EventBill getEventBillByUuid(String eventBillId) {
-        return eventBillRepository.findByUlid(eventBillId).orElseThrow(() -> new BaseException("eventBill is not found", ErrorCode.ELEMENT_NOT_FOUND));
+        return eventBillRepository.findByUlidAndIsDeleted(eventBillId,Boolean.FALSE).orElseThrow(() -> new BaseException("eventBill is not found", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     @Transactional
@@ -76,10 +77,10 @@ public class EventBillService {
         Event event = eventService.getEventByUuid(eventId);
         List<EventBill> eventBillList;
         if (lastId.equals("first")) {
-            eventBillList = eventBillRepository.getFirstPage(event.getUlid(), lastPaidAt, size + 1);
+            eventBillList = eventBillRepository.getFirstPage(event.getUlid(), lastPaidAt, Boolean.FALSE,size + 1);
         } else {
             EventBill eventBill = getEventBillByUuid(lastId);
-            eventBillList = eventBillRepository.getNextPage(event.getUlid(), lastPaidAt, eventBill.getUlid(), size + 1);
+            eventBillList = eventBillRepository.getNextPage(event.getUlid(), lastPaidAt, eventBill.getUlid(), Boolean.FALSE,size + 1);
         }
 
         //하나 추가해서 조회한거 삭제해주기
@@ -100,4 +101,34 @@ public class EventBillService {
         eventBill.setExplanation(eventBIllCreateExplanationReqDto.getExplanation());
         return eventBill;
     }
+
+    @Transactional
+    public void updateEventBillContent(String eventBillId, EventBillUpdateContentReqDto dto) {
+        EventBill eventBill = getEventBillByUuid(eventBillId);
+        TransactionHistory transactionHistory = transactionHistoryService.getTransactionHistory(eventBillId);
+
+        if(transactionHistory.getIsClassified()){
+            throw new BaseException("해당 출금 내역은 분류된 상태라 수정 불가능합니다.", ErrorCode.CLASSIFIED_ERROR);
+        }
+        AccountBook accountBook = accountBookService.getAccountBookByClubId(eventBill.getClub().getUlid());
+        //1. 기존에 더해졌던 금액 account book에서 차감 (미분류 항목, balance 항목)
+        accountBook.updateUnClassifiedWithdrawal(-eventBill.getAmount());
+        accountBook.updateBalance(-eventBill.getAmount());
+        //2. 바꿀 금액을 accountBook에 추가
+        accountBook.updateBalance(dto.getAmount());
+        accountBook.updateUnClassifiedWithdrawal(dto.getAmount());
+        //3. transactionHistory 수정
+        transactionHistory.updateContent(dto);
+        //4. fee 변경사항 반영
+        eventBill.updateContent(dto);
+    }
+
+    @Transactional
+    public void deleteEventBill(String eventBillId) {
+        EventBill eventBill = getEventBillByUuid(eventBillId);
+        TransactionHistory transactionHistory = transactionHistoryService.getTransactionHistory(eventBillId);
+        eventBill.updateIsDeleted(Boolean.TRUE);
+        transactionHistory.updateIsDeleted(Boolean.TRUE);
+    }
+
 }

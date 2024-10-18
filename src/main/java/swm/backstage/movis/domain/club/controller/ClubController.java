@@ -12,7 +12,6 @@ import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
 import swm.backstage.movis.domain.auth.service.AuthTokenService;
-import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.member.service.MemberService;
@@ -88,5 +87,10 @@ public class ClubController {
     @PostMapping("/{clubId}/inviteCode")
     public String updateInviteCode(@PathVariable("clubId") String clubId){
         return clubService.updateInviteCode(clubId);
+    }
+
+    @DeleteMapping()
+    public void deleteClub(@RequestParam("clubId") String clubId){
+        clubService.deleteClub(clubId);
     }
 }
