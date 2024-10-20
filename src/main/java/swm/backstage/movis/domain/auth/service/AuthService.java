@@ -16,7 +16,7 @@ import swm.backstage.movis.domain.auth.RsaPrivateKey;
 import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.RSAKeyPairDto;
 import swm.backstage.movis.domain.auth.dto.request.*;
-import swm.backstage.movis.domain.auth.dto.response.ConfirmIdentifierResDto;
+import swm.backstage.movis.domain.auth.dto.response.CheckIdentifierResDto;
 import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
 import swm.backstage.movis.domain.auth.dto.response.PublicKeyGetResDto;
 import swm.backstage.movis.domain.auth.dto.response.UserLoginResDto;
@@ -29,7 +29,6 @@ import swm.backstage.movis.domain.user.repository.UserRepository;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -92,13 +91,10 @@ public class AuthService {
         return this.register(userCreateReqDto);
     }
 
-    public ConfirmIdentifierResDto confirmIdentifier(ConfirmIdentifierReqDto confirmIdentifierReqDto) {
+    public CheckIdentifierResDto confirmIdentifier(String identifier) {
 
-        Optional<User> userOptional = userRepository.findByIdentifier(confirmIdentifierReqDto.getIdentifier());
-
-        return new ConfirmIdentifierResDto(
-                userOptional.isPresent()
-        );
+        Boolean isExist = userRepository.existsByIdentifier(identifier);
+        return new CheckIdentifierResDto(isExist);
     }
     /**
      * POST /api/auth/v1/login

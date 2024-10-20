@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.request.*;
-import swm.backstage.movis.domain.auth.dto.response.ConfirmIdentifierResDto;
+import swm.backstage.movis.domain.auth.dto.response.CheckIdentifierResDto;
 import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
 import swm.backstage.movis.domain.auth.dto.response.PublicKeyGetResDto;
 import swm.backstage.movis.domain.auth.dto.response.UserLoginResDto;
@@ -33,10 +33,10 @@ public class AuthController {
         return authService.login(userLoginReqDto);
     }
 
-    @PostMapping("/test/confirmIdentifier")
-    public ConfirmIdentifierResDto confirmIdentifier(@RequestBody ConfirmIdentifierReqDto confirmIdentifierReqDto) {
+    @GetMapping("/{identifier}/exists")
+    public CheckIdentifierResDto checkIdentifierExists(@PathVariable("identifier") String identifier) {
 
-        return authService.confirmIdentifier(confirmIdentifierReqDto);
+        return authService.confirmIdentifier(identifier);
     }
 
     /**
@@ -74,12 +74,6 @@ public class AuthController {
     public PublicKeyGetResDto getPublicKey() {
 
         return authService.getPublicKey();
-    }
-
-    @GetMapping("/test/manager")
-    public ResponseEntity<?> getManagerTest(){
-
-        return ResponseEntity.ok(200);
     }
 }
 
