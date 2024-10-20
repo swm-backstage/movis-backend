@@ -11,15 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import swm.backstage.movis.domain.auth.AuthToken;
+import swm.backstage.movis.domain.auth.dto.response.*;
 import swm.backstage.movis.domain.auth.enums.PlatformType;
 import swm.backstage.movis.domain.auth.RsaPrivateKey;
 import swm.backstage.movis.domain.auth.dto.AuthTokenDto;
 import swm.backstage.movis.domain.auth.dto.RSAKeyPairDto;
 import swm.backstage.movis.domain.auth.dto.request.*;
-import swm.backstage.movis.domain.auth.dto.response.CheckIdentifierResDto;
-import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
-import swm.backstage.movis.domain.auth.dto.response.PublicKeyGetResDto;
-import swm.backstage.movis.domain.auth.dto.response.UserLoginResDto;
 import swm.backstage.movis.domain.auth.repository.RsaPrivateKeyRepository;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 import swm.backstage.movis.domain.auth.utils.RsaUtil;
@@ -45,7 +42,7 @@ public class AuthService {
     private final RsaPrivateKeyRepository rsaPrivateKeyRepository;
 
     @Transactional
-    public ResponseEntity<?> register(@Validated UserCreateReqDto userCreateReqDto) {
+    public UserCreateResDto register(@Validated UserCreateReqDto userCreateReqDto) {
 
         Boolean isExist = userRepository.existsByIdentifier(userCreateReqDto.getIdentifier());
 
@@ -61,18 +58,17 @@ public class AuthService {
         String encryptedPasswordWithSHA256AndBCrypt = bCryptPasswordEncoder.encode(encryptedPasswordWithSHA256);
 
         userCreateReqDto.convertPasswordToEncrypted(encryptedPasswordWithSHA256AndBCrypt);
-        User user = new User(userUid, userCreateReqDto);
 
-        userRepository.save(user);
+        User registeredUser = userRepository.save(new User(userUid, userCreateReqDto));
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new UserCreateResDto(registeredUser);
     }
 
     /**
      * POST /api/auth/v2/register
      * */
     @Transactional
-    public ResponseEntity<?> registerWithRsaPublicKey(UserCreateWithPublicKeyReqDto userCreateWithPublicKeyReqDto) {
+    public UserCreateResDto registerWithRsaPublicKey(UserCreateWithPublicKeyReqDto userCreateWithPublicKeyReqDto) {
 
         Long rsaPrivateKeyId = userCreateWithPublicKeyReqDto.getRsaPrivateKeyId();
 

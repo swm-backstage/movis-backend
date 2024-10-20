@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.request.*;
-import swm.backstage.movis.domain.auth.dto.response.CheckIdentifierResDto;
-import swm.backstage.movis.domain.auth.dto.response.JwtCreateResDto;
-import swm.backstage.movis.domain.auth.dto.response.PublicKeyGetResDto;
-import swm.backstage.movis.domain.auth.dto.response.UserLoginResDto;
+import swm.backstage.movis.domain.auth.dto.response.*;
 import swm.backstage.movis.domain.auth.service.AuthService;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 
@@ -22,7 +19,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/test/register")
-    public ResponseEntity<?> register(@RequestBody @Validated UserCreateReqDto userCreateReqDto) {
+    public UserCreateResDto register(@RequestBody @Validated UserCreateReqDto userCreateReqDto) {
 
         return authService.register(userCreateReqDto);
     }
@@ -43,7 +40,7 @@ public class AuthController {
      * register with publicKey
      * */
     @PostMapping("/register")
-    public ResponseEntity<?> registerWithPublicKey(@RequestBody @Validated UserCreateWithPublicKeyReqDto userCreateWithPublicKeyReqDto) {
+    public UserCreateResDto registerWithPublicKey(@RequestBody @Validated UserCreateWithPublicKeyReqDto userCreateWithPublicKeyReqDto) {
 
         return authService.registerWithRsaPublicKey(userCreateWithPublicKeyReqDto);
     }
