@@ -36,7 +36,7 @@ public class EventBillService {
      * 지출 내역 추가 (수동 입력)
      */
     @Transactional
-    public void createEventBillByInput(String eventId, EventBillInputReqDto dto) {
+    public EventBill createEventBillByInput(String eventId, EventBillInputReqDto dto) {
         Event event = eventService.getEventByUuid(eventId);
         AccountBook accountBook = accountBookService.getAccountBookByClubId(event.getClub().getUlid());
         EventBill eventBill = eventBillRepository.save(new EventBill(dto, event.getClub(), event));
@@ -44,6 +44,7 @@ public class EventBillService {
         accountBook.updateClassifiedWithdrawal(dto.getPaidAmount());
         event.updateBalance(dto.getPaidAmount());
         transactionHistoryService.saveTransactionHistory(TransactionHistoryCreateDto.fromEventBill(eventBill,Boolean.TRUE));
+        return eventBill;
     }
     /**
      * 지출 내역 추가 (알림)

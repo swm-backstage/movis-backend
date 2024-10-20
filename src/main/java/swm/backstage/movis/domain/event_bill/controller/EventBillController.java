@@ -20,9 +20,9 @@ public class EventBillController {
      * */
     @PreAuthorize("hasPermission(#eventId, 'eventId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping("/input")
-    public void createEventBillByInput(@RequestParam("eventId") @Param("eventId") String eventId,
+    public EvenBillIdResDto createEventBillByInput(@RequestParam("eventId") @Param("eventId") String eventId,
                                        @RequestBody EventBillInputReqDto dto){
-        eventBillService.createEventBillByInput(eventId,dto);
+        return new EvenBillIdResDto(eventBillService.createEventBillByInput(eventId,dto).getUlid());
     }
     /**
      * 지출 내역 추가 (알림으로)
