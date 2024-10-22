@@ -15,12 +15,15 @@ import swm.backstage.movis.domain.club.dto.ClubInfoResDto;
 import swm.backstage.movis.domain.club.dto.CodeType;
 import swm.backstage.movis.domain.club.repository.ClubRepository;
 import swm.backstage.movis.domain.club_user.ClubUser;
+import swm.backstage.movis.domain.club_user.service.ClubUserManager;
+import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.service.UserService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,6 +35,7 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final UserService userService;
     private final AccountBookService accountBookService;
+    private final ClubUserManager clubUserManager;
 
     @Transactional
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
@@ -78,6 +82,10 @@ public class ClubService {
     }
 
     public List<Club> getClubList(String identifier){
+        if(clubUserManager.getClubUserCnt(identifier) == 0){
+            return new ArrayList<Club>();
+        }
+
         User user = userService.findUserWithInfoByIdentifier(identifier);
         return user.getClubUserList().stream()
                 .map(ClubUser::getClub)
