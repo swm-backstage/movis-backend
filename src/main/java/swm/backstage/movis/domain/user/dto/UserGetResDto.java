@@ -1,4 +1,4 @@
-package swm.backstage.movis.domain.user.dto.response;
+package swm.backstage.movis.domain.user.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
