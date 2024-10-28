@@ -61,6 +61,11 @@ public class User extends DateTimeField {
         this.deletedAt = null;
     }
 
+    public void updatePassword(String newPassword) {
+
+        this.password = newPassword;
+    }
+
     public void setUserDeleted() {
 
         this.isDeleted = Boolean.TRUE;
