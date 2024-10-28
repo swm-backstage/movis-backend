@@ -21,6 +21,7 @@ import swm.backstage.movis.domain.auth.repository.RsaPrivateKeyRepository;
 import swm.backstage.movis.domain.auth.utils.JwtUtil;
 import swm.backstage.movis.domain.auth.utils.RsaUtil;
 import swm.backstage.movis.domain.auth.utils.SHA256PasswordEncoder;
+import swm.backstage.movis.domain.invitation.service.VerifyService;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.repository.UserRepository;
 import swm.backstage.movis.global.error.ErrorCode;
@@ -40,9 +41,15 @@ public class AuthService {
     private final RsaUtil rsaUtil;
     private final AuthTokenService authTokenService;
     private final RsaPrivateKeyRepository rsaPrivateKeyRepository;
+    private final VerifyService verifyService;
+
 
     @Transactional
     public UserCreateResDto register(@Validated UserCreateReqDto userCreateReqDto) {
+
+        if (!verifyService.isVerifiedPhoneNumber(userCreateReqDto.getPhoneNo())) {
+            throw new BaseException("인증되지 않은 번호입니다 : " + userCreateReqDto.getPhoneNo(), ErrorCode.UNAUTHENTICATED_REQUEST);
+        }
 
         if (userRepository.existsByIdentifier(userCreateReqDto.getIdentifier())) {
 
