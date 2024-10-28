@@ -27,7 +27,7 @@ public class User extends DateTimeField {
     @Column(name = "uuid", unique = true, nullable = false, length = 36)
     private String uuid;
 
-    @Column(name = "identifier", nullable = false, length = 255)
+    @Column(unique = true, name = "identifier", nullable = false, length = 255)
     private String identifier;
 
     @Column(name = "password", nullable = false, length = 255)
@@ -36,7 +36,7 @@ public class User extends DateTimeField {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "phone_no", nullable = false, length = 255)
+    @Column(unique = true, name = "phone_no", nullable = false, length = 255)
     private String phoneNo;
 
     @Column(name = "is_deleted", nullable = false)
