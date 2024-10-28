@@ -10,9 +10,10 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByIdentifier(String identifier);
-    Boolean existsByPhoneNo(String PhoneNo);
+    Boolean existsByPhoneNo(String phoneNo);
 
     Optional<User> findByIdentifier(String identifier);
+    Optional<User> findByPhoneNo(String phoneNo);
 
     @Query("SELECT u FROM User u " +
             "JOIN FETCH u.clubUserList cu " +
