@@ -44,11 +44,14 @@ public class AuthService {
     @Transactional
     public UserCreateResDto register(@Validated UserCreateReqDto userCreateReqDto) {
 
-        Boolean isExist = userRepository.existsByIdentifier(userCreateReqDto.getIdentifier());
-
-        if (isExist) {
+        if (userRepository.existsByIdentifier(userCreateReqDto.getIdentifier())) {
 
             throw new BaseException("이미 존재하는 회원입니다.", ErrorCode.DUPLICATE_USER);
+        }
+
+        if (userRepository.existsByPhoneNo(userCreateReqDto.getPhoneNo())) {
+
+            throw new BaseException("이미 해당 전화번호로 가입된 사용자가 존재합니다. ", ErrorCode.DUPLICATE_USER);
         }
 
         String userUid = UUID.randomUUID().toString();
