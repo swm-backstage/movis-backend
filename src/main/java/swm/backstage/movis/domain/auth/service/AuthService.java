@@ -47,7 +47,7 @@ public class AuthService {
     @Transactional
     public UserCreateResDto register(@Validated UserCreateReqDto userCreateReqDto) {
 
-        if (!verifyService.isVerifiedPhoneNumber(userCreateReqDto.getPhoneNo())) {
+        if (!verifyService.isVerifiedPhoneNumber(userCreateReqDto.getPhoneNo().replaceAll("-", ""))) {
             throw new BaseException("인증되지 않은 번호입니다 : " + userCreateReqDto.getPhoneNo(), ErrorCode.UNAUTHENTICATED_REQUEST);
         }
 

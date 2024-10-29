@@ -8,11 +8,14 @@ import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.accout_book.service.AccountBookService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
+import swm.backstage.movis.domain.event.repository.EventRepository;
 import swm.backstage.movis.domain.event_bill.service.EventBillManager;
 import swm.backstage.movis.domain.event_member.dto.EventMemberListReqDto;
 import swm.backstage.movis.domain.event_member.service.EventMemberService;
 import swm.backstage.movis.domain.fee.service.FeeManager;
 import swm.backstage.movis.domain.transaction_history.service.TransactionHistoryManager;
+import swm.backstage.movis.global.error.ErrorCode;
+import swm.backstage.movis.global.error.exception.BaseException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class EventManager {
     private final FeeManager feeManager;
     private final EventBillManager eventBillManager;
     private final TransactionHistoryManager transactionHistoryManager;
+    private final EventRepository eventRepository;
 
     public Event createEvent(EventCreateReqDto eventCreateReqDto) {
         // 1. event를 생성한다. (클럽id, 이벤트 이름, 입금기한, 입금금액)
@@ -41,7 +45,7 @@ public class EventManager {
         AccountBook accountBook = accountBookService.getAccountBookByClubId(clubId);
         log.info("Catch lock");
 
-        Event event = eventService.getEventByUuid(eventId);
+        Event event = eventRepository.findByUlidAndIsDeleted(eventId,Boolean.FALSE).orElseThrow(()->new BaseException("eventId is not found", ErrorCode.ELEMENT_NOT_FOUND));
         event.updateIsDeleted(Boolean.TRUE);
 
         log.info("이벤트 soft delete");

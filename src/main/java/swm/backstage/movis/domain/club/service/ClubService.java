@@ -16,7 +16,6 @@ import swm.backstage.movis.domain.club.dto.CodeType;
 import swm.backstage.movis.domain.club.repository.ClubRepository;
 import swm.backstage.movis.domain.club_user.ClubUser;
 import swm.backstage.movis.domain.club_user.service.ClubUserManager;
-import swm.backstage.movis.domain.club_user.service.ClubUserService;
 import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.service.UserService;
@@ -36,6 +35,7 @@ public class ClubService {
     private final UserService userService;
     private final AccountBookService accountBookService;
     private final ClubUserManager clubUserManager;
+    private final EventManager eventManager;
 
     @Transactional
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
@@ -151,6 +151,7 @@ public class ClubService {
     @Transactional
     public void deleteClub(String clubId) {
         Club club = getClubByUuId(clubId);
+        club.getEventList().forEach(event -> eventManager.deleteEvent(clubId, event.getUlid()));
         club.updateIsDeleted(Boolean.TRUE);
     }
 }

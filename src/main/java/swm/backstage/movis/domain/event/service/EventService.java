@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.accout_book.service.AccountBookService;
 import swm.backstage.movis.domain.club.Club;
+import swm.backstage.movis.domain.club.service.ClubManager;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.event.Event;
 import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
@@ -35,12 +36,12 @@ import java.util.UUID;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final ClubService clubService;
+    private final ClubManager clubManager;
     private final AccountBookService accountBookService;
 
     @Transactional
     public Event createEvent(EventCreateReqDto eventCreateReqDto) {
-        Club club = clubService.getClubByUuId(eventCreateReqDto.getClubId());
+        Club club = clubManager.getClubByUuId(eventCreateReqDto.getClubId());
         return eventRepository.save(new Event( eventCreateReqDto,club,club.getAccountBook()));
     }
 
@@ -74,7 +75,7 @@ public class EventService {
      * 이벤트 리스트 페이징 조회
      * */
     public EventGetPagingListResDto getEventPagingList(String clubId, String lastId, int size) {
-        Club club = clubService.getClubByUuId(clubId);
+        Club club = clubManager.getClubByUuId(clubId);
         List<Event> eventList;
         if(lastId.equals("first")){
             eventList = eventRepository.getFirstPage(club.getUlid(),size+1);
@@ -94,7 +95,7 @@ public class EventService {
      * 현재 회비를 모으고 있는 이벤트 리스트 조회
      * */
     public List<Event> getCollectingMoneyEventList(String clubId, LocalDate now){
-        Club club = clubService.getClubByUuId(clubId);
+        Club club = clubManager.getClubByUuId(clubId);
         return eventRepository.getCollectingMoneyEventByClub(club, now);
     }
 
