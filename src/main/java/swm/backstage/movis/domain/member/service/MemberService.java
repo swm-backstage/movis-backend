@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.club.Club;
+import swm.backstage.movis.domain.club.service.ClubManager;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.member.Member;
 import swm.backstage.movis.domain.member.dto.MemberCreateListDto;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
-    private final ClubService clubService;
+    private final ClubManager clubManager;
     private final MemberJdbcRepository memberJdbcRepository;
 
     /**
@@ -32,7 +33,7 @@ public class MemberService {
      * */
     @Transactional
     public void createAll(MemberCreateListDto memberCreateListDto) {
-        Club club = clubService.getClubByUuId(memberCreateListDto.getClubId());
+        Club club = clubManager.getClubByUuId(memberCreateListDto.getClubId());
 
         //member리스트 조회 후 Map 자료구조로 변경
         Set<String> existMemberSet = memberJpaRepository.findAllByClub(club).stream()
@@ -51,14 +52,14 @@ public class MemberService {
         return memberJpaRepository.existsByNameAndClub_Ulid(name, clubId);
     }
     public void create(String clubUid, MemberCreateReqDto memberCreateReqDto) {
-        Club club = clubService.getClubByUuId(clubUid);
+        Club club = clubManager.getClubByUuId(clubUid);
         Member member = new Member( club, memberCreateReqDto);
         memberJpaRepository.save(member);
     }
 
 
     public List<Member> getMemberList(String clubId) {
-        return memberJpaRepository.findAllByClub(clubService.getClubByUuId(clubId));
+        return memberJpaRepository.findAllByClub(clubManager.getClubByUuId(clubId));
     }
 
     public List<Member> getMemberListByUuids(List<String> uuids) {
@@ -66,7 +67,7 @@ public class MemberService {
     }
 
     public boolean isMemberExist(String clubId, String name, String phoneNo) {
-        return memberJpaRepository.findByClubAndNameAndPhoneNo(clubService.getClubByUuId(clubId), name, phoneNo)
+        return memberJpaRepository.findByClubAndNameAndPhoneNo(clubManager.getClubByUuId(clubId), name, phoneNo)
                 .orElseThrow(() -> new BaseException("일치하는 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND)) != null;
     }
 }
