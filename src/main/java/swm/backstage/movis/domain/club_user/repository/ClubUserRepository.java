@@ -12,10 +12,10 @@ public interface ClubUserRepository extends JpaRepository<ClubUser, Long> {
 
     Optional<ClubUser> findByIdentifierAndClub_Ulid(String identifier, String clubId);
 
-    boolean existsByIdentifierAndClub_Ulid(String identifier, String clubId);
+    Optional<ClubUser> findByIdentifierAndClub_UlidAndIsDeleted(String identifier, String clubId, Boolean isDeleted);
 
-    List<ClubUser> findAllByClub_Ulid(String clubId);
+    List<ClubUser> findAllByClub_UlidAndIsDeleted(String clubId, Boolean isDeleted);
 
-    @Query("SELECT count(u.id) FROM ClubUser u where u.identifier = :identifier ")
+    @Query("SELECT count(u.id) FROM ClubUser u WHERE u.identifier = :identifier AND u.isDeleted = false")
     Integer countClubUserByIdentifier(@Param("identifier") String identifier);
 }
