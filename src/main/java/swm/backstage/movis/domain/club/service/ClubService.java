@@ -150,8 +150,16 @@ public class ClubService {
 
     @Transactional
     public void deleteClub(String clubId) {
+
         Club club = getClubByUuId(clubId);
+
+        // 1. ClubUser 제거
+        clubUserManager.deleteClubUserByDeleteClub(club.getClubUserList());
+
+        // 2. Event 제거
         club.getEventList().forEach(event -> eventManager.deleteEvent(clubId, event.getUlid()));
+
+        // 3. Club 제거
         club.updateIsDeleted(Boolean.TRUE);
     }
 }
