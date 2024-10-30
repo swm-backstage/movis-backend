@@ -69,4 +69,15 @@ public class ClubUserService {
         ClubUser clubUser = this.getClubUser(identifier, clubId);
         clubUser.updateIsDeleted(Boolean.TRUE);
     }
+
+    @Transactional
+    public void deleteClubUserByManager(String actorIdentifier, String targetIdentifier, String clubId) {
+
+        if(actorIdentifier.equals(targetIdentifier)){
+
+            throw new BaseException("총무는 자기 자신을 제명시킬 수 없습니다. ", ErrorCode.UNAUTHORIZED_PERMISSION);
+        }
+
+        this.deleteClubUser(targetIdentifier, clubId);
+    }
 }
