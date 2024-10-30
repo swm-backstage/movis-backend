@@ -11,6 +11,7 @@ import swm.backstage.movis.domain.club_user.ClubUser;
 import swm.backstage.movis.domain.club_user.dto.ClubUserCreateReqDto;
 import swm.backstage.movis.domain.club_user.dto.ClubUserGetResDto;
 import swm.backstage.movis.domain.club_user.dto.ClubUserListGetResDto;
+import swm.backstage.movis.domain.club_user.service.ClubUserManager;
 import swm.backstage.movis.domain.club_user.service.ClubUserService;
 
 import java.util.List;
@@ -44,4 +45,22 @@ public class ClubUserController {
                 .stream()
                 .map(clubUser -> new ClubUserGetResDto(clubUser.getUuid(), clubUser.getIdentifier(), clubUser.getRoleType())).toList());
     }
+
+    @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_EXECUTIVE'})")
+    @DeleteMapping("/me")
+    public void deleteClubUserBySelf(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
+                                     @RequestParam("clubId") @Param("clubId") String clubId) {
+
+        clubUserService.deleteClubUser(principal.getIdentifier(), clubId);
+    }
+
+    @PreAuthorize("hasPermission(#clubId, 'clubId', {'ROLE_MANAGER'})")
+    @DeleteMapping("/{identifier}")
+    public void deleteClubUserByManager(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
+                                        @RequestParam("clubId") @Param("clubId") String clubId,
+                                        @PathVariable("identifier") String identifier) {
+
+        clubUserService.deleteClubUserByManager(principal.getIdentifier(), identifier, clubId);
+    }
+
 }

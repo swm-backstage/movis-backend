@@ -8,6 +8,8 @@ import swm.backstage.movis.domain.auth.enums.RoleTypeConverter;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.user.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "club_user",
         indexes = {
@@ -45,6 +47,12 @@ public class ClubUser {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     public ClubUser(String uuid, RoleType roleType, User user, Club club) {
         this.uuid = uuid;
         this.roleType = roleType;
@@ -52,10 +60,15 @@ public class ClubUser {
         this.clubUuid = club.getUlid();
         this.user = user;
         this.club = club;
+        this.isDeleted = Boolean.FALSE;
         club.addClubUser(this);
     }
 
     public void updateRole(RoleType roleType){
         this.roleType = roleType;
+    }
+
+    public void updateIsDeleted(Boolean isDeleted){
+        this.isDeleted = isDeleted;
     }
 }
