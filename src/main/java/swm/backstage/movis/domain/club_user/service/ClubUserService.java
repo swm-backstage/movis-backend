@@ -62,4 +62,11 @@ public class ClubUserService {
     public List<ClubUser> getClubUserList(String clubId) {
         return clubUserRepository.findAllByClub_Ulid(clubId);
     }
+
+    @Transactional
+    public void deleteClubUser(String identifier, String clubId) {
+
+        ClubUser clubUser = this.getClubUser(identifier, clubId);
+        clubUser.updateIsDeleted(Boolean.TRUE);
+    }
 }
