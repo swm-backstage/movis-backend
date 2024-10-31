@@ -27,6 +27,7 @@ import swm.backstage.movis.domain.user.repository.UserRepository;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -48,18 +49,12 @@ public class AuthService {
     public UserCreateResDto register(@Validated UserCreateReqDto userCreateReqDto) {
 
         if (!verifyService.isVerifiedPhoneNumber(userCreateReqDto.getPhoneNo().replaceAll("-", ""))) {
+
             throw new BaseException("인증되지 않은 번호입니다 : " + userCreateReqDto.getPhoneNo(), ErrorCode.UNAUTHENTICATED_REQUEST);
         }
 
-        if (userRepository.existsByIdentifier(userCreateReqDto.getIdentifier())) {
-
-            throw new BaseException("이미 존재하는 회원입니다.", ErrorCode.DUPLICATE_USER);
-        }
-
-        if (userRepository.existsByPhoneNo(userCreateReqDto.getPhoneNo())) {
-
-            throw new BaseException("이미 해당 전화번호로 가입된 사용자가 존재합니다. ", ErrorCode.DUPLICATE_USER);
-        }
+        this.validateExistingUser(userRepository.findByIdentifier(userCreateReqDto.getIdentifier()));
+        this.validateExistingUser(userRepository.findByPhoneNo(userCreateReqDto.getPhoneNo()));
 
         String userUid = UUID.randomUUID().toString();
 
@@ -97,20 +92,24 @@ public class AuthService {
         return this.register(userCreateReqDto);
     }
 
+    /**
+     * 회원 탈퇴된 사용자의 identifier도 중복 검사에 포함된다.
+     * */
     public CheckIdentifierResDto confirmIdentifier(String identifier) {
 
-        Boolean isExist = userRepository.existsByIdentifier(identifier);
-        return new CheckIdentifierResDto(isExist);
+        return new CheckIdentifierResDto(userRepository.existsByIdentifier(identifier));
     }
+
     /**
      * POST /api/auth/v1/login
      * */
+    @Transactional
     public UserLoginResDto login(UserLoginReqDto userLoginReqDto){
 
         String identifier = userLoginReqDto.getIdentifier();
         String password = userLoginReqDto.getPassword();
 
-        User user = userRepository.findByIdentifier(identifier)
+        User user = userRepository.findByIdentifierAndIsDeleted(identifier, Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("해당 사용자를 찾을 수 없습니다.", ErrorCode.USER_NOT_FOUND));
 
         String encryptedPasswordWithSHA256 = sha256PasswordEncoder.encodeWithSalt(password, user.getUuid());
@@ -206,6 +205,7 @@ public class AuthService {
         );
     }
 
+    @Transactional
     public PublicKeyGetResDto getPublicKey() {
 
         RSAKeyPairDto rsaKeyPairDto = rsaUtil.getRsaKeyPairDto();
@@ -215,5 +215,16 @@ public class AuthService {
         ));
 
         return new PublicKeyGetResDto(savedRsaPrivateKey.getId(), rsaKeyPairDto.getPublicKeyString()) ;
+    }
+
+    private void validateExistingUser(Optional<User> optionalUser) {
+
+        optionalUser.ifPresent(user -> {
+            if (!user.getIsDeleted()) {
+                throw new BaseException("이미 존재하는 회원입니다.", ErrorCode.DUPLICATE_USER);
+            } else {
+                throw new BaseException("이미 탈퇴된 계정입니다. 탈퇴 복구 문의를 부탁드립니다. ", ErrorCode.DUPLICATE_CLUB_USER);
+            }
+        });
     }
 }

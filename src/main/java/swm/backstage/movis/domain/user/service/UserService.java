@@ -5,14 +5,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.auth.utils.SHA256PasswordEncoder;
+import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.invitation.service.VerifyService;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.repository.UserRepository;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +20,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final VerifyService verifyService;
+    private final ClubService clubService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SHA256PasswordEncoder sha256PasswordEncoder;
 
     // TODO: 해당 계층에서 커스텀 예외 처리
-    public Optional<User> findByIdentifier(String identifier) {
+    public User findByIdentifier(String identifier) {
 
-        return userRepository.findByIdentifier(identifier);
+        return userRepository.findByIdentifierAndIsDeleted(identifier, Boolean.FALSE)
+                .orElseThrow(() -> new BaseException("유저를 찾을 수 없습니다. ", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     public User findByPhoneNo(String phoneNo) {
@@ -35,13 +37,8 @@ public class UserService {
             throw new BaseException("인증되지 않은 번호입니다 : " + phoneNo, ErrorCode.UNAUTHENTICATED_REQUEST);
         }
 
-        return userRepository.findByPhoneNo(phoneNo)
+        return userRepository.findByPhoneNoAndIsDeleted(phoneNo, Boolean.FALSE)
                 .orElseThrow(()-> new BaseException("해당 번호로 가입된 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
-    }
-
-    public User findUserWithInfoByIdentifier(String identifier) {
-        return userRepository.findUserWithClubUserAndClubAndAccountBook(identifier)
-                .orElseThrow(()-> new BaseException("유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     @Transactional
@@ -52,8 +49,7 @@ public class UserService {
             throw new BaseException("이전 비밀번호와 동일합니다.", ErrorCode.INVALID_PASSWORD);
         }
 
-        User user = this.findByIdentifier(identifier)
-                .orElseThrow(()-> new BaseException("유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
+        User user = this.findByIdentifier(identifier);
 
         String encryptedOldPasswordWithSHA256 = sha256PasswordEncoder.encodeWithSalt(oldPassword, user.getUuid());
         if (!bCryptPasswordEncoder.matches(encryptedOldPasswordWithSHA256, user.getPassword())){
@@ -65,5 +61,19 @@ public class UserService {
         String encryptedNewPasswordWithSHA256AndBCrypt = bCryptPasswordEncoder.encode(encryptedNewPasswordWithSHA256);
 
         user.updatePassword(encryptedNewPasswordWithSHA256AndBCrypt);
+    }
+
+    @Transactional
+    public void deleteUser(String identifier) {
+
+        this.findByIdentifier(identifier)
+                .getClubUserList()
+                .forEach(clubUser -> {
+                    if (clubUser.getRoleType().equals(RoleType.ROLE_MANAGER)){
+                        clubService.deleteClub(clubUser.getClubUuid());
+                    } else {
+                        clubUser.updateIsDeleted(Boolean.TRUE);
+                    }
+                });
     }
 }

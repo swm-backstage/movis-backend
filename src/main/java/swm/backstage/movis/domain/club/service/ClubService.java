@@ -18,7 +18,7 @@ import swm.backstage.movis.domain.club_user.ClubUser;
 import swm.backstage.movis.domain.club_user.service.ClubUserManager;
 import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.user.User;
-import swm.backstage.movis.domain.user.service.UserService;
+import swm.backstage.movis.domain.user.service.UserManager;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 public class ClubService {
     private static final Logger log = LoggerFactory.getLogger(ClubService.class);
     private final ClubRepository clubRepository;
-    private final UserService userService;
+    private final UserManager userManager;
     private final AccountBookService accountBookService;
     private final ClubUserManager clubUserManager;
     private final EventManager eventManager;
 
     @Transactional
     public Club createClub(ClubCreateReqDto clubCreateReqDto,String identifier) {
-        User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
+        User user = userManager.findByIdentifier(identifier);
 
         // AccountBook 생성
         AccountBook accountBook = new AccountBook();
@@ -86,14 +86,14 @@ public class ClubService {
             return new ArrayList<Club>();
         }
 
-        User user = userService.findUserWithInfoByIdentifier(identifier);
+        User user = userManager.findUserWithInfoByIdentifier(identifier);
         return user.getClubUserList().stream()
                 .map(ClubUser::getClub)
                 .filter(club -> !club.getIsDeleted()).collect(Collectors.toList());
     }
 
     public String getClubUid(String accountNumber, String identifier) {
-        User user = userService.findByIdentifier(identifier).orElseThrow(()-> new BaseException("Element Not Found",ErrorCode.ELEMENT_NOT_FOUND));
+        User user = userManager.findByIdentifier(identifier);
         List<ClubUser> clubUserList = user.getClubUserList();
         return clubUserList.stream()
                 .filter(clubUser -> clubUser.getClub().getAccountNumber().equals(accountNumber) && !clubUser.getClub().getIsDeleted())
