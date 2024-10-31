@@ -12,8 +12,6 @@ import swm.backstage.movis.domain.user.repository.UserRepository;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,9 +22,10 @@ public class UserService {
     private final SHA256PasswordEncoder sha256PasswordEncoder;
 
     // TODO: 해당 계층에서 커스텀 예외 처리
-    public Optional<User> findByIdentifier(String identifier) {
+    public User findByIdentifier(String identifier) {
 
-        return userRepository.findByIdentifierAndIsDeleted(identifier, Boolean.FALSE);
+        return userRepository.findByIdentifierAndIsDeleted(identifier, Boolean.FALSE)
+                .orElseThrow(() -> new BaseException("유저를 찾을 수 없습니다. ", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
     public User findByPhoneNo(String phoneNo) {
@@ -39,11 +38,6 @@ public class UserService {
                 .orElseThrow(()-> new BaseException("해당 번호로 가입된 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
-    public User findUserWithInfoByIdentifier(String identifier) {
-        return userRepository.findUserWithClubUserAndClubAndAccountBook(identifier)
-                .orElseThrow(()-> new BaseException("유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
-    }
-
     @Transactional
     public void updatePassword(String identifier, String oldPassword, String newPassword) {
 
@@ -52,8 +46,7 @@ public class UserService {
             throw new BaseException("이전 비밀번호와 동일합니다.", ErrorCode.INVALID_PASSWORD);
         }
 
-        User user = this.findByIdentifier(identifier)
-                .orElseThrow(()-> new BaseException("유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
+        User user = this.findByIdentifier(identifier);
 
         String encryptedOldPasswordWithSHA256 = sha256PasswordEncoder.encodeWithSalt(oldPassword, user.getUuid());
         if (!bCryptPasswordEncoder.matches(encryptedOldPasswordWithSHA256, user.getPassword())){

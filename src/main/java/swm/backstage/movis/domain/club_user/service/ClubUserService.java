@@ -10,6 +10,7 @@ import swm.backstage.movis.domain.club_user.dto.ClubUserCreateReqDto;
 import swm.backstage.movis.domain.club_user.repository.ClubUserRepository;
 import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.user.User;
+import swm.backstage.movis.domain.user.service.UserManager;
 import swm.backstage.movis.domain.user.service.UserService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
@@ -22,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClubUserService {
 
-    private final UserService userService;
+    private final UserManager userManager;
     private final ClubService clubService;
     private final ClubUserRepository clubUserRepository;
 
@@ -36,8 +37,7 @@ public class ClubUserService {
     public void createClubUser(ClubUserCreateReqDto clubUserCreateReqDto) {
 
         Club club = clubService.findClubByUuId(clubUserCreateReqDto.getClubId());
-        User user = userService.findByIdentifier(clubUserCreateReqDto.getIdentifier())
-                .orElseThrow(()-> new BaseException("해당 사용자를 찾을 수 없습니다. ", ErrorCode.ELEMENT_NOT_FOUND));
+        User user = userManager.findByIdentifier(clubUserCreateReqDto.getIdentifier());
 
         Optional<ClubUser> optionalClubUser = clubUserRepository.findByIdentifierAndClub_Ulid(user.getIdentifier(), club.getUlid());
 

@@ -10,8 +10,6 @@ import swm.backstage.movis.domain.user.dto.UserIdentifierGetReqDto;
 import swm.backstage.movis.domain.user.dto.UserIdentifierGetResDto;
 import swm.backstage.movis.domain.user.dto.UserPasswordUpdateReqDto;
 import swm.backstage.movis.domain.user.service.UserService;
-import swm.backstage.movis.global.error.ErrorCode;
-import swm.backstage.movis.global.error.exception.BaseException;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +21,7 @@ public class UserController {
     @GetMapping("/me")
     public UserGetResDto getUserByToken(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
 
-        return new UserGetResDto(userService.findByIdentifier(principal.getIdentifier())
-                .orElseThrow(()-> new BaseException("Element Not Found", ErrorCode.ELEMENT_NOT_FOUND)));
+        return new UserGetResDto(userService.findByIdentifier(principal.getIdentifier()));
     }
 
     @PostMapping("/identifier")
