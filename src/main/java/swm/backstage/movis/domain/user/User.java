@@ -56,7 +56,6 @@ public class User extends DateTimeField {
         this.name = userCreateReqDto.getName();
         this.phoneNo = userCreateReqDto.getPhoneNo();
 
-        // TODO: soft delete
         this.isDeleted = Boolean.FALSE;
         this.deletedAt = null;
     }
@@ -66,16 +65,9 @@ public class User extends DateTimeField {
         this.password = newPassword;
     }
 
-    public void setUserDeleted() {
+    public void updateIsDeleted(Boolean isDeleted) {
 
-        this.isDeleted = Boolean.TRUE;
-        this.deletedAt = LocalDateTime.now();
-    }
-
-    public void setUserRestored() {
-
-        this.isDeleted = Boolean.FALSE;
-        this.deletedAt = null;
+        this.isDeleted = isDeleted;
     }
 }
 

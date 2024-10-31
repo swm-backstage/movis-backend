@@ -26,7 +26,7 @@ public class UserService {
     // TODO: 해당 계층에서 커스텀 예외 처리
     public Optional<User> findByIdentifier(String identifier) {
 
-        return userRepository.findByIdentifier(identifier);
+        return userRepository.findByIdentifierAndIsDeleted(identifier, Boolean.FALSE);
     }
 
     public User findByPhoneNo(String phoneNo) {
@@ -35,7 +35,7 @@ public class UserService {
             throw new BaseException("인증되지 않은 번호입니다 : " + phoneNo, ErrorCode.UNAUTHENTICATED_REQUEST);
         }
 
-        return userRepository.findByPhoneNo(phoneNo)
+        return userRepository.findByPhoneNoAndIsDeleted(phoneNo, Boolean.FALSE)
                 .orElseThrow(()-> new BaseException("해당 번호로 가입된 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
     }
 
