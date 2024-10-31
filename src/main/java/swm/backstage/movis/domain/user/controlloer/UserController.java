@@ -36,4 +36,10 @@ public class UserController {
 
         userService.updatePassword(principal.getIdentifier(), userPasswordUpdateReqDto.getOldPassword(), userPasswordUpdateReqDto.getNewPassword());
     }
+
+    @DeleteMapping("/me")
+    public void deleteUser(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
+
+        userService.deleteUser(principal.getIdentifier());
+    }
 }

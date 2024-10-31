@@ -5,7 +5,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.auth.utils.SHA256PasswordEncoder;
+import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.invitation.service.VerifyService;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.repository.UserRepository;
@@ -18,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final VerifyService verifyService;
+    private final ClubService clubService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SHA256PasswordEncoder sha256PasswordEncoder;
 
@@ -58,5 +61,19 @@ public class UserService {
         String encryptedNewPasswordWithSHA256AndBCrypt = bCryptPasswordEncoder.encode(encryptedNewPasswordWithSHA256);
 
         user.updatePassword(encryptedNewPasswordWithSHA256AndBCrypt);
+    }
+
+    @Transactional
+    public void deleteUser(String identifier) {
+
+        this.findByIdentifier(identifier)
+                .getClubUserList()
+                .forEach(clubUser -> {
+                    if (clubUser.getRoleType().equals(RoleType.ROLE_MANAGER)){
+                        clubService.deleteClub(clubUser.getClubUuid());
+                    } else {
+                        clubUser.updateIsDeleted(Boolean.TRUE);
+                    }
+                });
     }
 }

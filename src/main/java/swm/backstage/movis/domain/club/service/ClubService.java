@@ -19,7 +19,6 @@ import swm.backstage.movis.domain.club_user.service.ClubUserManager;
 import swm.backstage.movis.domain.event.service.EventManager;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.service.UserManager;
-import swm.backstage.movis.domain.user.service.UserService;
 import swm.backstage.movis.global.error.ErrorCode;
 import swm.backstage.movis.global.error.exception.BaseException;
 
