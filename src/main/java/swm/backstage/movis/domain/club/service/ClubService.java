@@ -99,7 +99,7 @@ public class ClubService {
                 .filter(clubUser -> clubUser.getClub().getAccountNumber().equals(accountNumber) && !clubUser.getClub().getIsDeleted())
                 .findFirst()
                 .orElseThrow(() -> new BaseException("club을 찾을 수 없습니다.",ErrorCode.ELEMENT_NOT_FOUND))
-                .getUuid();
+                .getClubUuid();
     }
 
     // 입장 코드
