@@ -169,21 +169,21 @@ public class AuthService {
             throw new BaseException("옳바르지 않은 토큰 형식입니다. ", ErrorCode.INVALID_TOKEN_FORMAT);
         }
 
-        // refreshToken 여부 검사
-        if (!jwtUtil.getTokenType(refreshToken).equals(jwtUtil.getREFRESH_TOKEN_NAME())){
-
-            throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
-        }
-
         // 토큰 유효성 검사
         try {
 
             jwtUtil.validateToken(refreshToken);
         } catch (ExpiredJwtException e) {
 
-            throw new BaseException("토큰이 만료되었습니다. 토큰을 재발급 해주세요. ", ErrorCode.EXPIRED_TOKEN);
+            throw new BaseException("리프레쉬 토큰이 만료되었습니다. 토큰을 재발급 해주세요. ", ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
         catch (JwtException e) {
+
+            throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
+        }
+
+        // refreshToken 여부 검사
+        if (!jwtUtil.getTokenType(refreshToken).equals(jwtUtil.getREFRESH_TOKEN_NAME())){
 
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
