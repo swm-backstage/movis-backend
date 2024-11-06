@@ -67,18 +67,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new BaseException("옳바르지 않은 토큰 형식입니다. ", ErrorCode.INVALID_TOKEN_FORMAT);
         }
 
-        // accessToken 여부 검사
-        if (!jwtUtil.getTokenType(accessToken).equals(jwtUtil.getACCESS_TOKEN_NAME())){
-            throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
-        }
-
         // token 유효성 검사
         try {
             jwtUtil.validateToken(accessToken);
         } catch (ExpiredJwtException e) {
-            throw new BaseException("토큰이 만료되었습니다. 토큰을 재발급 해주세요. ", ErrorCode.EXPIRED_TOKEN);
+            throw new BaseException("액세스 토큰이 만료되었습니다. 토큰을 재발급 해주세요. ", ErrorCode.EXPIRED_ACCESS_TOKEN);
         }
         catch (JwtException e) {
+            throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
+        }
+
+        // accessToken 여부 검사
+        if (!jwtUtil.getTokenType(accessToken).equals(jwtUtil.getACCESS_TOKEN_NAME())){
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 
