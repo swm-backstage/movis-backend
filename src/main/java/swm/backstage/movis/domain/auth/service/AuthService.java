@@ -197,7 +197,10 @@ public class AuthService {
             throw new BaseException("유효하지 않은 토큰 입니다. 다시 로그인 해주세요. ", ErrorCode.INVALID_TOKEN);
         }
 
-        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(identifier, PlatformType.APP.value());
+        AuthTokenDto authTokenDto = authTokenService.issueAuthToken(
+                identifier,
+                jwtUtil.getPlatformType(refreshToken)
+        );
 
         return new JwtCreateResDto(
                 authTokenDto.getAccessToken(),
