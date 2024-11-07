@@ -5,6 +5,7 @@ import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import swm.backstage.movis.domain.accout_book.AccountBook;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event.dto.EventCreateReqDto;
@@ -13,6 +14,7 @@ import swm.backstage.movis.domain.event_bill.EventBill;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.fee.Fee;
 import swm.backstage.movis.domain.transaction_history.TransactionHistory;
+import swm.backstage.movis.global.common.DateTimeField;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ import java.util.List;
         @Index(name = "idx_club_id_event_id", columnList = "club_id, ulid")})
 @NoArgsConstructor
 @Getter
-public class Event {
+public class Event extends DateTimeField {
 
     @Id
     @Column(unique = true, nullable = false, length = 26)
