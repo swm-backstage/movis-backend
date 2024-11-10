@@ -37,8 +37,7 @@ public class ClubUserService {
     public void createClubUser(ClubUserCreateReqDto clubUserCreateReqDto) {
 
         Club club = clubService.findClubByUuId(clubUserCreateReqDto.getClubId());
-        User user = userManager.findByIdentifier(clubUserCreateReqDto.getIdentifier());
-
+        User user = userManager.findByPhoneNo(clubUserCreateReqDto.getPhoneNo());
         Optional<ClubUser> optionalClubUser = clubUserRepository.findByIdentifierAndClub_Ulid(user.getIdentifier(), club.getUlid());
 
         if (optionalClubUser.isPresent()) {
