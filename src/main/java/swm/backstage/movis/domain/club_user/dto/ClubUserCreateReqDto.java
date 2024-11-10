@@ -12,5 +12,5 @@ public class ClubUserCreateReqDto {
     private String clubId;
 
     @NotNull
-    private String identifier;
+    private String phoneNo;
 }

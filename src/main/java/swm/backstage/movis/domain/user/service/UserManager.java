@@ -18,6 +18,11 @@ public class UserManager {
         return userRepository.findByIdentifierAndIsDeleted(identifier, Boolean.FALSE)
                 .orElseThrow(() -> new BaseException("유저를 찾을 수 없습니다. ", ErrorCode.ELEMENT_NOT_FOUND));
     }
+    public User findByPhoneNo(String phoneNo) {
+
+        return userRepository.findByPhoneNoAndIsDeleted(phoneNo, Boolean.FALSE)
+                .orElseThrow(() -> new BaseException("유저를 찾을 수 없습니다. ", ErrorCode.ELEMENT_NOT_FOUND));
+    }
 
     public User findUserWithInfoByIdentifier(String identifier) {
 

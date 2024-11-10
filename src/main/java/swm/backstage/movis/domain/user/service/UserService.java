@@ -66,7 +66,6 @@ public class UserService {
     @Transactional
     public void deleteUser(String identifier, String password) {
 
-        System.out.println(identifier + " " + password);
         User user = this.findByIdentifier(identifier);
         String encryptedOldPasswordWithSHA256 = sha256PasswordEncoder.encodeWithSalt(password, user.getUuid());
         if (!bCryptPasswordEncoder.matches(encryptedOldPasswordWithSHA256, user.getPassword())){
