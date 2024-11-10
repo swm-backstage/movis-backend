@@ -5,10 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.auth.dto.AuthenticationPrincipalDetails;
-import swm.backstage.movis.domain.user.dto.UserGetResDto;
-import swm.backstage.movis.domain.user.dto.UserIdentifierGetReqDto;
-import swm.backstage.movis.domain.user.dto.UserIdentifierGetResDto;
-import swm.backstage.movis.domain.user.dto.UserPasswordUpdateReqDto;
+import swm.backstage.movis.domain.user.dto.*;
 import swm.backstage.movis.domain.user.service.UserService;
 
 @RestController
@@ -37,9 +34,10 @@ public class UserController {
         userService.updatePassword(principal.getIdentifier(), userPasswordUpdateReqDto.getOldPassword(), userPasswordUpdateReqDto.getNewPassword());
     }
 
-    @DeleteMapping("/me")
-    public void deleteUser(@AuthenticationPrincipal AuthenticationPrincipalDetails principal){
+    @PatchMapping("/me")
+    public void deleteUser(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
+                           @RequestBody @Validated UserDeleteReqDto userDeleteReqDto){
 
-        userService.deleteUser(principal.getIdentifier());
+        userService.deleteUser(principal.getIdentifier(), userDeleteReqDto.getPassword());
     }
 }
