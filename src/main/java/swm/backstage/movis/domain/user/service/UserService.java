@@ -64,11 +64,18 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(String identifier) {
+    public void deleteUser(String identifier, String password) {
 
-        this.findByIdentifier(identifier)
-                .getClubUserList()
-                .forEach(clubUser -> {
+        System.out.println(identifier + " " + password);
+        User user = this.findByIdentifier(identifier);
+        String encryptedOldPasswordWithSHA256 = sha256PasswordEncoder.encodeWithSalt(password, user.getUuid());
+        if (!bCryptPasswordEncoder.matches(encryptedOldPasswordWithSHA256, user.getPassword())){
+
+            throw new BaseException("비밀번호가 일치하지 않습니다.", ErrorCode.INVALID_PASSWORD);
+        }
+        user.updateIsDeleted(Boolean.TRUE);
+
+        user.getClubUserList().forEach(clubUser -> {
                     if (clubUser.getRoleType().equals(RoleType.ROLE_MANAGER)){
                         clubService.deleteClub(clubUser.getClubUuid());
                     } else {
