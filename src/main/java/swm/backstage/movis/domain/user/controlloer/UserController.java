@@ -34,6 +34,11 @@ public class UserController {
         userService.updatePassword(principal.getIdentifier(), userPasswordUpdateReqDto.getOldPassword(), userPasswordUpdateReqDto.getNewPassword());
     }
 
+    @PostMapping("/password/reset")
+    public void resetUserPassword(@RequestBody UserPasswordResetReqDto userPasswordResetReqDto){
+        userService.resetPassword(userPasswordResetReqDto.getPhoneNo());
+    }
+
     @PatchMapping("/me")
     public void deleteUser(@AuthenticationPrincipal AuthenticationPrincipalDetails principal,
                            @RequestBody @Validated UserDeleteReqDto userDeleteReqDto){

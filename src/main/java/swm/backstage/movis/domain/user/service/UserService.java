@@ -3,11 +3,13 @@ package swm.backstage.movis.domain.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.auth.enums.RoleType;
 import swm.backstage.movis.domain.auth.utils.SHA256PasswordEncoder;
 import swm.backstage.movis.domain.club.service.ClubService;
+import swm.backstage.movis.domain.invitation.service.MessageService;
 import swm.backstage.movis.domain.invitation.service.VerifyService;
 import swm.backstage.movis.domain.user.User;
 import swm.backstage.movis.domain.user.repository.UserRepository;
@@ -20,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final VerifyService verifyService;
+    private final MessageService messageService;
     private final ClubService clubService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SHA256PasswordEncoder sha256PasswordEncoder;
@@ -39,6 +42,27 @@ public class UserService {
 
         return userRepository.findByPhoneNoAndIsDeleted(phoneNo, Boolean.FALSE)
                 .orElseThrow(()-> new BaseException("해당 번호로 가입된 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
+    }
+
+    // 비밀번호 찾기는 임시 비밀번호를 발급하여 문자로 전송하는 방식으로 구현
+    @Transactional
+    public void resetPassword(String phoneNo) {
+        if (!verifyService.isVerifiedPhoneNumber(phoneNo)) {
+            throw new BaseException("인증되지 않은 번호입니다 : " + phoneNo, ErrorCode.UNAUTHENTICATED_REQUEST);
+        }
+
+        User user = userRepository.findByPhoneNoAndIsDeleted(phoneNo, Boolean.FALSE)
+                .orElseThrow(() -> new BaseException("해당 번호로 가입된 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
+
+        String temporaryPassword = RandomStringUtils.randomAlphanumeric(10);
+        String encryptedTempPasswordWithSHA256 = sha256PasswordEncoder.encodeWithSalt(temporaryPassword, user.getUuid());
+        String encryptedTempPasswordWithSHA256AndBCrypt = bCryptPasswordEncoder.encode(encryptedTempPasswordWithSHA256);
+
+        user.updatePassword(encryptedTempPasswordWithSHA256AndBCrypt);
+        userRepository.save(user);
+
+        String message = "[모비스]\n임시 비밀번호: " + temporaryPassword;
+        messageService.sendSmsWithBody(phoneNo, message);
     }
 
     @Transactional

@@ -34,6 +34,22 @@ public class MessageService {
         }
     }
 
+    public void sendSmsWithBody(String to, String body) {
+        try {
+            Message coolsms = new Message(apiKey, apiSecret);
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("to", to); // 수신
+            params.put("from", fromPhoneNumber); // 발신
+            params.put("type", "SMS");
+            params.put("text", body);
+
+            coolsms.send(params); // 메시지 전송
+        } catch (Exception e) {
+            throw new RuntimeException("SMS 전송에 실패했습니다.");
+        }
+    }
+
     // 인증번호 생성
     private String generateRandomNumber() {
         Random rand = new Random();
