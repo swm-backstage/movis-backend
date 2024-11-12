@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.backstage.movis.domain.event_bill.dto.EventBIllCreateExplanationReqDto;
 import swm.backstage.movis.domain.event_bill.dto.EventBillGetResDto;
@@ -26,7 +27,7 @@ public class FeeController {
     @PreAuthorize("hasPermission(#eventId, 'eventId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PostMapping("/input")
     public void createFeeByInput(@RequestParam("eventId") @Param("eventId") String eventId,
-                                 @RequestBody FeeInputReqDto feeInputReqDto){
+                                 @RequestBody @Validated FeeInputReqDto feeInputReqDto){
         feeService.createFeeByInput(eventId,feeInputReqDto);
     }
     /**

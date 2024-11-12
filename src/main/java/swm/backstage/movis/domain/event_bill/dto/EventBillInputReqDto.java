@@ -1,6 +1,8 @@
 package swm.backstage.movis.domain.event_bill.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 public class EventBillInputReqDto {
     private Long paidAmount;
     private LocalDateTime paidAt;
+    @NotNull
+    @Size(min = 1, max = 10)
     private String name;
     private String explanation;
     private String image;

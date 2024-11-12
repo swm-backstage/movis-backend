@@ -2,6 +2,7 @@ package swm.backstage.movis.domain.event.dto;
 
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class EventCreateReqDto {
     private String clubId;
 
     @NotNull
+    @Size(min = 2, max = 20)
     private String eventName;
 
     private EventGatherFeeReqDto gatherFeeInfo;
