@@ -3,6 +3,7 @@ package swm.backstage.movis.domain.club.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
@@ -12,6 +13,7 @@ import org.hibernate.validator.constraints.Range;
 public class ClubCreateReqDto {
 
     @NotNull
+    @Size(min = 1, max = 20)
     private String name;
 
     private String description;

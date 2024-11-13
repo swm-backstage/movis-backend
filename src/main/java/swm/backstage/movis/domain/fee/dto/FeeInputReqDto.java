@@ -1,5 +1,7 @@
 package swm.backstage.movis.domain.fee.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,6 +15,9 @@ public class FeeInputReqDto {
     private String eventMemberId;
     private Long paidAmount;
     private LocalDateTime paidAt;
+
+    @NotNull
+    @Size(min = 1,max =10)
     private String name;
     private String explanation;
 

@@ -1,6 +1,7 @@
 package swm.backstage.movis.domain.member.dto;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class MemberCreateListDto {
     @NotNull
     private String clubId;
 
+    @Valid
     private List<MemberCreateReqDto> memberList;
 
     public MemberCreateListDto(String clubId, List<MemberCreateReqDto> memberList) {

@@ -59,7 +59,7 @@ public class EventController {
     @PreAuthorize("hasPermission(#eventId, 'eventId', {'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
     @PatchMapping()
     public EventGetDto updateEvent(@RequestParam(name = "eventId") @Param("eventId") String eventId,
-                            @RequestBody EventUpdateReqDto eventUpdateReqDto) {
+                            @RequestBody @Validated EventUpdateReqDto eventUpdateReqDto) {
         return new EventGetDto(eventService.updateEvent(eventId,eventUpdateReqDto));
     }
     /**
