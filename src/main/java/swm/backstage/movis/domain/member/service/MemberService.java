@@ -58,6 +58,10 @@ public class MemberService {
         memberJpaRepository.save(member);
     }
 
+    public Member getMember(String memberId){
+        return memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException("일치하는 모임 회원을 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND));
+    }
 
     public List<Member> getMemberList(String clubId) {
         return memberJpaRepository.findAllByClub(clubManager.getClubByUuId(clubId));
