@@ -67,6 +67,9 @@ public class Event extends DateTimeField {
     @Column(name="is_deleted")
     private Boolean isDeleted;
 
+    @Column
+    private Integer isNotPaidCnt;
+
     public Event( EventCreateReqDto eventCreateReqDto, Club club, AccountBook accountBook) {
         this.ulid = UlidCreator.getUlid().toString();
         this.name = eventCreateReqDto.getEventName();
@@ -74,6 +77,7 @@ public class Event extends DateTimeField {
         this.accountBook = accountBook;
         this.balance = 0L;
         this.isDeleted = Boolean.FALSE;
+        this.isNotPaidCnt = eventCreateReqDto.getEventMemberIdList().size();
         if(eventCreateReqDto.getGatherFeeInfo() == null){
             this.totalPaymentAmount = 0L;
         }
@@ -96,5 +100,12 @@ public class Event extends DateTimeField {
         this.name = eventUpdateReqDto.getName();
         this.totalPaymentAmount = eventUpdateReqDto.getTotalPaymentAmount();
         this.paymentDeadline = eventUpdateReqDto.getPaymentDeadline();
+    }
+
+    public void setIsNotPaidCnt(){
+        if(this.isNotPaidCnt==0){
+            return;
+        }
+        this.isNotPaidCnt--;
     }
 }

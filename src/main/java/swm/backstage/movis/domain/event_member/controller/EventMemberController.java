@@ -29,4 +29,10 @@ public class EventMemberController {
     public EventMemberListResDto getEventMemberList(@RequestParam("eventId") @Param("eventId") String eventId){
         return new EventMemberListResDto(eventMemberService.getEventMemberList(eventId));
     }
+
+    @GetMapping("/paid")
+    @PreAuthorize("hasPermission(#eventId, 'eventId', {'ROLE_MEMBER', 'ROLE_EXECUTIVE', 'ROLE_MANAGER'})")
+    public EventMemberListResDto getEventMemberListNotPaid(@RequestParam("eventId") @Param("eventId") String eventId){
+        return new EventMemberListResDto(eventMemberService.getEventMemberListNotPaid(eventId));
+    }
 }

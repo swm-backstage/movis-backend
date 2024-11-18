@@ -13,4 +13,6 @@ public interface EventMemberJpaRepository extends JpaRepository<EventMember, Str
     Optional<EventMember> findByEventAndMemberName(Event event, String memberName);
 
     List<EventMember> findAllByEvent(Event event);
+
+    List<EventMember> findAllByEventAndIsPaid(Event event, Boolean isPaid);
 }

@@ -18,6 +18,7 @@ public class EventGetPagingListElementDto {
     private Long balance;
 
     private LocalDateTime createdAt;
+    private Integer isNotPaidCnt;
 
 
     public EventGetPagingListElementDto(Event event) {
@@ -25,5 +26,6 @@ public class EventGetPagingListElementDto {
         this.name = event.getName();
         this.balance = event.getBalance();
         this.createdAt = event.getCreatedAt();
+        this.isNotPaidCnt = event.getIsNotPaidCnt();
     }
 }
