@@ -18,9 +18,6 @@ import java.util.List;
 @Table(name = "member",
         indexes = {
                 @Index(name = "idx_name_club_uuid", columnList = "name, club_id")
-        },
-        uniqueConstraints = {
-                @UniqueConstraint(name = "unique_name_club_uuid", columnNames = {"name", "club_id"})
         })
 @NoArgsConstructor
 @Getter
@@ -31,7 +28,7 @@ public class Member extends DateTimeField {
     @Column(unique = true, nullable = false, length = 26)
     private String ulid;
 
-    @Column(unique = true, name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @Column(name = "phone_no", nullable = false, length = 255)
