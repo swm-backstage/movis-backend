@@ -19,8 +19,6 @@ import java.util.List;
 @Getter
 public class EventMember extends DateTimeField {
 
-
-
     @Id
     @Column(unique = true, nullable = false, length = 26)
     private String ulid;
@@ -37,7 +35,7 @@ public class EventMember extends DateTimeField {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @OneToMany(mappedBy = "eventMember", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "eventMember", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Fee> feeList = new ArrayList<>();
 
     public void updateEventMember() {

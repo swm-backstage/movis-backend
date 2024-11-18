@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.club.service.ClubManager;
 import swm.backstage.movis.domain.club.service.ClubService;
+import swm.backstage.movis.domain.event_member.service.EventMemberService;
 import swm.backstage.movis.domain.member.Member;
 import swm.backstage.movis.domain.member.dto.MemberCreateListDto;
 import swm.backstage.movis.domain.member.dto.MemberCreateReqDto;
@@ -69,5 +70,12 @@ public class MemberService {
     public boolean isMemberExist(String clubId, String name, String phoneNo) {
         return memberJpaRepository.findByClubAndNameAndPhoneNo(clubManager.getClubByUuId(clubId), name, phoneNo)
                 .orElseThrow(() -> new BaseException("일치하는 유저를 찾을 수 없습니다.", ErrorCode.ELEMENT_NOT_FOUND)) != null;
+    }
+    /**
+     * Member 삭제 (soft deleted)
+     * */
+    @Transactional
+    public void deleteMember(String memberId) {
+        memberJpaRepository.deleteById(memberId);
     }
 }

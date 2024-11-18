@@ -5,6 +5,7 @@ import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import swm.backstage.movis.domain.club.Club;
 import swm.backstage.movis.domain.event_member.EventMember;
 import swm.backstage.movis.domain.member.dto.MemberCreateReqDto;
@@ -38,6 +39,7 @@ public class Member extends DateTimeField {
     private Boolean isEnrolled;
 
     @Column(name = "is_deleted", nullable = false)
+    @Setter
     private Boolean isDeleted;
 
     @Column(name = "deleted_at", nullable = true)

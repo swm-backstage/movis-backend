@@ -30,5 +30,10 @@ public class MemberController {
         return new MemberGetListResDto(memberService.getMemberList(clubId));
     }
 
+    @DeleteMapping()
+    public void deleteMember(@RequestParam(name = "memberId") String memberId){
+        memberService.deleteMember(memberId);
+    }
+
 
 }
