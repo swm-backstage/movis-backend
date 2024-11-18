@@ -20,6 +20,7 @@ public class ClubGetResDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String bankCode;
+    private String entryCode;
 
     public ClubGetResDto(Club club) {
         this.clubId = club.getUlid();
@@ -30,5 +31,6 @@ public class ClubGetResDto {
         this.createdAt = club.getCreatedAt();
         this.updatedAt = club.getUpdatedAt();
         this.bankCode = club.getBankCode();
+        this.entryCode = club.getEntryCode();
     }
 }

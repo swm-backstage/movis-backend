@@ -16,8 +16,6 @@ import swm.backstage.movis.domain.club.dto.*;
 import swm.backstage.movis.domain.club.service.ClubService;
 import swm.backstage.movis.domain.member.service.MemberService;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/v1/clubs")
