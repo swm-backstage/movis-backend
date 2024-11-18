@@ -30,8 +30,9 @@ public class MemberController {
         return new MemberGetListResDto(memberService.getMemberList(clubId));
     }
 
+    @PreAuthorize("hasPermission(#memberId, 'memberId', {'ROLE_MANAGER'})")
     @DeleteMapping()
-    public void deleteMember(@RequestParam(name = "memberId") String memberId){
+    public void deleteMember(@RequestParam(name = "memberId") @Param("memberId") String memberId){
         memberService.deleteMember(memberId);
     }
 

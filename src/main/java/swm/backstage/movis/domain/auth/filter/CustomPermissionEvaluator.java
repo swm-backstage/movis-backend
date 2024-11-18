@@ -54,6 +54,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             return eventBillService.getEventBillByUuid(targetId).getClub().getUlid();
         } else if(targetType.equals("feeId")){
             return feeService.getFeeByUuId(targetId).getClub().getUlid();
+        } else if(targetType.equals("memberId")) {
+            return memberService.getMember(targetId).getClub().getUlid();
         }
         return null;
     }
