@@ -53,6 +53,8 @@ public class FeeService {
         else{
             log.info("yes memberId {}", feeInputReqDto.getEventMemberId());
             EventMember eventMember = eventMemberService.getEventMemberByUuid(feeInputReqDto.getEventMemberId());
+            eventMember.updateEventMember();
+            event.setIsNotPaidCnt();
             fee = feeRepository.save(new Fee(feeInputReqDto,event.getClub(),event,eventMember));
         }
         accountBook.updateBalance(feeInputReqDto.getPaidAmount());
@@ -154,6 +156,7 @@ public class FeeService {
             }
             eventMember.updateEventMember();
             eventMember.getEvent().updateBalance(feeReqDto.getPaidAmount());
+            eventMember.getEvent().setIsNotPaidCnt();
             accountBook.updateClassifiedDeposit(feeReqDto.getPaidAmount());
         }
     }

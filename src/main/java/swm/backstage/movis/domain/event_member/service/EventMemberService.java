@@ -55,6 +55,10 @@ public class EventMemberService {
         return eventMemberJpaRepository.findAllByEvent(eventService.getEventByUuid(eventId));
     }
 
+    public List<EventMember> getEventMemberListNotPaid(String eventId){
+        return eventMemberJpaRepository.findAllByEventAndIsPaid(eventService.getEventByUuid(eventId),Boolean.FALSE);
+    }
+
     public String getEventMemberIdByAlertInfo(String clubId, String name, Long amount){
 
         //1. clubId,  amount로 event 찾기 -> 못찾으면 null 반환
@@ -69,6 +73,5 @@ public class EventMemberService {
         }
         return eventMember.getUlid();
     }
-
 
 }

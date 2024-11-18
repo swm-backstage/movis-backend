@@ -36,6 +36,7 @@ public interface EventRepository extends JpaRepository<Event, String> {
     @Query("SELECT e FROM Event e " +
             "WHERE e.club = :club " +
             "AND e.paymentDeadline > :now " +
+            "AND e.isNotPaidCnt != 0 " +
             "order by e.paymentDeadline ASC ")
     List<Event> getCollectingMoneyEventByClub(@Param("club") Club club,
                                               @Param("now") LocalDate now);

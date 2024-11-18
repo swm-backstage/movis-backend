@@ -19,6 +19,7 @@ public class TransactionHistoryGetPagingListResDto {
     private Long totalUnClassifiedDeposit;
     private Long totalClassifiedWithdrawal;
     private Long totalUnClassifiedWithdrawal;
+    private Integer IsNotPaid;
 
     public TransactionHistoryGetPagingListResDto(List<TransactionHistory> feeList, Boolean isLast, AccountBook accountBook) {
         this.isLast = isLast;
